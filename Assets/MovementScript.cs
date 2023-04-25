@@ -1,39 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MovementScript : MonoBehaviour
 {
-
     public CharacterController controller;
-    public Transform cam;
+    public float moveSpeed = 5f;
+    public float turnSpeed = 180f;
+    public float gravity = -9.81f;
+    public float jumpHeight = 1f;
+    public Transform groundCheck;
+    public float groundDistance = 0.4f;
+    public Transform cameraTransform;
+    public LayerMask groundMask;
 
+    private Vector3 velocity;
+    private bool isGrounded;
 
-    public float speed = 6f;
-
-    public float turnSmoothTime = 0.1f;
-    float turnSmoothVelocity;
-
-    public void Update()
+    void Update()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");    
-        float vertical = Input.GetAxisRaw("Vertical");
+        // Check if the player is on the ground
+        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
 
+        // Get input from the Xbox controller
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
         Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
 
-        if(direction.magnitude >= 0.1f)
+        // Get the camera's forward vector
+        Vector3 cameraForward = cameraTransform.forward;
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
+
+        // Calculate the direction to move the player
+        direction = cameraForward * direction.z + cameraTransform.right * direction.x;
+
+
+        // Move the player based on the input
+        if (direction.magnitude >= 0.1f)
         {
-            //Angle between forward and direction in rad and convert to deg
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            // Rotate the player to face the direction of movement
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
 
-            float angle = Mathf.SmoothDampAngle(transform.eulerAngles.y, targetAngle, ref turnSmoothVelocity, turnSmoothTime);
-
-            transform.rotation = Quaternion.Euler(0f, angle, 0f);
-
-            Vector3 moveDir = Quaternion.Euler(0f, targetAngle, 0f)*Vector3.forward;
-            controller.Move(moveDir.normalized * speed*Time.deltaTime);
+            // Move the player using the character controller
+            controller.Move(direction * moveSpeed * Time.deltaTime);
         }
 
+        // Allow the player to jump
+        if (isGrounded && Input.GetButtonDown("Jump"))
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+        }
     }
-
 }

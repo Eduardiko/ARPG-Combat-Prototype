@@ -2,53 +2,94 @@ using UnityEngine;
 
 public class MovementScript : MonoBehaviour
 {
-    public CharacterController controller;
-    public float moveSpeed = 5f;
-    public float turnSpeed = 180f;
-    public float gravity = -9.81f;
-    public float jumpHeight = 1f;
-    public Transform groundCheck;
-    public float groundDistance = 0.4f;
-    public Transform cameraTransform;
-    public LayerMask groundMask;
+    //References
+    private CharacterController controller;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform groundCheck;
 
+    //Variables
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runSpeed = 5f;
+
+    [SerializeField] private float turnSpeed = 180f;
+
+    private Vector3 moveDirection;
+
+    [SerializeField] private float jumpHeight = 0.5f;
+    [SerializeField] private float gravity = -9.81f;
     private Vector3 velocity;
+
+    public LayerMask groundMask;
+    public float groundRayDistance = 0.4f;
     private bool isGrounded;
+
+
+    private void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        velocity = Vector3.zero;
+    }
 
     void Update()
     {
-        // Check if the player is on the ground
-        isGrounded = Physics.CheckSphere(groundCheck.position, groundDistance, groundMask);
+        //Allow the player to jump
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
 
+        // Check if the player is on the ground
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
+        if (!isGrounded)
+        {
+            // Move the player using the character controller
+            controller.Move(velocity);
+
+            velocity.y -= 5f * Time.deltaTime;
+        }
+
+        Move();
+    }
+
+    void Move()
+    {
         // Get input from the Xbox controller
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-        Vector3 direction = new Vector3(horizontal, 0f, vertical).normalized;
+        float xMovement = Input.GetAxis("Horizontal");
+        float zMovement = Input.GetAxis("Vertical");
+        moveDirection = new Vector3(xMovement, 0f, zMovement).normalized;
 
         // Get the camera's forward vector
         Vector3 cameraForward = cameraTransform.forward;
         cameraForward.y = 0f;
         cameraForward.Normalize();
 
-        // Calculate the direction to move the player
-        direction = cameraForward * direction.z + cameraTransform.right * direction.x;
+        // Calculate the direction to move the player and multiply it by the speed
+        moveDirection = cameraForward * moveDirection.z + cameraTransform.right * moveDirection.x;
+        moveDirection *= moveSpeed * Time.deltaTime;
 
-
-        // Move the player based on the input
-        if (direction.magnitude >= 0.1f)
+        // Move the player
+        if(moveDirection != Vector3.zero)
         {
+            //ToDo: run/walk------------
+
+            controller.Move(moveDirection);
+
             // Rotate the player to face the direction of movement
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+            float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
             transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+        }
+    }
+
+    void Jump()
+    {
+        // Allow the player to jump
+        if (isGrounded)
+        {
+            velocity.y = jumpHeight * gravity * -0.005f;
 
             // Move the player using the character controller
-            controller.Move(direction * moveSpeed * Time.deltaTime);
-        }
-
-        // Allow the player to jump
-        if (isGrounded && Input.GetButtonDown("Jump"))
-        {
-            velocity.y = Mathf.Sqrt(jumpHeight * -2f * gravity);
+            controller.Move(velocity);
         }
     }
 }

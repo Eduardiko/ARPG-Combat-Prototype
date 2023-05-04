@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 
 public class MovementScript : MonoBehaviour
 {
+
     //References
     private CharacterController controller;
     [SerializeField] private Transform cameraTransform;
@@ -32,20 +33,17 @@ public class MovementScript : MonoBehaviour
 
     void Update()
     {
-
-        SetDirection();
         MovePlayer();
-        JumpingBehavior();
-        
+        JumpingLogic();
     }
 
 
-    void SetDirection()
+    public void SetDirection(InputAction.CallbackContext context)
     {
+        Vector2 inputVector = context.ReadValue<Vector2>();
+
         // Get input from the Xbox controller
-        float xMovement = Input.GetAxis("Horizontal");
-        float zMovement = Input.GetAxis("Vertical");
-        moveDirection = new Vector3(xMovement, 0f, zMovement).normalized;
+        moveDirection = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
 
         // Get the camera's forward vector
         Vector3 cameraForward = cameraTransform.forward;
@@ -73,20 +71,12 @@ public class MovementScript : MonoBehaviour
         if (moveDirection != Vector3.zero) controller.Move(moveDirection);
     }
 
-    void JumpingBehavior()
+    void JumpingLogic()
     {
-        // Check if the player is on the ground
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
-
         //Set velocity negative so we don't get errors with positive velocities
         if (isGrounded && velocity.y < 0)
         {
             velocity.y = -2f;
-
-            if (Input.GetButtonDown("Jump"))
-            {
-                Jump();
-            }
         }
 
         //In-air logic
@@ -107,8 +97,15 @@ public class MovementScript : MonoBehaviour
         moveSpeed = walkSpeed;
     }
 
-    void Jump()
+    public void Jump(InputAction.CallbackContext context)
     {
-        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        // Check if the player is on the ground
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
+
+        //Set velocity negative so we don't get errors with positive velocities
+        if (isGrounded && velocity.y < 0 && context.performed)
+        {
+            velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        }
     }
 }

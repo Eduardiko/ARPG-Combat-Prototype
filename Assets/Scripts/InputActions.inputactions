@@ -1,15 +1,15 @@
 {
-    "name": "InputManager",
+    "name": "InputActions",
     "maps": [
         {
-            "name": "Movement",
+            "name": "PlayerActions",
             "id": "5522c48c-079d-44eb-91fa-68dbb2606e9f",
             "actions": [
                 {
                     "name": "Move",
                     "type": "Value",
                     "id": "20b93f24-8523-4e66-aed2-4f4026d5bb02",
-                    "expectedControlType": "Axis",
+                    "expectedControlType": "Vector2",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": true
@@ -28,7 +28,7 @@
                 {
                     "name": "",
                     "id": "4e069f4c-a8a9-423f-b77f-5e5837d95eb5",
-                    "path": "<Gamepad>/leftStick/x",
+                    "path": "<Gamepad>/leftStick",
                     "interactions": "",
                     "processors": "",
                     "groups": "",

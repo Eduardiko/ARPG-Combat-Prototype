@@ -14,6 +14,7 @@ public class MovementScript : MonoBehaviour
     [SerializeField] private float moveSpeed = 0f;
     [SerializeField] private float walkSpeed = 5f;
     private Vector3 moveDirection;
+    private Vector2 inputVector;
 
     [SerializeField] private float jumpHeight = 0.5f;
     [SerializeField] private float gravity = -9.81f;
@@ -40,7 +41,7 @@ public class MovementScript : MonoBehaviour
 
     public void SetDirection(InputAction.CallbackContext context)
     {
-        Vector2 inputVector = context.ReadValue<Vector2>();
+        inputVector = context.ReadValue<Vector2>();
 
         // Get input from the Xbox controller
         moveDirection = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
@@ -90,11 +91,10 @@ public class MovementScript : MonoBehaviour
 
     void Walk()
     {
-        //Do Joystick from 0 to 1
-        float joystickDrift = 1f;
-        playerAnimator.SetFloat("IdleToWalk", joystickDrift);
+        float joystickInclination = inputVector.magnitude;
+        playerAnimator.SetFloat("IdleToWalk", joystickInclination);
 
-        moveSpeed = walkSpeed;
+        moveSpeed = walkSpeed * joystickInclination;
     }
 
     public void Jump(InputAction.CallbackContext context)

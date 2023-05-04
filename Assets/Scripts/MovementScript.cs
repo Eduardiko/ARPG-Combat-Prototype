@@ -1,0 +1,114 @@
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class MovementScript : MonoBehaviour
+{
+    //References
+    private CharacterController controller;
+    [SerializeField] private Transform cameraTransform;
+    [SerializeField] private Transform groundCheck;
+    private Animator playerAnimator;
+
+    //Variables
+    [SerializeField] private float moveSpeed = 0f;
+    [SerializeField] private float walkSpeed = 5f;
+    private Vector3 moveDirection;
+
+    [SerializeField] private float jumpHeight = 0.5f;
+    [SerializeField] private float gravity = -9.81f;
+    private Vector3 velocity;
+
+    private bool isGrounded;
+    public LayerMask groundMask;
+    public float groundRayDistance = 0.4f;
+
+
+    private void Start()
+    {
+        controller = GetComponent<CharacterController>();
+        playerAnimator = GetComponentInChildren<Animator>();
+        velocity = Vector3.zero;
+    }
+
+    void Update()
+    {
+
+        SetDirection();
+        MovePlayer();
+        JumpingBehavior();
+        
+    }
+
+
+    void SetDirection()
+    {
+        // Get input from the Xbox controller
+        float xMovement = Input.GetAxis("Horizontal");
+        float zMovement = Input.GetAxis("Vertical");
+        moveDirection = new Vector3(xMovement, 0f, zMovement).normalized;
+
+        // Get the camera's forward vector
+        Vector3 cameraForward = cameraTransform.forward;
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
+
+        // Calculate the direction to move the player and multiply it by the speed
+        moveDirection = cameraForward * moveDirection.z + cameraTransform.right * moveDirection.x;
+        moveDirection *= moveSpeed * Time.deltaTime;
+
+        // Rotate the player to face the direction of movement
+        float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+        transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+    }
+
+    void MovePlayer()
+    {
+        //Set speeds and animation states
+        if (moveDirection != Vector3.zero)
+            Walk();
+        else if (moveDirection == Vector3.zero)
+            Idle();
+
+        // Move the player
+        if (moveDirection != Vector3.zero) controller.Move(moveDirection);
+    }
+
+    void JumpingBehavior()
+    {
+        // Check if the player is on the ground
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
+
+        //Set velocity negative so we don't get errors with positive velocities
+        if (isGrounded && velocity.y < 0)
+        {
+            velocity.y = -2f;
+
+            if (Input.GetButtonDown("Jump"))
+            {
+                Jump();
+            }
+        }
+
+        //In-air logic
+        velocity.y += gravity * Time.deltaTime;
+        controller.Move(velocity * Time.deltaTime);
+    }
+    void Idle()
+    {
+        playerAnimator.SetFloat("IdleToWalk", 0f);
+    }
+
+    void Walk()
+    {
+        //Do Joystick from 0 to 1
+        float joystickDrift = 1f;
+        playerAnimator.SetFloat("IdleToWalk", joystickDrift);
+
+        moveSpeed = walkSpeed;
+    }
+
+    void Jump()
+    {
+        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+    }
+}

@@ -34,39 +34,18 @@ public class MovementScript : MonoBehaviour
 
     void Update()
     {
-        MovePlayer();
+        MoveLogic();
         JumpingLogic();
     }
 
 
-    public void SetDirection(InputAction.CallbackContext context)
-    {
-        inputVector = context.ReadValue<Vector2>();
-
-        // Get input from the Xbox controller
-        moveDirection = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
-
-        // Get the camera's forward vector
-        Vector3 cameraForward = cameraTransform.forward;
-        cameraForward.y = 0f;
-        cameraForward.Normalize();
-
-        // Calculate the direction to move the player and multiply it by the speed
-        moveDirection = cameraForward * moveDirection.z + cameraTransform.right * moveDirection.x;
-        moveDirection *= moveSpeed * Time.deltaTime;
-
-        // Rotate the player to face the direction of movement
-        float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
-    }
-
-    void MovePlayer()
+    void MoveLogic()
     {
         //Set speeds and animation states
         if (moveDirection != Vector3.zero)
-            Walk();
+            SetWalk();
         else if (moveDirection == Vector3.zero)
-            Idle();
+            SetIdle();
 
         // Move the player
         if (moveDirection != Vector3.zero) controller.Move(moveDirection);
@@ -84,20 +63,38 @@ public class MovementScript : MonoBehaviour
         velocity.y += gravity * Time.deltaTime;
         controller.Move(velocity * Time.deltaTime);
     }
-    void Idle()
+
+    void SetIdle()
     {
         playerAnimator.SetFloat("IdleToWalk", 0f);
     }
-
-    void Walk()
+    void SetWalk()
     {
-        float joystickInclination = inputVector.magnitude;
-        playerAnimator.SetFloat("IdleToWalk", joystickInclination);
-
-        moveSpeed = walkSpeed * joystickInclination;
+        playerAnimator.SetFloat("IdleToWalk", inputVector.magnitude);
+        moveSpeed = walkSpeed * inputVector.magnitude;
     }
 
-    public void Jump(InputAction.CallbackContext context)
+    public void ActionMove(InputAction.CallbackContext context)
+    {
+        inputVector = context.ReadValue<Vector2>();
+
+        // Get input from the Xbox controller
+        moveDirection = new Vector3(inputVector.x, 0f, inputVector.y).normalized;
+
+        // Get the camera's forward vector
+        Vector3 cameraForward = cameraTransform.forward;
+        cameraForward.y = 0f;
+        cameraForward.Normalize();
+
+        // Calculate the direction to move the player and multiply it by the speed
+        moveDirection = cameraForward * moveDirection.z + cameraTransform.right * moveDirection.x;
+        moveDirection *= moveSpeed * Time.deltaTime;
+
+        // Rotate the player to face the direction of movement
+        float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+        if (targetAngle != 0f) transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+    }
+    public void ActionJump(InputAction.CallbackContext context)
     {
         // Check if the player is on the ground
         isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);

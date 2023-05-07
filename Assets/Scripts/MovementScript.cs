@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Cinemachine;
 
 public class MovementScript : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class MovementScript : MonoBehaviour
     public LayerMask groundMask;
     public float groundRayDistance = 0.4f;
 
+    public CinemachineFreeLook freeCamera;
 
     private void Start()
     {
@@ -58,6 +60,17 @@ public class MovementScript : MonoBehaviour
             SetRun();
         else if (moveDirection == Vector3.zero)
             SetIdle();
+
+        //Recenter Camera If Walking Forwards
+        if(inputVector.y > 0.45f)
+        {
+            freeCamera.m_RecenterToTargetHeading.m_enabled = true;
+            freeCamera.m_YAxisRecentering.m_enabled = true;
+        } else
+        {
+            freeCamera.m_RecenterToTargetHeading.m_enabled = false;
+            freeCamera.m_YAxisRecentering.m_enabled = false;
+        }
 
         //Quit Running
         if (moveSpeed <= 4f || Vector2.Angle(currentInputVector, inputVector) > 90f)
@@ -119,6 +132,8 @@ public class MovementScript : MonoBehaviour
     void SetIdle()
     {
         playerAnimator.SetFloat("IdleToWalk", 0f);
+
+
         isRunning = false;
     }
     void SetWalk()

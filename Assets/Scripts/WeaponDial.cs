@@ -5,70 +5,74 @@ using UnityEngine;
 public class WeaponDial : MonoBehaviour
 {
 
-    public Transform plane;
-    public Transform point1;
-    public Transform point2;
-
+    public Transform refPlaneT;
     private Vector3 planeNormal;
 
-    private Vector3 topPoint;
-    private Vector3 bottomPoint;
+    public Transform topT;
+    public Transform bottomT;
+
+    private Vector3 topProjection;
+    private Vector3 bottomProjection;
+
+    private Vector3 topRefPoint;
+    private Vector3 centerRefPoint;
+    private Vector3 bottomRefPoint;
+
+    private float topAngle;
+    private float bottomAngle;
+
+    private float radius;
 
     void Update()
     {
-        planeNormal = plane.up;
+        planeNormal = refPlaneT.up;
 
         // Calculate the projection of the two points onto the plane
-        Vector3 projection1 = Vector3.ProjectOnPlane(point1.position - plane.position, planeNormal) + plane.position;
-        Vector3 projection2 = Vector3.ProjectOnPlane(point2.position - plane.position, planeNormal) + plane.position;
+        topProjection = Vector3.ProjectOnPlane(topT.position - refPlaneT.position, planeNormal) + refPlaneT.position;
+        bottomProjection = Vector3.ProjectOnPlane(bottomT.position - refPlaneT.position, planeNormal) + refPlaneT.position;
 
         // Calculate the center and radius of the circle that passes through both projection points
-        Vector3 center = (projection1 + projection2) / 2.0f;
-        float radius = Vector3.Distance(center, projection1);
+        centerRefPoint = (topProjection + bottomProjection) / 2.0f;
+        radius = Vector3.Distance(centerRefPoint, topProjection);
+
+        // Calculate the points to use as reference
+        topRefPoint = centerRefPoint + Vector3.up * radius;
+        bottomRefPoint = centerRefPoint + Vector3.down * radius;
 
         // Calculate the angle of inclination of the two projection points
-        topPoint = center + Vector3.up * radius;
-        bottomPoint = center + Vector3.down * radius;
+        Vector3 topDirection;
+        Vector3 bottomDirection;
 
-        Vector3 dir1 = topPoint - center;
-        Vector3 dir2 = projection1 - center;
-        float angle = Vector3.SignedAngle(dir2, dir1, center);
+        topDirection = topRefPoint - centerRefPoint;
+        bottomDirection = topProjection - centerRefPoint;
+        topAngle = Vector3.SignedAngle(bottomDirection, topDirection, centerRefPoint);
 
-        dir1 = bottomPoint - center;
-        dir2 = projection1 - center;
-        float angle2 = Vector3.SignedAngle(dir2, dir1, center);
+        topDirection = bottomRefPoint - centerRefPoint;
+        bottomDirection = topProjection - centerRefPoint;
+        bottomAngle = Vector3.SignedAngle(bottomDirection, topDirection, centerRefPoint);
 
-        // Output the angle to the console
-        Debug.Log("Top: " + angle + " degrees");
-        Debug.Log("Bottom: " + angle2 + " degrees");
+        print("Top: " + topAngle + " degrees");
+        print("Bottom: " + bottomAngle + " degrees");
     }
 
     void OnDrawGizmos()
     {
-        // Calculate the projection of the two points onto the plane
-        Vector3 projection1 = Vector3.ProjectOnPlane(point1.position - plane.position, planeNormal) + plane.position;
-        Vector3 projection2 = Vector3.ProjectOnPlane(point2.position - plane.position, planeNormal) + plane.position;
-
-        // Calculate the center and radius of the circle that passes through both projection points
-        Vector3 center = (projection1 + projection2) / 2.0f;
-        float radius = Vector3.Distance(center, projection1);
-
-        // Draw the projection points and circle using Gizmos
+        // Draw the projection points and circle
         Gizmos.color = Color.red;
-        Gizmos.DrawSphere(projection1, 0.1f);
-        Gizmos.DrawSphere(projection2, 0.1f);
+        Gizmos.DrawSphere(topProjection, 0.1f);
+        Gizmos.DrawSphere(bottomProjection, 0.1f);
         Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(center, radius);
+        Gizmos.DrawWireSphere(centerRefPoint, radius);
 
-        // Calculate the top point of the circle and draw a line to it from each projection point
+        // Draw Lines For Top Point
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(center, topPoint);
-        Gizmos.DrawLine(projection1, center);
+        Gizmos.DrawLine(centerRefPoint, topRefPoint);
+        Gizmos.DrawLine(topProjection, centerRefPoint);
 
-        // Calculate the top point of the circle and draw a line to it from each projection point
+        // Draw Lines For Bottom Point
         Gizmos.color = Color.green;
-        Gizmos.DrawLine(center, bottomPoint);
-        Gizmos.DrawLine(projection2, center);
+        Gizmos.DrawLine(centerRefPoint, bottomRefPoint);
+        Gizmos.DrawLine(bottomProjection, centerRefPoint);
     }
 
 }

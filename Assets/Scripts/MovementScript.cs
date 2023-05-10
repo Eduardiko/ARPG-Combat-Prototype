@@ -1,83 +1,107 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using Cinemachine;
 
 public class MovementScript : MonoBehaviour
 {
 
     //References
-    private CharacterController controller;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform groundCheck;
+    [SerializeField] private LayerMask groundMask;
+    private CharacterController controller;
     private Animator playerAnimator;
 
     //Variables
-    [SerializeField] private float moveSpeed = 0f;
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 8f;
-    private bool isRunning = false;
-    private Vector3 moveDirection;
+    private float moveSpeed = 0f;
+
     private Vector2 inputVector;
     private Vector2 currentInputVector;
     private Vector2 smoothInputVelocity;
 
+    private Vector3 moveDirection;
+
     [SerializeField] private float jumpHeight = 0.5f;
     [SerializeField] private float gravity = -9.81f;
-    private Vector3 velocity;
+    private Vector3 jumpVelocity;
 
-    private bool isGrounded;
-    public LayerMask groundMask;
-    public float groundRayDistance = 0.4f;
+    private float groundRayDistance = 0.4f;
 
-    public CinemachineFreeLook freeCamera;
+    // State Bools
+    private bool isRunning = false;
+    private bool isGrounded = false;
+
+    private bool tryingToRun = false;
+    private bool tryingToJump = false;
+
+    private bool ableToJump = false;
+    private bool ableToRun = false;
+    private bool movingInput = false;
 
     private void Start()
     {
         controller = GetComponent<CharacterController>();
         playerAnimator = GetComponentInChildren<Animator>();
-        velocity = Vector3.zero;
+        jumpVelocity = Vector3.zero;
     }
 
     void Update()
     {
+        SetPossibleActions();
         MoveLogic();
         JumpingLogic();
     }
 
+    void SetPossibleActions()
+    {
+        // Check if the player is on the ground
+        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
 
+        //Is There Input?
+        if (inputVector != Vector2.zero)
+            movingInput = true;
+        else
+            movingInput = false;
+
+        // Can The Player Run?
+        if (movingInput && isGrounded)
+            ableToRun = true;
+        else
+            ableToRun = false;
+
+        // Can The Player Jump?
+        if (isGrounded && jumpVelocity.y < 0)
+            ableToJump = true;
+        else
+            ableToJump = false;
+
+    }
+
+    #region MOVEMENT
     void MoveLogic()
     {
+        //Set speeds and animation states
+        if(movingInput)
+        {
+            if (ableToRun && tryingToRun)
+                isRunning = true;
+            else
+                tryingToRun = false;
+
+            if (isRunning && Vector2.Angle(currentInputVector, inputVector) < 90f)
+                Run();
+            else
+                Walk();
+        } else
+        {
+            Idle();
+        }
 
         //Smooth Movement
         float smoothInputSpeed = 0.15f;
         currentInputVector = Vector2.SmoothDamp(currentInputVector, inputVector, ref smoothInputVelocity, smoothInputSpeed);
         moveDirection = new Vector3(currentInputVector.x, 0f, currentInputVector.y).normalized;
-
-        //Set speeds and animation states
-        if (moveDirection != Vector3.zero && !isRunning)
-            SetWalk();
-        else if (moveDirection != Vector3.zero && isRunning)
-            SetRun();
-        else if (moveDirection == Vector3.zero)
-            SetIdle();
-
-        //Recenter Camera If Walking Forwards
-        if(inputVector.y > 0.45f)
-        {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = true;
-            freeCamera.m_YAxisRecentering.m_enabled = true;
-        } else
-        {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = false;
-            freeCamera.m_YAxisRecentering.m_enabled = false;
-        }
-
-        //Quit Running
-        if (moveSpeed <= 4f || Vector2.Angle(currentInputVector, inputVector) > 90f)
-        {
-            playerAnimator.SetTrigger("RunToIdle");
-            isRunning = false;
-        }
 
         // Get the camera's forward vector
         Vector3 cameraForward = cameraTransform.forward;
@@ -98,81 +122,126 @@ public class MovementScript : MonoBehaviour
             controller.Move(moveDirection);
         }
     }
+    void Idle()
+    {
+        // Manage Running
+        if (isRunning)
+            isRunning = false;
 
+        tryingToRun = false;
+
+        // Set Speed
+        if (moveSpeed > 0.2f)
+            moveSpeed = DecelerateSpeed(moveSpeed, 0.1f);
+        else if (currentInputVector.magnitude < 0.01f)
+        {
+            currentInputVector = Vector2.zero;
+            moveSpeed = 0f;
+        }
+
+        // Set Animation
+        playerAnimator.SetTrigger("RunToIdle");
+        playerAnimator.SetFloat("IdleToWalk", currentInputVector.magnitude / 3);
+
+    }
+    void Walk()
+    {
+        // Manage Running
+        if (isRunning)
+            isRunning = false;
+
+        // Set Speed
+        if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
+        moveSpeed = walkSpeed * currentInputVector.magnitude;
+
+        // Set Animation
+        playerAnimator.SetTrigger("RunToIdle");
+        playerAnimator.SetFloat("IdleToWalk", currentInputVector.magnitude/3);
+    }
+
+    void Run()
+    {
+        // Manage Running
+        isRunning = true;
+        
+        // Set Speed
+        if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
+        moveSpeed = AccelerateSpeed(moveSpeed, 0.5f, runSpeed);
+        if(moveSpeed > runSpeed) moveSpeed = runSpeed;
+
+
+        // Set Animation
+        playerAnimator.SetTrigger("WalkToRun");
+    }
+    #endregion
+
+    #region JUMP
     void JumpingLogic()
     {
-        // Check if the player is on the ground
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
+        if (ableToJump && tryingToJump)
+            Jump();
+        else
+            tryingToJump = false;
 
-        //Set velocity negative so we don't get errors with positive velocities
-        if (isGrounded && velocity.y < 0)
+        //Set jumpVelocity negative so we don't get errors with positive velocities
+        if (isGrounded && jumpVelocity.y < 0)
         {
-            velocity.y = -2f;
+            jumpVelocity.y = -2f;
         }
 
         //In-air logic
-
-        if (velocity.y >= 0.3f)
+        if (jumpVelocity.y >= 0.3f)
         {
-            velocity.y += (gravity - velocity.y) * Time.deltaTime;
+            jumpVelocity.y += (gravity - jumpVelocity.y) * Time.deltaTime;
         }
-        else if(velocity.y < 0.3f && velocity.y >= 0f)
+        else if(jumpVelocity.y < 0.3f && jumpVelocity.y >= 0f)
         {
-            velocity.y += gravity/5f * Time.deltaTime;
+            jumpVelocity.y += gravity/4f * Time.deltaTime;
         }
         else
         {
-            velocity.y += (gravity - velocity.y * velocity.y / 5f) * 1.75f * Time.deltaTime;
+            jumpVelocity.y += (gravity - jumpVelocity.y * jumpVelocity.y / 5f) * 1.5f * Time.deltaTime;
         }
- 
-
-        controller.Move(velocity * Time.deltaTime);
+        
+        // Move vertically
+        controller.Move(jumpVelocity * Time.deltaTime);
     }
-
-    void SetIdle()
+    void Jump()
     {
-        playerAnimator.SetFloat("IdleToWalk", 0f);
-
-
-        isRunning = false;
-    }
-    void SetWalk()
-    {
-        playerAnimator.SetFloat("IdleToWalk", currentInputVector.magnitude/3);
-        if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
-        moveSpeed = walkSpeed * currentInputVector.magnitude;
-    }
-
-    void SetRun()
-    {
-        playerAnimator.SetTrigger("WalkToRun");
-
-        if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
-        moveSpeed = runSpeed * currentInputVector.magnitude;
-    }
-
-    void SetJump()
-    {
-        //ToDo: If Animator is idle "IdleToJump" if not "WalkToJump"
-        velocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-
+        jumpVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
         playerAnimator.SetTrigger("WalkToJump");
     }
+    #endregion
 
+    #region ACTIONS
     public void ActionMove(InputAction.CallbackContext context)
     {
         inputVector = context.ReadValue<Vector2>();
     }
     public void ActionJump(InputAction.CallbackContext context)
     {
-        if (isGrounded && velocity.y < 0 && context.performed)
-        {
-            SetJump();
-        }
+        if(context.performed) tryingToJump = true;
     }
 
     public void ActionRun(InputAction.CallbackContext context)
     {
-        if(context.performed && isGrounded) isRunning = true;
+        if (context.performed) tryingToRun = true;
     }
+    #endregion
+
+    #region HERLPERS
+    public float DecelerateSpeed(float currentSpeed, float decelerationTime)
+    {
+        float decelerationRate = Mathf.Log(2) / decelerationTime;
+        float deceleratedSpeed = currentSpeed * Mathf.Exp(-decelerationRate * Time.deltaTime);
+        return deceleratedSpeed;
+    }
+
+    public float AccelerateSpeed(float currentSpeed, float accelerationTime, float maxSpeed)
+    {
+        float accelerationRate = Mathf.Log(maxSpeed / currentSpeed) / accelerationTime;
+        float acceleratedSpeed = currentSpeed * Mathf.Exp(accelerationRate * Time.deltaTime);
+        return Mathf.Min(acceleratedSpeed, maxSpeed);
+    }
+    #endregion
 }

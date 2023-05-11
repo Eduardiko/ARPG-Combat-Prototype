@@ -26,8 +26,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 9165311666511839612}
-  m_LocalRotation: {x: -0, y: 0.9999527, z: -0, w: 0.009729274}
-  m_LocalPosition: {x: -0.6965196, y: -1.9231452, z: -35.638885}
+  m_LocalRotation: {x: -0.09296914, y: 0.00000003539026, z: -0.000000003317837, w: -0.995669}
+  m_LocalPosition: {x: 0.000000012040796, y: 2.6827064, z: -7.854191}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9165311666933903317}
   - component: {fileID: 9165311666933903319}
+  - component: {fileID: 1478662677}
   - component: {fileID: 9165311666933903313}
   - component: {fileID: 9165311666933903316}
   - component: {fileID: 9165311666933903318}
@@ -172,15 +173,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 9165311666511839609}
   groundCheck: {fileID: 9165311667765459009}
-  moveSpeed: 5
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
   walkSpeed: 6
   runSpeed: 10
   jumpHeight: 3
   gravity: -12
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
-  groundRayDistance: 0.4
+--- !u!114 &1478662677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9165311667729916191}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7329e57b6ce3b48489b07c355d4b2f7d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
   freeCamera: {fileID: 0}
 --- !u!114 &9165311666933903313
 MonoBehaviour:
@@ -212,6 +223,18 @@ MonoBehaviour:
       - m_Target: {fileID: 9165311666933903319}
         m_TargetAssemblyTypeName: MovementScript, Assembly-CSharp
         m_MethodName: ActionMove
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1478662677}
+        m_TargetAssemblyTypeName: CameraController, Assembly-CSharp
+        m_MethodName: ActionLook
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

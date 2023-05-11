@@ -7,23 +7,29 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     public CinemachineFreeLook freeCamera;
-    private Vector2 inputVector;
+    private Vector2 inputMoveVector;
+    private Vector2 inputLookVector;
 
     // Update is called once per frame
     void Update()
     {
         //Recenter Camera If Walking Forwards
-        if (inputVector.y >= -0.7 && inputVector != Vector2.zero)
-        {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = true;
-            freeCamera.m_YAxisRecentering.m_enabled = true;
-        }
-        else if (inputVector.y < -0.95 && inputVector != Vector2.zero)
+        if(inputLookVector != Vector2.zero)
         {
             freeCamera.m_RecenterToTargetHeading.m_enabled = false;
             freeCamera.m_YAxisRecentering.m_enabled = false;
         }
-        else if (inputVector.y < -0.7 && inputVector != Vector2.zero)
+        if (inputMoveVector.y >= -0.7 && inputMoveVector != Vector2.zero)
+        {
+            freeCamera.m_RecenterToTargetHeading.m_enabled = true;
+            freeCamera.m_YAxisRecentering.m_enabled = true;
+        }
+        else if (inputMoveVector.y < -0.95 && inputMoveVector != Vector2.zero)
+        {
+            freeCamera.m_RecenterToTargetHeading.m_enabled = false;
+            freeCamera.m_YAxisRecentering.m_enabled = false;
+        }
+        else if (inputMoveVector.y < -0.7 && inputMoveVector != Vector2.zero)
         {
             freeCamera.m_RecenterToTargetHeading.m_enabled = true;
             freeCamera.m_YAxisRecentering.m_enabled = false;
@@ -33,10 +39,21 @@ public class CameraController : MonoBehaviour
             freeCamera.m_RecenterToTargetHeading.m_enabled = false;
             freeCamera.m_YAxisRecentering.m_enabled = false;
         }
+
+    }
+
+    public void ActionMove(InputAction.CallbackContext context)
+    {
+        inputMoveVector = context.ReadValue<Vector2>();
     }
 
     public void ActionLook(InputAction.CallbackContext context)
     {
-        inputVector = context.ReadValue<Vector2>();
+        inputLookVector = context.ReadValue<Vector2>();
+    }
+
+    public void ActionFocus(InputAction.CallbackContext context)
+    {
+        inputMoveVector = context.ReadValue<Vector2>();
     }
 }

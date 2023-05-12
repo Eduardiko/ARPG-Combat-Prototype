@@ -40,16 +40,16 @@ public class WeaponDial : MonoBehaviour
         bottomRefPoint = centerRefPoint + Vector3.down * radius;
 
         // Calculate the angle of inclination of the two projection points
-        Vector3 topDirection;
-        Vector3 bottomDirection;
+        Vector3 centerToRef;
+        Vector3 centerToPoint;
 
-        topDirection = topRefPoint - centerRefPoint;
-        bottomDirection = topProjection - centerRefPoint;
-        topAngle = Vector3.SignedAngle(bottomDirection, topDirection, centerRefPoint);
+        centerToRef = topRefPoint - centerRefPoint;
+        centerToPoint = topProjection - centerRefPoint;
+        topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, centerRefPoint);
 
-        topDirection = bottomRefPoint - centerRefPoint;
-        bottomDirection = topProjection - centerRefPoint;
-        bottomAngle = Vector3.SignedAngle(bottomDirection, topDirection, centerRefPoint);
+        centerToRef = bottomRefPoint - centerRefPoint;
+        centerToPoint = topProjection - centerRefPoint;
+        bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, centerRefPoint);
 
         print("Top: " + topAngle + " degrees");
         print("Bottom: " + bottomAngle + " degrees");

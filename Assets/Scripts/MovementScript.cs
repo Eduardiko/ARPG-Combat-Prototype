@@ -185,23 +185,15 @@ public class MovementScript : MonoBehaviour
 
         //Set jumpVelocity negative so we don't get errors with positive velocities
         if (isGrounded && jumpVelocity.y < 0)
-        {
             jumpVelocity.y = -2f;
-        }
 
         //In-air logic
         if (jumpVelocity.y >= 0.3f)
-        {
             jumpVelocity.y += (gravity - jumpVelocity.y) * Time.deltaTime;
-        }
         else if(jumpVelocity.y < 0.3f && jumpVelocity.y >= 0f)
-        {
             jumpVelocity.y += gravity/4f * Time.deltaTime;
-        }
         else
-        {
             jumpVelocity.y += (gravity - jumpVelocity.y * jumpVelocity.y / 5f) * 1.5f * Time.deltaTime;
-        }
         
         // Move vertically
         controller.Move(jumpVelocity * Time.deltaTime);

@@ -2939,7 +2939,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   freeCamera: {fileID: 1717960157}
   playerLookAt: {fileID: 6522471015725464942}
-  lockDetectionRadius: 15
+  lockDetectionRadius: 46.44
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &2794094414115747824
 GameObject:
   m_ObjectHideFlags: 0

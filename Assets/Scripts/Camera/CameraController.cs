@@ -116,30 +116,28 @@ public class CameraController : MonoBehaviour
 
     private void SetLockedTarget()
     {
-        //cinemachineAnimator.Play("LockCamera");
 
-
-        //var dir = nearestEnemy.transform.position + new Vector3(0, 3, 0) - freeLookCamera.transform.position;
-        //dir.y = 0;
-        //var rotation = Quaternion.LookRotation(dir);
-        //freeLookCamera.transform.rotation = Quaternion.Slerp(freeLookCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
         lockCamera.LookAt = nearestEnemy.transform;
 
         Vector3 direction = nearestEnemy.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         lockCamera.transform.rotation = Quaternion.Slerp(lockCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
 
-        freeLookCamera.m_Priority = 1;
-        lockCamera.m_Priority = 2;
+        freeLookCamera.gameObject.SetActive(false);
+        lockCamera.gameObject.SetActive(true);
+
+        //freeLookCamera.m_Priority = 1;
+        //lockCamera.m_Priority = 2;
     }
 
     private void ResetLocking()
     {
-        //cinemachineAnimator.Play("FreeLookCamera");
         freeLookCamera.LookAt = playerLookAt;
 
-        freeLookCamera.m_Priority = 2;
-        lockCamera.m_Priority = 1;
+        freeLookCamera.gameObject.SetActive(true);
+        lockCamera.gameObject.SetActive(false);
+        //freeLookCamera.m_Priority = 2;
+        //lockCamera.m_Priority = 1;
     }
 
     public void ActionMove(InputAction.CallbackContext context)

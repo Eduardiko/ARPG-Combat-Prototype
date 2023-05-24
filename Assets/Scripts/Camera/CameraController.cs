@@ -7,11 +7,14 @@ using System;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] private CinemachineFreeLook freeCamera;
+    
+    [SerializeField] private CinemachineFreeLook freeLookCamera;
+    [SerializeField] private CinemachineVirtualCamera lockCamera;
 
     [SerializeField] Transform playerLookAt;
-    [SerializeField] private float lockDetectionRadius;
     [SerializeField] private LayerMask enemyLayerMask;
+
+    [SerializeField] Animator cinemachineAnimator;
 
     private Vector2 inputMoveVector;
     private Vector2 inputLookVector;
@@ -19,9 +22,20 @@ public class CameraController : MonoBehaviour
     private bool tryingToLock;
     private bool isLocking = false;
 
+    private GameObject nearestEnemy;
+
+    [Header("Settings")]
+    [SerializeField] private bool zeroVertLook;
+    [SerializeField] private float lockDetectionRadius;
+    [SerializeField] private float lookAtSmoothing;
+    [Tooltip("AngleDetection")] [SerializeField] private float maxLockAngle;
+    //[SerializeField] private float crossHairScale;
+
     // Update is called once per frame
     void Update()
     {
+        
+
         ManageRecentering();
         ManageLocking();
     }
@@ -29,32 +43,35 @@ public class CameraController : MonoBehaviour
     private void ManageRecentering()
     {
         //Recenter Camera If Walking Forwards
+        if (isLocking)   
+            return;
+        
+
         if (inputLookVector != Vector2.zero)
         {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = false;
-            freeCamera.m_YAxisRecentering.m_enabled = false;
+            freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+            freeLookCamera.m_YAxisRecentering.m_enabled = false;
         }
         if (inputMoveVector.y >= -0.7 && inputMoveVector != Vector2.zero)
         {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = true;
-            freeCamera.m_YAxisRecentering.m_enabled = true;
+            freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
+            freeLookCamera.m_YAxisRecentering.m_enabled = true;
         }
         else if (inputMoveVector.y < -0.95 && inputMoveVector != Vector2.zero)
         {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = false;
-            freeCamera.m_YAxisRecentering.m_enabled = false;
+            freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+            freeLookCamera.m_YAxisRecentering.m_enabled = false;
         }
         else if (inputMoveVector.y < -0.7 && inputMoveVector != Vector2.zero)
         {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = true;
-            freeCamera.m_YAxisRecentering.m_enabled = false;
+            freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
+            freeLookCamera.m_YAxisRecentering.m_enabled = false;
         }
         else
         {
-            freeCamera.m_RecenterToTargetHeading.m_enabled = false;
-            freeCamera.m_YAxisRecentering.m_enabled = false;
+            freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+            freeLookCamera.m_YAxisRecentering.m_enabled = false;
         }
-
     }
 
     private void ManageLocking()
@@ -67,33 +84,62 @@ public class CameraController : MonoBehaviour
         {
             tryingToLock = false;
 
-            Collider[] hitColliders = Physics.OverlapSphere(freeCamera.m_Follow.position, lockDetectionRadius, enemyLayerMask);
+            Collider[] hitColliders = Physics.OverlapSphere(freeLookCamera.m_Follow.position, lockDetectionRadius, enemyLayerMask);
             List<GameObject> nearbyEnemies = new List<GameObject>();
+
+            // See video for polish on detection with angle
 
             foreach (Collider collider in hitColliders)
             {
                 if(collider.gameObject.tag == "Enemy") nearbyEnemies.Add(collider.gameObject);
             }
 
-            Vector3 closestDistance = nearbyEnemies[0].transform.position;
-            GameObject nearestEnemy = new GameObject();
+            Vector3 closestDistance = freeLookCamera.m_Follow.transform.position - nearbyEnemies[0].transform.position;
 
             foreach(GameObject enemy in nearbyEnemies)
             {
-                Vector3 relativeDistance = freeCamera.m_Follow.transform.position - enemy.transform.position;
+                Vector3 relativeDistance = freeLookCamera.m_Follow.transform.position - enemy.transform.position;
 
-                if(relativeDistance.magnitude < closestDistance.magnitude) nearestEnemy = enemy;
+                if(relativeDistance.magnitude <= closestDistance.magnitude) nearestEnemy = enemy;
             }
 
-            freeCamera.m_LookAt = nearestEnemy.transform;
         } else if (tryingToLock)
         {
             tryingToLock = false;
-            freeCamera.LookAt = playerLookAt;
+            ResetLocking();
         }
 
+        if(isLocking)
+            SetLockedTarget();
+
+    }
+
+    private void SetLockedTarget()
+    {
+        //cinemachineAnimator.Play("LockCamera");
 
 
+        //var dir = nearestEnemy.transform.position + new Vector3(0, 3, 0) - freeLookCamera.transform.position;
+        //dir.y = 0;
+        //var rotation = Quaternion.LookRotation(dir);
+        //freeLookCamera.transform.rotation = Quaternion.Slerp(freeLookCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
+        lockCamera.LookAt = nearestEnemy.transform;
+
+        Vector3 direction = nearestEnemy.transform.position - transform.position;
+        Quaternion rotation = Quaternion.LookRotation(direction);
+        lockCamera.transform.rotation = Quaternion.Slerp(lockCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
+
+        freeLookCamera.m_Priority = 1;
+        lockCamera.m_Priority = 2;
+    }
+
+    private void ResetLocking()
+    {
+        //cinemachineAnimator.Play("FreeLookCamera");
+        freeLookCamera.LookAt = playerLookAt;
+
+        freeLookCamera.m_Priority = 2;
+        lockCamera.m_Priority = 1;
     }
 
     public void ActionMove(InputAction.CallbackContext context)

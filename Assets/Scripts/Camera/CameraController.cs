@@ -11,11 +11,6 @@ public class CameraController : MonoBehaviour
     [SerializeField] private CinemachineFreeLook freeLookCamera;
     [SerializeField] private CinemachineVirtualCamera lockCamera;
 
-    [SerializeField] Transform playerLookAt;
-    [SerializeField] private LayerMask enemyLayerMask;
-
-    [SerializeField] Animator cinemachineAnimator;
-
     private Vector2 inputMoveVector;
     private Vector2 inputLookVector;
 
@@ -23,46 +18,44 @@ public class CameraController : MonoBehaviour
     private bool isLocking = false;
 
     private GameObject nearestEnemy;
+    private List<GameObject> lockableEnemies = new List<GameObject>();
+    [SerializeField] private LayerMask enemyLayerMask;
 
     [Header("Settings")]
-    [SerializeField] private bool zeroVertLook;
     [SerializeField] private float lockDetectionRadius;
     [SerializeField] private float lookAtSmoothing;
-    [Tooltip("AngleDetection")] [SerializeField] private float maxLockAngle;
-    //[SerializeField] private float crossHairScale;
+    [SerializeField] private float maxLockAngle;
 
     // Update is called once per frame
     void Update()
     {
-        
-
         ManageRecentering();
         ManageLocking();
     }
 
+    #region MANAGERS
     private void ManageRecentering()
     {
-        //Recenter Camera If Walking Forwards
-        if (isLocking)   
+        //Locking && Looking - have priority over walking
+        if (isLocking || inputLookVector != Vector2.zero)
+        {
+            freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
+            freeLookCamera.m_YAxisRecentering.m_enabled = false;
             return;
-        
+        }
 
-        if (inputLookVector != Vector2.zero)
+        // Walking
+        if (inputMoveVector == Vector2.zero || inputMoveVector.y < -0.95)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
             freeLookCamera.m_YAxisRecentering.m_enabled = false;
         }
-        if (inputMoveVector.y >= -0.7 && inputMoveVector != Vector2.zero)
+        else if (inputMoveVector.y >= -0.7)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
             freeLookCamera.m_YAxisRecentering.m_enabled = true;
         }
-        else if (inputMoveVector.y < -0.95 && inputMoveVector != Vector2.zero)
-        {
-            freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
-            freeLookCamera.m_YAxisRecentering.m_enabled = false;
-        }
-        else if (inputMoveVector.y < -0.7 && inputMoveVector != Vector2.zero)
+        else if (inputMoveVector.y < -0.7)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
             freeLookCamera.m_YAxisRecentering.m_enabled = false;
@@ -76,70 +69,105 @@ public class CameraController : MonoBehaviour
 
     private void ManageLocking()
     {
-        if (tryingToLock)
-            isLocking = !isLocking;
-
-
-        if(tryingToLock && isLocking)
+        if (tryingToLock && !isLocking)
         {
             tryingToLock = false;
 
-            Collider[] hitColliders = Physics.OverlapSphere(freeLookCamera.m_Follow.position, lockDetectionRadius, enemyLayerMask);
-            List<GameObject> nearbyEnemies = new List<GameObject>();
-
-            // See video for polish on detection with angle
-
-            foreach (Collider collider in hitColliders)
+            // If there are not available enemies, don't change the camera
+            if (FindLockableTargets())
             {
-                if(collider.gameObject.tag == "Enemy") nearbyEnemies.Add(collider.gameObject);
+                isLocking = true;
+                SetLockTarget();
+                SetLockCamera();
             }
-
-            Vector3 closestDistance = freeLookCamera.m_Follow.transform.position - nearbyEnemies[0].transform.position;
-
-            foreach(GameObject enemy in nearbyEnemies)
-            {
-                Vector3 relativeDistance = freeLookCamera.m_Follow.transform.position - enemy.transform.position;
-
-                if(relativeDistance.magnitude <= closestDistance.magnitude) nearestEnemy = enemy;
-            }
-
-        } else if (tryingToLock)
+            else
+                RecenterFreeLookCamera();
+        }
+        else if (tryingToLock && isLocking)
         {
+            // If locking, return to freeLook
             tryingToLock = false;
-            ResetLocking();
+            isLocking = false;
+            SetFreeLookCamera();
         }
 
-        if(isLocking)
-            SetLockedTarget();
+        // Updates camera so player is always in-sight
+        if (isLocking)
+            UpdateLockedCamera();
 
     }
+    #endregion
 
-    private void SetLockedTarget()
+    #region HELPERS
+    private bool FindLockableTargets()
     {
+        lockableEnemies.Clear();
 
+        // Find all nearby GameObjects && LookAt Vector of the camera
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, lockDetectionRadius, enemyLayerMask);
+        Vector3 lookDir = freeLookCamera.m_LookAt.transform.position - freeLookCamera.transform.position;
+
+        foreach (Collider collider in hitColliders)
+        {
+            // Calculate angle between the relative direction w/enemy and the "center of screen" vectors to determine if they are inside the range
+            Vector3 dir = collider.gameObject.transform.position - freeLookCamera.transform.position;
+            float angle = Vector3.Angle(lookDir, dir);
+
+            if (collider.gameObject.tag == "Enemy" && angle < maxLockAngle)
+            {
+                lockableEnemies.Add(collider.gameObject);
+            }
+        }
+
+        if (lockableEnemies.Count == 0) return false;
+
+        return true;
+    }
+    private void UpdateLockedCamera()
+    {
         lockCamera.LookAt = nearestEnemy.transform;
 
+        // Rotates the camera so that the forward Vector is always the Vector between enemy & player
         Vector3 direction = nearestEnemy.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         lockCamera.transform.rotation = Quaternion.Slerp(lockCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
-
-        freeLookCamera.gameObject.SetActive(false);
-        lockCamera.gameObject.SetActive(true);
-
-        //freeLookCamera.m_Priority = 1;
-        //lockCamera.m_Priority = 2;
     }
 
-    private void ResetLocking()
+    private void RecenterFreeLookCamera()
     {
-        freeLookCamera.LookAt = playerLookAt;
+        // Rotates the camera so that the forward Vector is always the Vector between enemy & player
 
+    }
+
+    #endregion
+
+    #region SETTERS
+    private void SetFreeLookCamera()
+    {
         freeLookCamera.gameObject.SetActive(true);
         lockCamera.gameObject.SetActive(false);
-        //freeLookCamera.m_Priority = 2;
-        //lockCamera.m_Priority = 1;
     }
 
+    private void SetLockCamera()
+    {
+        lockCamera.gameObject.SetActive(true);
+        freeLookCamera.gameObject.SetActive(false);
+    }
+
+    private void SetLockTarget()
+    {
+        // Calculates the nearest enemy from the list of available locking enemies
+        Vector3 closestDistance = freeLookCamera.m_Follow.transform.position - lockableEnemies[0].transform.position;
+
+        foreach (GameObject enemy in lockableEnemies)
+        {
+            Vector3 relativeDistance = freeLookCamera.m_Follow.transform.position - enemy.transform.position;
+            if (relativeDistance.magnitude <= closestDistance.magnitude) nearestEnemy = enemy;
+        }
+    }
+    #endregion
+
+    #region ACTIONS
     public void ActionMove(InputAction.CallbackContext context)
     {
         inputMoveVector = context.ReadValue<Vector2>();
@@ -154,4 +182,5 @@ public class CameraController : MonoBehaviour
     {
         if (context.performed) tryingToLock = true;
     }
+    #endregion
 }

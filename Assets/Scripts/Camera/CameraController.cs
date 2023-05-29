@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     
     [SerializeField] private CinemachineFreeLook freeLookCamera;
     [SerializeField] private CinemachineVirtualCamera lockCamera;
+    [SerializeField] private LayerMask enemyLayerMask;
 
     private Vector2 inputMoveVector;
     private Vector2 inputLookVector;
@@ -19,7 +20,7 @@ public class CameraController : MonoBehaviour
 
     private GameObject nearestEnemy;
     private List<GameObject> lockableEnemies = new List<GameObject>();
-    [SerializeField] private LayerMask enemyLayerMask;
+    private Vector3 playerToNearestEnemyVector = new Vector3();
 
     [Header("Settings")]
     [SerializeField] private float lockDetectionRadius;
@@ -135,6 +136,14 @@ public class CameraController : MonoBehaviour
     private void UpdateLockedCamera()
     {
         lockCamera.LookAt = nearestEnemy.transform;
+
+        playerToNearestEnemyVector = transform.position - nearestEnemy.transform.position;
+
+        if(playerToNearestEnemyVector.magnitude > lockDetectionRadius + 5f)
+        {
+            isLocking = false;
+            SetFreeLookCamera();
+        }
 
         // Rotates the camera so that the forward Vector is always the Vector between enemy & player
         Vector3 direction = nearestEnemy.transform.position - transform.position;

@@ -26,7 +26,18 @@ public class CameraController : MonoBehaviour
     [SerializeField] private float lookAtSmoothing;
     [SerializeField] private float maxLockAngle;
 
-    // Update is called once per frame
+    private float initialFreeLookX;
+    private float initialFreeLookY;
+
+    private void Start()
+    {
+        initialFreeLookX = freeLookCamera.m_XAxis.Value;
+        print(initialFreeLookX);
+        initialFreeLookY = freeLookCamera.m_YAxis.Value;
+        print(initialFreeLookY);
+
+    }
+
     void Update()
     {
         ManageRecentering();
@@ -80,8 +91,6 @@ public class CameraController : MonoBehaviour
                 SetLockTarget();
                 SetLockCamera();
             }
-            else
-                RecenterFreeLookCamera();
         }
         else if (tryingToLock && isLocking)
         {
@@ -131,12 +140,6 @@ public class CameraController : MonoBehaviour
         Vector3 direction = nearestEnemy.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         lockCamera.transform.rotation = Quaternion.Slerp(lockCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
-    }
-
-    private void RecenterFreeLookCamera()
-    {
-        // Rotates the camera so that the forward Vector is always the Vector between enemy & player
-
     }
 
     #endregion

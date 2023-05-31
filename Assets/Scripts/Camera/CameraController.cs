@@ -78,14 +78,10 @@ public class CameraController : MonoBehaviour
     {
         if (tryingToLock && !isLocking)
         {
-            tryingToLock = false;
-
             // If there are not available enemies, don't change the camera
+            tryingToLock = false;
             if (FindLockableTargets())
-            {
-                SetLockTarget();
                 SetLockCamera();
-            }
         }
         else if (tryingToLock && isLocking)
         {
@@ -109,6 +105,8 @@ public class CameraController : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapSphere(transform.position, lockDetectionRadius, enemyLayerMask);
         Vector3 lookDir = freeLookCamera.m_LookAt.transform.position - freeLookCamera.transform.position;
 
+        float closestAngle = maxLockAngle;
+
         foreach (Collider collider in hitColliders)
         {
             // Calculate angle between the relative direction w/enemy and the "center of screen" vectors to determine if they are inside the range
@@ -118,6 +116,13 @@ public class CameraController : MonoBehaviour
             if (collider.gameObject.tag == "Enemy" && angle < maxLockAngle)
             {
                 lockableEnemies.Add(collider.gameObject);
+
+                // Set Lockable Target
+                if (angle < closestAngle)
+                {
+                    closestAngle = angle;
+                    nearestEnemy = collider.gameObject;
+                }
             }
         }
 
@@ -171,18 +176,6 @@ public class CameraController : MonoBehaviour
         freeLookCamera.gameObject.SetActive(false);
     }
 
-    private void SetLockTarget()
-    {
-        // Calculates the nearest enemy from the list of available locking enemies
-        Vector3 closestDistance = freeLookCamera.m_Follow.transform.position - lockableEnemies[0].transform.position;
-
-        foreach (GameObject enemy in lockableEnemies)
-        {
-            Vector3 relativeDistance = freeLookCamera.m_Follow.transform.position - enemy.transform.position;
-            if (relativeDistance.magnitude <= closestDistance.magnitude) nearestEnemy = enemy;
-        }
-
-    }
     #endregion
 
     #region ACTIONS

@@ -1,13 +1,26 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
+[System.Serializable]
+public class AnimationTriggerKeys
+{
+    public string jumpTriggerKey;
+    public string runTriggerKey;
+    public string isRunningKey;
+    public string idleWalkRunKey;
+    public string directionKey;
+    public string orientationKey;
+}
+
 public class MovementScript : MonoBehaviour
 {
-
+    
     //References
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
+
     private CharacterController controller;
     private Animator playerAnimator;
 
@@ -38,6 +51,8 @@ public class MovementScript : MonoBehaviour
     private bool ableToJump = false;
     private bool ableToRun = false;
     private bool movingInput = false;
+
+    [SerializeField] AnimationTriggerKeys animKeys;
 
     private void Start()
     {
@@ -85,16 +100,20 @@ public class MovementScript : MonoBehaviour
         if(movingInput)
         {
             if (ableToRun && tryingToRun)
-                isRunning = true;
+                EnterRunning();
             else
                 tryingToRun = false;
 
             if (isRunning && Vector2.Angle(currentInputVector, inputVector) < 90f)
                 Run();
             else
+            {
+                if(isRunning) QuitRunning();
                 Walk();
+            }
         } else
         {
+            if(isRunning) QuitRunning();
             Idle();
         }
 
@@ -124,12 +143,6 @@ public class MovementScript : MonoBehaviour
     }
     void Idle()
     {
-        // Manage Running
-        if (isRunning)
-            isRunning = false;
-
-        tryingToRun = false;
-
         // Set Speed
         if (moveSpeed > 0.2f)
             moveSpeed = DecelerateSpeed(moveSpeed, 0.1f);
@@ -140,38 +153,25 @@ public class MovementScript : MonoBehaviour
         }
 
         // Set Animation
-        playerAnimator.SetTrigger("RunToIdle");
-        playerAnimator.SetFloat("IdleToWalk", currentInputVector.magnitude / 3);
+        playerAnimator.SetFloat(animKeys.idleWalkRunKey, currentInputVector.magnitude);
 
     }
     void Walk()
     {
-        // Manage Running
-        if (isRunning)
-            isRunning = false;
-
         // Set Speed
         if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
         moveSpeed = walkSpeed * currentInputVector.magnitude;
 
         // Set Animation
-        playerAnimator.SetTrigger("RunToIdle");
-        playerAnimator.SetFloat("IdleToWalk", currentInputVector.magnitude/3);
+        playerAnimator.SetFloat(animKeys.idleWalkRunKey, currentInputVector.magnitude);
     }
 
     void Run()
-    {
-        // Manage Running
-        isRunning = true;
-        
+    {       
         // Set Speed
         if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
         moveSpeed = AccelerateSpeed(moveSpeed, 0.5f, runSpeed);
         if(moveSpeed > runSpeed) moveSpeed = runSpeed;
-
-
-        // Set Animation
-        playerAnimator.SetTrigger("WalkToRun");
     }
     #endregion
 
@@ -201,7 +201,7 @@ public class MovementScript : MonoBehaviour
     void Jump()
     {
         jumpVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
-        playerAnimator.SetTrigger("WalkToJump");
+        playerAnimator.SetTrigger(animKeys.jumpTriggerKey);
     }
     #endregion
 
@@ -222,18 +222,36 @@ public class MovementScript : MonoBehaviour
     #endregion
 
     #region HERLPERS
-    public float DecelerateSpeed(float currentSpeed, float decelerationTime)
+    private float DecelerateSpeed(float currentSpeed, float decelerationTime)
     {
         float decelerationRate = Mathf.Log(2) / decelerationTime;
         float deceleratedSpeed = currentSpeed * Mathf.Exp(-decelerationRate * Time.deltaTime);
         return deceleratedSpeed;
     }
 
-    public float AccelerateSpeed(float currentSpeed, float accelerationTime, float maxSpeed)
+    private float AccelerateSpeed(float currentSpeed, float accelerationTime, float maxSpeed)
     {
         float accelerationRate = Mathf.Log(maxSpeed / currentSpeed) / accelerationTime;
         float acceleratedSpeed = currentSpeed * Mathf.Exp(accelerationRate * Time.deltaTime);
         return Mathf.Min(acceleratedSpeed, maxSpeed);
     }
+
+    private void EnterRunning()
+    {
+        isRunning = true;
+        tryingToRun = false;
+
+        // Set Animation
+        playerAnimator.SetBool(animKeys.isRunningKey, true);
+    }
+    private void QuitRunning()
+    {
+        isRunning = false;
+        tryingToRun = false;
+
+        // Set Animation
+        playerAnimator.SetBool(animKeys.isRunningKey, false);
+    }
+
     #endregion
 }

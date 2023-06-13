@@ -18,11 +18,11 @@ public class CameraController : MonoBehaviour
     private Vector2 inputLookVector;
 
     private bool tryingToLock;
-    private bool isLocking = false;
+    [HideInInspector] public bool isLocking = false;
 
-    private GameObject nearestEnemy;
+    [HideInInspector] public GameObject nearestEnemy;
     private List<GameObject> lockableEnemies = new List<GameObject>();
-    private Vector3 playerToNearestEnemyVector = new Vector3();
+    [HideInInspector] public Vector3 playerToNearestEnemyVector = new Vector3();
 
     [Header("Settings")]
     [SerializeField] private float lockDetectionRadius;
@@ -135,7 +135,7 @@ public class CameraController : MonoBehaviour
         lockCamera.LookAt = nearestEnemy.transform;
 
         // Change To FreeLook Camera if being far from the locked enemy
-        playerToNearestEnemyVector = transform.position - nearestEnemy.transform.position;
+        playerToNearestEnemyVector = nearestEnemy.transform.position - transform.position;
         if(playerToNearestEnemyVector.magnitude > lockDetectionRadius + lockDetectionRadius / 6f)
             SetFreeLookCamera();
 

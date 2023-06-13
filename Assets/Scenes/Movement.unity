@@ -550,7 +550,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.01818948, y: 0.000000017491402, z: -1.5404567e-10, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189503, y: 0.000000018015271, z: -1.589342e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1978,7 +1978,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141456, y: -0.00000001679291, z: -4.6168225e-10, w: 0.99983543}
+  m_LocalRotation: {x: -0.018141458, y: 0.000000017636921, z: 4.8748916e-10, w: 0.99983543}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4784,6 +4784,9 @@ MonoBehaviour:
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 64
+  isLocking: 0
+  nearestEnemy: {fileID: 0}
+  playerToNearestEnemyVector: {x: 0, y: 0, z: 0}
   lockDetectionRadius: 30
   lookAtSmoothing: 0.6
   maxLockAngle: 35
@@ -4812,9 +4815,9 @@ MonoBehaviour:
     jumpTriggerKey: JumpTrigger
     runTriggerKey: RunTrigger
     isRunningKey: isRunning
-    idleWalkRunKey: IdleWalkRun
-    directionKey: Direction
-    orientationKey: Orientation
+    isLockingKey: isLocking
+    directionXKey: DirectionX
+    directionZKey: DirectionZ
 --- !u!137 &330069501831014613
 SkinnedMeshRenderer:
   m_ObjectHideFlags: 0

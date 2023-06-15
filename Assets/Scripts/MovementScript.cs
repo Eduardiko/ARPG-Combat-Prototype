@@ -19,6 +19,8 @@ public class AnimationTriggerKeys
     public string directionZKey;
 }
 
+// Sekiro Lock -> front, normal speed || back and sides, reduced speeds
+
 public class MovementScript : MonoBehaviour
 {
     

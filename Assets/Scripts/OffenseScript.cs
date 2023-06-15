@@ -3,28 +3,23 @@ using UnityEngine.InputSystem;
 
 public class OffenseScript : MonoBehaviour
 {
+    // References
     private Animator characterAnimator;
+    private InputManager inputManager;
+    private Character character;
 
-    private bool tryingToAttack = false;
-
-    // Start is called before the first frame update
     void Start()
     {
         characterAnimator = GetComponent<Animator>();
+        inputManager = GetComponent<InputManager>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if(tryingToAttack)
+        if(inputManager.tryingToAttack)
         {
-            tryingToAttack = false;
+            inputManager.tryingToAttack = false;
             characterAnimator.SetTrigger("AttackTrigger");
         }
-    }
-
-    public void ActionAttack(InputAction.CallbackContext context)
-    {
-        if (context.performed) tryingToAttack = true;
     }
 }

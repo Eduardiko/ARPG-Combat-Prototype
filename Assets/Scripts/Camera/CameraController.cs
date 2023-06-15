@@ -1,37 +1,31 @@
-using System.Collections;
 using System.Collections.Generic;
-using UnityEngine.InputSystem;
 using Cinemachine;
 using UnityEngine;
-using System;
 
 public class CameraController : MonoBehaviour
 {
-    
-    [SerializeField] private CinemachineFreeLook freeLookCamera;
-    [SerializeField] private CinemachineVirtualCamera lockCamera;
-
-    [SerializeField] private GameObject uiLock;
-    [SerializeField] private LayerMask enemyLayerMask;
-
-    private Vector2 inputMoveVector;
-    private Vector2 inputLookVector;
-
-    private bool tryingToLock;
-    [HideInInspector] public bool isLocking = false;
-
-    [HideInInspector] public GameObject nearestEnemy;
-    private List<GameObject> lockableEnemies = new List<GameObject>();
-    [HideInInspector] public Vector3 playerToNearestEnemyVector = new Vector3();
-
     [Header("Settings")]
     [SerializeField] private float lockDetectionRadius;
     [SerializeField] private float lookAtSmoothing;
     [SerializeField] private float maxLockAngle;
 
+    [Header("References")]
+    [SerializeField] private CinemachineFreeLook freeLookCamera;
+    [SerializeField] private CinemachineVirtualCamera lockCamera;
+    [SerializeField] private GameObject uiLock;
+    [SerializeField] private LayerMask enemyLayerMask;
+
+    // References
+    private Character character;
+    private InputManager inputManager;
+    private List<GameObject> lockableEnemies = new List<GameObject>();
+    private Vector3 playerToNearestEnemyVector = new Vector3();
+
     private void Start()
     {
         uiLock.SetActive(false);
+        inputManager = GetComponent<InputManager>();
+        character = GetComponent<Character>();
     }
 
     void Update()
@@ -44,7 +38,7 @@ public class CameraController : MonoBehaviour
     private void ManageRecentering()
     {
         //Locking && Looking - have priority over walking
-        if (isLocking || inputLookVector != Vector2.zero)
+        if (character.isLocking || inputManager.tryingToLook)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
             freeLookCamera.m_YAxisRecentering.m_enabled = false;
@@ -52,17 +46,17 @@ public class CameraController : MonoBehaviour
         }
 
         // Walking
-        if (inputMoveVector == Vector2.zero || inputMoveVector.y < -0.95)
+        if (!inputManager.tryingToMove || inputManager.inputMoveVector.y < -0.95)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = false;
             freeLookCamera.m_YAxisRecentering.m_enabled = false;
         }
-        else if (inputMoveVector.y >= -0.7)
+        else if (inputManager.inputMoveVector.y >= -0.7)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
             freeLookCamera.m_YAxisRecentering.m_enabled = true;
         }
-        else if (inputMoveVector.y < -0.7)
+        else if (inputManager.inputMoveVector.y < -0.7)
         {
             freeLookCamera.m_RecenterToTargetHeading.m_enabled = true;
             freeLookCamera.m_YAxisRecentering.m_enabled = false;
@@ -76,22 +70,22 @@ public class CameraController : MonoBehaviour
 
     private void ManageLocking()
     {
-        if (tryingToLock && !isLocking)
+        if (inputManager.tryingToLock && !character.isLocking)
         {
             // If there are not available enemies, don't change the camera
-            tryingToLock = false;
+            inputManager.tryingToLock = false;
             if (FindLockableTargets())
                 SetLockCamera();
         }
-        else if (tryingToLock && isLocking)
+        else if (inputManager.tryingToLock && character.isLocking)
         {
             // If locking, return to freeLook
-            tryingToLock = false;
+            inputManager.tryingToLock = false;
             SetFreeLookCamera();
         }
 
         // Updates camera so player is always in-sight
-        if (isLocking)
+        if (character.isLocking)
             UpdateLockedCamera();
     }
     #endregion
@@ -121,7 +115,7 @@ public class CameraController : MonoBehaviour
                 if (angle < closestAngle)
                 {
                     closestAngle = angle;
-                    nearestEnemy = collider.gameObject;
+                    character.target = collider.gameObject;
                 }
             }
         }
@@ -132,21 +126,21 @@ public class CameraController : MonoBehaviour
     }
     private void UpdateLockedCamera()
     {
-        lockCamera.LookAt = nearestEnemy.transform;
+        lockCamera.LookAt = character.target.transform;
 
         // Change To FreeLook Camera if being far from the locked enemy
-        playerToNearestEnemyVector = nearestEnemy.transform.position - transform.position;
+        playerToNearestEnemyVector = character.target.transform.position - transform.position;
         if(playerToNearestEnemyVector.magnitude > lockDetectionRadius + lockDetectionRadius / 6f)
             SetFreeLookCamera();
 
         // Rotates the camera so that the forward Vector is always the Vector between enemy & player
-        Vector3 direction = nearestEnemy.transform.position - transform.position;
+        Vector3 direction = character.target.transform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         lockCamera.transform.rotation = Quaternion.Slerp(lockCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
 
         // Updates the position & scale of the UI
-        Vector3 targetPos = nearestEnemy.transform.position;
-        targetPos.y = targetPos.y * nearestEnemy.GetComponent<CapsuleCollider>().height * 2 / 3;
+        Vector3 targetPos = character.target.transform.position;
+        targetPos.y = targetPos.y * character.target.GetComponent<CapsuleCollider>().height * 2 / 3;
         uiLock.transform.position = targetPos;
         uiLock.transform.localScale = Vector3.one * ((lockCamera.transform.position - targetPos).magnitude);
     }
@@ -158,7 +152,7 @@ public class CameraController : MonoBehaviour
     {
         // Set Bools
         uiLock.SetActive(false);
-        isLocking = false;
+        character.isLocking = false;
 
         // Change Cameras
         freeLookCamera.gameObject.SetActive(true);
@@ -168,7 +162,7 @@ public class CameraController : MonoBehaviour
     private void SetLockCamera()
     {
         // Set Booleans
-        isLocking = true;
+        character.isLocking = true;
         uiLock.SetActive(true);
 
         // Change Cameras
@@ -178,20 +172,4 @@ public class CameraController : MonoBehaviour
 
     #endregion
 
-    #region ACTIONS
-    public void ActionMove(InputAction.CallbackContext context)
-    {
-        inputMoveVector = context.ReadValue<Vector2>();
-    }
-
-    public void ActionLook(InputAction.CallbackContext context)
-    {
-        inputLookVector = context.ReadValue<Vector2>();
-    }
-
-    public void ActionLock(InputAction.CallbackContext context)
-    {
-        if (context.performed) tryingToLock = true;
-    }
-    #endregion
 }

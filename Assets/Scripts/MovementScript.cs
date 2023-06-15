@@ -1,6 +1,4 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
-
 
 // Strings To Re-Use and Not memorize all animation parameters
 [System.Serializable]
@@ -24,50 +22,49 @@ public class AnimationTriggerKeys
 public class MovementScript : MonoBehaviour
 {
     
-    //References
+    [Header("Move Parameters")]
+    [SerializeField] private float walkSpeed = 5f;
+    [SerializeField] private float runSpeed = 8f;
+
+    [Header("Jump Parameters")]
+    [SerializeField] private float jumpHeight = 0.5f;
+    [SerializeField] private float gravity = -9.81f;
+
+    [Header("References")]
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
 
+    [Header("Animations")]
+    [SerializeField] AnimationTriggerKeys animKeys;
+    
+    // References
+    private Character character;
     private CharacterController characterController;
-    private CameraController cameraController;
+    private InputManager inputManager;
     private Animator characterAnimator;
 
-    //Variables
-    [SerializeField] private float walkSpeed = 5f;
-    [SerializeField] private float runSpeed = 8f;
+    // Variables
     private float moveSpeed = 0f;
+    private float groundRayDistance = 0.4f;
 
-    private Vector2 inputVector;
     private Vector2 currentInputVector;
     private Vector2 smoothInputVelocity;
 
     private Vector3 moveDirection;
-
-    [SerializeField] private float jumpHeight = 0.5f;
-    [SerializeField] private float gravity = -9.81f;
     private Vector3 jumpVelocity;
 
-    private float groundRayDistance = 0.4f;
-
-    // State Bools
-    private bool isRunning = false;
-    private bool isGrounded = false;
-
-    private bool tryingToRun = false;
-    private bool tryingToJump = false;
-
+    // Bools
     private bool ableToJump = false;
     private bool ableToRun = false;
-    private bool movingInput = false;
 
-    [SerializeField] AnimationTriggerKeys animKeys;
 
     private void Start()
     {
         characterController = GetComponent<CharacterController>();
         characterAnimator = GetComponentInChildren<Animator>();
-        cameraController = GetComponentInChildren<CameraController>();
+        character = GetComponentInChildren<Character>();
+        inputManager = GetComponentInChildren<InputManager>();
 
         jumpVelocity = Vector3.zero;
     }
@@ -83,49 +80,42 @@ public class MovementScript : MonoBehaviour
     private void UpdatePossibleActions()
     {
         // Check if the player is on the ground
-        isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
-
-        //Is There Input?
-        if (inputVector != Vector2.zero)
-            movingInput = true;
-        else
-            movingInput = false;
+        character.isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
 
         // Can The Player Run?
-        if (movingInput && isGrounded)
+        if (inputManager.tryingToMove && character.isGrounded)
             ableToRun = true;
         else
             ableToRun = false;
 
         // Can The Player Jump?
-        if (isGrounded && jumpVelocity.y < 0)
+        if (character.isGrounded && jumpVelocity.y < 0)
             ableToJump = true;
         else
             ableToJump = false;
-
     }
 
     private void UpdateStatesAndAnimations()
     {
         // Animation Mode
-        if (cameraController.isLocking)
+        if (character.isLocking)
             characterAnimator.SetBool(animKeys.isLockingKey, true);
         else
             characterAnimator.SetBool(animKeys.isLockingKey, false);
 
         // Walking
-        if (movingInput)
+        if (inputManager.tryingToMove)
         {
-            if (ableToRun && tryingToRun)
+            if (ableToRun && inputManager.tryingToRun)
                 EnterRunning();
             else
-                tryingToRun = false;
+                inputManager.tryingToRun = false;
 
-            if (isRunning && Vector2.Angle(currentInputVector, inputVector) < 90f)
+            if (character.isRunning && Vector2.Angle(currentInputVector, inputManager.inputMoveVector) < 90f)
                 Run();
             else
             {
-                if (isRunning)
+                if (character.isRunning)
                     QuitRunning();
 
                 Walk();
@@ -133,17 +123,17 @@ public class MovementScript : MonoBehaviour
         }
         else
         {
-            if (isRunning)
+            if (character.isRunning)
                 QuitRunning();
 
             Idle();
         }
 
         // Jumping
-        if (ableToJump && tryingToJump)
+        if (ableToJump && inputManager.tryingToJump)
             Jump();
         else
-            tryingToJump = false;
+            inputManager.tryingToJump = false;
     }
 
     #region MOVEMENT
@@ -151,7 +141,7 @@ public class MovementScript : MonoBehaviour
     {
         //Smooth Movement
         float smoothInputSpeed = 0.15f;
-        currentInputVector = Vector2.SmoothDamp(currentInputVector, inputVector, ref smoothInputVelocity, smoothInputSpeed);
+        currentInputVector = Vector2.SmoothDamp(currentInputVector, inputManager.inputMoveVector, ref smoothInputVelocity, smoothInputSpeed);
         moveDirection = new Vector3(currentInputVector.x, 0f, currentInputVector.y).normalized;
 
         // Get the camera's forward vector
@@ -164,17 +154,18 @@ public class MovementScript : MonoBehaviour
         moveDirection *= moveSpeed * Time.deltaTime;
 
 
-        // Move the player
+        // Move and rotate the player
         if (moveDirection != Vector3.zero)
         {
-            if(!cameraController.isLocking || isRunning)
+            if(!character.isLocking || character.isRunning || !character.isGrounded)
             {
                 // Rotate the player to face the direction of movement
                 float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
             } else
             {
-                transform.rotation = Quaternion.LookRotation(cameraController.playerToNearestEnemyVector);
+                Vector3 playerToNearestEnemyVector = character.target.transform.position - transform.position;
+                transform.rotation = Quaternion.LookRotation(playerToNearestEnemyVector);
             }
 
 
@@ -193,7 +184,7 @@ public class MovementScript : MonoBehaviour
         }
 
         // Set Animation
-        if(cameraController.isLocking)
+        if(character.isLocking)
         {
             characterAnimator.SetFloat(animKeys.directionXKey, currentInputVector.x);
             characterAnimator.SetFloat(animKeys.directionZKey, currentInputVector.y);
@@ -210,7 +201,7 @@ public class MovementScript : MonoBehaviour
         moveSpeed = walkSpeed * currentInputVector.magnitude;
 
         // Set Animation
-        if (cameraController.isLocking)
+        if (character.isLocking)
         {
             characterAnimator.SetFloat(animKeys.directionXKey, currentInputVector.x);
             characterAnimator.SetFloat(animKeys.directionZKey, currentInputVector.y);
@@ -234,7 +225,7 @@ public class MovementScript : MonoBehaviour
     private void JumpingLogic()
     {
         //Set jumpVelocity negative so we don't get errors with positive velocities
-        if (isGrounded && jumpVelocity.y < 0)
+        if (character.isGrounded && jumpVelocity.y < 0)
             jumpVelocity.y = -2f;
 
         //In-air logic
@@ -257,22 +248,6 @@ public class MovementScript : MonoBehaviour
     }
     #endregion
 
-    #region ACTIONS
-    public void ActionMove(InputAction.CallbackContext context)
-    {
-        inputVector = context.ReadValue<Vector2>();
-    }
-    public void ActionJump(InputAction.CallbackContext context)
-    {
-        if(context.performed) tryingToJump = true;
-    }
-
-    public void ActionRun(InputAction.CallbackContext context)
-    {
-        if (context.performed) tryingToRun = true;
-    }
-    #endregion
-
     #region HERLPERS
     private float DecelerateSpeed(float currentSpeed, float decelerationTime)
     {
@@ -290,16 +265,16 @@ public class MovementScript : MonoBehaviour
 
     private void EnterRunning()
     {
-        isRunning = true;
-        tryingToRun = false;
+        character.isRunning = true;
+        inputManager.tryingToRun = false;
 
         // Set Animation
         characterAnimator.SetBool(animKeys.isRunningKey, true);
     }
     private void QuitRunning()
     {
-        isRunning = false;
-        tryingToRun = false;
+        character.isRunning = false;
+        inputManager.tryingToRun = false;
 
         // Set Animation
         characterAnimator.SetBool(animKeys.isRunningKey, false);

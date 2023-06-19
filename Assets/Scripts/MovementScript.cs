@@ -73,6 +73,7 @@ public class MovementScript : MonoBehaviour
     {
         UpdatePossibleActions();
         UpdateStatesAndAnimations();
+
         MoveLogic();
         JumpingLogic();
     }
@@ -93,6 +94,8 @@ public class MovementScript : MonoBehaviour
             ableToJump = true;
         else
             ableToJump = false;
+
+        
     }
 
     private void UpdateStatesAndAnimations()
@@ -132,7 +135,7 @@ public class MovementScript : MonoBehaviour
         // Jumping
         if (ableToJump && inputManager.tryingToJump)
             Jump();
-        else
+        else 
             inputManager.tryingToJump = false;
     }
 
@@ -245,6 +248,8 @@ public class MovementScript : MonoBehaviour
 
         // Set Animation
         characterAnimator.SetTrigger(animKeys.jumpTriggerKey);
+
+        inputManager.bufferedAction = BufferActions.CLEAR;
     }
     #endregion
 
@@ -267,6 +272,7 @@ public class MovementScript : MonoBehaviour
     {
         character.isRunning = true;
         inputManager.tryingToRun = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Set Animation
         characterAnimator.SetBool(animKeys.isRunningKey, true);

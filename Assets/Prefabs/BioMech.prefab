@@ -216,7 +216,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4968185956831376252}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1343,8 +1343,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tryingToRun: 0
   tryingToJump: 0
+  tryingToMove: 0
   inputMoveVector: {x: 0, y: 0}
   tryingToLock: 0
+  tryingToLook: 0
   inputLookVector: {x: 0, y: 0}
   tryingToAttack: 0
 --- !u!114 &8954123284109610139
@@ -1359,15 +1361,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0eb79ceb150b53641b2d3de3eea50e25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  walkSpeed: 6
+  runSpeed: 10
+  jumpHeight: 3
+  gravity: -12
   cameraTransform: {fileID: 0}
   groundCheck: {fileID: 8707652538085762965}
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  walkSpeed: 6
-  runSpeed: 10
-  jumpHeight: 3
-  gravity: -12
   animKeys:
     jumpTriggerKey: JumpTrigger
     runTriggerKey: RunTrigger
@@ -1387,17 +1389,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7329e57b6ce3b48489b07c355d4b2f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lockDetectionRadius: 30
+  lookAtSmoothing: 0.6
+  maxLockAngle: 35
   freeLookCamera: {fileID: 0}
   lockCamera: {fileID: 0}
   uiLock: {fileID: 0}
   enemyLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  nearestEnemy: {fileID: 0}
-  playerToNearestEnemyVector: {x: 0, y: 0, z: 0}
-  lockDetectionRadius: 30
-  lookAtSmoothing: 0.6
-  maxLockAngle: 35
 --- !u!114 &8954123284109610138
 MonoBehaviour:
   m_ObjectHideFlags: 0

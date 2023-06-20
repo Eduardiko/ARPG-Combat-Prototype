@@ -95,7 +95,6 @@ public class MovementScript : MonoBehaviour
         else
             ableToJump = false;
 
-        
     }
 
     private void UpdateStatesAndAnimations()
@@ -201,7 +200,18 @@ public class MovementScript : MonoBehaviour
     {
         // Set Speed
         if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
-        moveSpeed = walkSpeed * currentInputVector.magnitude;
+        
+        if(!character.isLocking)
+            moveSpeed = walkSpeed * currentInputVector.magnitude;
+        else 
+        {
+            Vector2 reducedVec = currentInputVector;
+
+            reducedVec.x = reducedVec.x * 0.75f;
+            if(currentInputVector.y < 0f) reducedVec.y = reducedVec.y * 0.8f;
+
+            moveSpeed = walkSpeed * reducedVec.magnitude;
+        }
 
         // Set Animation
         if (character.isLocking)
@@ -221,6 +231,7 @@ public class MovementScript : MonoBehaviour
         if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
         moveSpeed = AccelerateSpeed(moveSpeed, 0.5f, runSpeed);
         if(moveSpeed > runSpeed) moveSpeed = runSpeed;
+
     }
     #endregion
 

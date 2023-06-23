@@ -113,7 +113,7 @@ public class MovementScript : MonoBehaviour
             else
                 inputManager.tryingToRun = false;
 
-            if (character.isRunning && Vector2.Angle(currentInputVector, inputManager.inputMoveVector) < 90f)
+            if (character.isRunning)
                 Run();
             else
             {

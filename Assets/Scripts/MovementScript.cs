@@ -166,10 +166,11 @@ public class MovementScript : MonoBehaviour
                 transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
             } else
             {
-                Vector3 playerToNearestEnemyVector = character.target.transform.position - transform.position;
-                transform.rotation = Quaternion.LookRotation(playerToNearestEnemyVector);
+                // Y axis to 0 so Vector is calculated at same height
+                Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
+                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
             }
-
 
             characterController.Move(moveDirection);
         }

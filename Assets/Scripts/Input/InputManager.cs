@@ -8,15 +8,21 @@ public enum BufferActions
     ACTION_RUN,
     ACTION_JUMP,
     ACTION_ATTACK,
-    CLEAR,
+    ACTION_BACKSTEP,
+    ACTION_DODGE_RIGHT,
+    ACTION_DODGE_LEFT,
+    CLEAR
 }
 
 public class InputManager : MonoBehaviour
 {
     // Movement Inputs
-    [HideInInspector] public bool tryingToRun = false;                  // Action 0
-    [HideInInspector] public bool tryingToJump = false;                 // Action 1
+    [HideInInspector] public bool tryingToRun = false;                  
+    [HideInInspector] public bool tryingToJump = false;                
     [HideInInspector] public bool tryingToMove = false;                 
+    [HideInInspector] public bool tryingToBackstep = false;
+    [HideInInspector] public bool tryingToDodgeRight = false;
+    [HideInInspector] public bool tryingToDodgeLeft = false;
     [HideInInspector] public Vector2 inputMoveVector = new Vector2();
 
     // Camera Inputs
@@ -25,7 +31,7 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public Vector2 inputLookVector = new Vector2();
 
     // Offensive Inputs
-    [HideInInspector] public bool tryingToAttack = false;               // Action 2
+    [HideInInspector] public bool tryingToAttack = false;               
 
 
     [HideInInspector] public BufferActions bufferedAction;
@@ -78,6 +84,15 @@ public class InputManager : MonoBehaviour
                     case BufferActions.ACTION_ATTACK:
                         tryingToAttack = true;
                         break;
+                    case BufferActions.ACTION_BACKSTEP:
+                        tryingToBackstep = true;
+                        break;
+                    case BufferActions.ACTION_DODGE_RIGHT:
+                        tryingToDodgeRight = true;
+                        break;
+                    case BufferActions.ACTION_DODGE_LEFT:
+                        tryingToDodgeLeft = true;
+                        break;
                     default:
                         break;
                 }
@@ -111,10 +126,37 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public void ActionBackstep(InputAction.CallbackContext context)
+    {
+        if(context.performed)
+        {
+            tryingToBackstep = true;
+            SendActionToInputBuffer(BufferActions.ACTION_BACKSTEP);
+        }
+    }
+    public void ActionDodgeRight(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            tryingToDodgeRight = true;
+            SendActionToInputBuffer(BufferActions.ACTION_DODGE_RIGHT);
+        }
+    }
+
+    public void ActionDodgeLeft(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            tryingToDodgeLeft = true;
+            SendActionToInputBuffer(BufferActions.ACTION_DODGE_LEFT);
+        }
+    }
+
     public void ActionMove(InputAction.CallbackContext context)
     {
         inputMoveVector = context.ReadValue<Vector2>();
     }
+
     // Camera Actions
     public void ActionLook(InputAction.CallbackContext context)
     {

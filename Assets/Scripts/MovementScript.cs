@@ -1,27 +1,8 @@
 using UnityEngine;
 
-// Strings To Re-Use and Not memorize all animation parameters
-[System.Serializable]
-public class AnimationTriggerKeys
-{
-    // Triggers
-    public string jumpTriggerKey;
-    public string runTriggerKey;
-
-    // Bools
-    public string isRunningKey;
-    public string isLockingKey;
-
-    // Floats
-    public string directionXKey;
-    public string directionZKey;
-}
-
-// Sekiro Lock -> front, normal speed || back and sides, reduced speeds
 
 public class MovementScript : MonoBehaviour
 {
-    
     [Header("Move Parameters")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 8f;
@@ -34,9 +15,6 @@ public class MovementScript : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
-
-    [Header("Animations")]
-    [SerializeField] AnimationTriggerKeys animKeys;
     
     // References
     private Character character;
@@ -84,7 +62,7 @@ public class MovementScript : MonoBehaviour
         character.isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
 
         // Can The Player Run?
-        if (inputManager.tryingToMove && character.isGrounded)
+        if (character.isGrounded)
             ableToRun = true;
         else
             ableToRun = false;
@@ -101,9 +79,9 @@ public class MovementScript : MonoBehaviour
     {
         // Animation Mode
         if (character.isLocking)
-            characterAnimator.SetBool(animKeys.isLockingKey, true);
+            characterAnimator.SetBool(character.animKeys.isLockingKey, true);
         else
-            characterAnimator.SetBool(animKeys.isLockingKey, false);
+            characterAnimator.SetBool(character.animKeys.isLockingKey, false);
 
         // Walking
         if (inputManager.tryingToMove)
@@ -189,11 +167,11 @@ public class MovementScript : MonoBehaviour
         // Set Animation
         if(character.isLocking)
         {
-            characterAnimator.SetFloat(animKeys.directionXKey, currentInputVector.x);
-            characterAnimator.SetFloat(animKeys.directionZKey, currentInputVector.y);
+            characterAnimator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
+            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
         } else
         {
-            characterAnimator.SetFloat(animKeys.directionZKey, currentInputVector.magnitude);
+            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.magnitude);
         }
 
     }
@@ -217,12 +195,12 @@ public class MovementScript : MonoBehaviour
         // Set Animation
         if (character.isLocking)
         {
-            characterAnimator.SetFloat(animKeys.directionXKey, currentInputVector.x);
-            characterAnimator.SetFloat(animKeys.directionZKey, currentInputVector.y);
+            characterAnimator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
+            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
         }
         else
         {
-            characterAnimator.SetFloat(animKeys.directionZKey, currentInputVector.magnitude);
+            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.magnitude);
         }
     }
 
@@ -259,7 +237,7 @@ public class MovementScript : MonoBehaviour
         jumpVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
 
         // Set Animation
-        characterAnimator.SetTrigger(animKeys.jumpTriggerKey);
+        characterAnimator.SetTrigger(character.animKeys.jumpTriggerKey);
 
         inputManager.bufferedAction = BufferActions.CLEAR;
     }
@@ -287,7 +265,7 @@ public class MovementScript : MonoBehaviour
         inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Set Animation
-        characterAnimator.SetBool(animKeys.isRunningKey, true);
+        characterAnimator.SetBool(character.animKeys.isRunningKey, true);
     }
     private void QuitRunning()
     {
@@ -295,7 +273,7 @@ public class MovementScript : MonoBehaviour
         inputManager.tryingToRun = false;
 
         // Set Animation
-        characterAnimator.SetBool(animKeys.isRunningKey, false);
+        characterAnimator.SetBool(character.animKeys.isRunningKey, false);
     }
 
     #endregion

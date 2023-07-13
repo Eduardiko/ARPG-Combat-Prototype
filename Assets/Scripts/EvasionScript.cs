@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EvasionScript : MonoBehaviour
 {
- 
+
     // References
     private Character character;
     private InputManager inputManager;
@@ -32,13 +32,13 @@ public class EvasionScript : MonoBehaviour
     private void UpdatePossibleActions()
     {
         // Can The Player Backstep?
-        if (inputManager.tryingToBackstep && character.isGrounded)
+        if (character.isGrounded)
             ableToBackstep = true;
         else
             ableToBackstep = false;
 
         // Can The Player Dodge?
-        if ((inputManager.tryingToDodgeRight || inputManager.tryingToDodgeLeft) && character.isGrounded)
+        if (character.isGrounded)
             ableToDodge = true;
         else
             ableToDodge = false;
@@ -46,26 +46,35 @@ public class EvasionScript : MonoBehaviour
 
     private void UpdateStatesAndAnimations()
     {
+        // Backstep
         if (inputManager.tryingToBackstep && ableToBackstep)
         {
             inputManager.tryingToBackstep = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetTrigger("BackstepTrigger");
+            characterAnimator.SetTrigger(character.animKeys.backstepTriggerKey);
         }
+        else
+            inputManager.tryingToBackstep = false;
 
+        // Dodge Right
         if (inputManager.tryingToDodgeRight && ableToDodge)
         {
             inputManager.tryingToDodgeRight = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetTrigger("DodgeRightTrigger");
+            characterAnimator.SetTrigger(character.animKeys.dodgeRightTriggerKey);
         }
+        else
+            inputManager.tryingToDodgeRight = false;
 
+        // Dodge Left
         if (inputManager.tryingToDodgeLeft && ableToDodge)
         {
             inputManager.tryingToDodgeLeft = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetTrigger("DodgeLeftTrigger");
+            characterAnimator.SetTrigger(character.animKeys.dodgeLeftTriggerKey);
         }
+        else
+            inputManager.tryingToDodgeLeft = false;
     }
 
 }

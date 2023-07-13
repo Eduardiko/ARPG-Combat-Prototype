@@ -99,6 +99,9 @@ public class InputManager : MonoBehaviour
             }
 
             bufferedTimeRemaining -= Time.deltaTime;
+        } else
+        {
+
         }
     }
 

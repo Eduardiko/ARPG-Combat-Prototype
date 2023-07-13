@@ -6,10 +6,12 @@ public class WeaponDial : MonoBehaviour
 {
 
     public Transform refPlaneT;
-    private Vector3 planeNormal;
+    [SerializeField] private Sprite topPart;
 
     public Transform topT;
     public Transform bottomT;
+
+    private Vector3 planeNormal;
 
     private Vector3 topProjection;
     private Vector3 bottomProjection;
@@ -23,7 +25,16 @@ public class WeaponDial : MonoBehaviour
 
     private float radius;
 
-    void Update()
+
+
+    private void Update()
+    {
+        SetAngles();
+
+    }
+
+
+    private void SetAngles()
     {
         planeNormal = refPlaneT.up;
 
@@ -50,10 +61,8 @@ public class WeaponDial : MonoBehaviour
         centerToRef = bottomRefPoint - centerRefPoint;
         centerToPoint = topProjection - centerRefPoint;
         bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, centerRefPoint);
-
-        //print("Top: " + topAngle + " degrees");
-        //print("Bottom: " + bottomAngle + " degrees");
     }
+
 
     void OnDrawGizmos()
     {

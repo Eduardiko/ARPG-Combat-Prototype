@@ -17,7 +17,7 @@ public class UILookAtCamera : MonoBehaviour
         {
             Vector3 dir = target.position - transform.position;
 
-            transform.rotation = Quaternion.LookRotation(dir);
+            transform.rotation = Quaternion.LookRotation(-dir);
             yield return null;
         }
     }

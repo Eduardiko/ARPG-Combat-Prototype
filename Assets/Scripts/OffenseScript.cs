@@ -38,6 +38,9 @@ public class OffenseScript : MonoBehaviour
     // Bools
     private bool ableToAttack = false;
 
+    // UI Parameters
+    private Vector3 positionInDial;
+
     private void Start()
     {
         characterAnimator = GetComponent<Animator>();
@@ -52,6 +55,13 @@ public class OffenseScript : MonoBehaviour
         UpdatePossibleActions();
 
         UpdateStatesAndAnimations();
+
+        UpdateUI();
+    }
+
+    private void UpdateUI()
+    {
+
     }
 
     private void UpdatePossibleActions()
@@ -92,17 +102,22 @@ public class OffenseScript : MonoBehaviour
         topRefPoint = centerRefPoint + Vector3.up * radius;
         bottomRefPoint = centerRefPoint + Vector3.down * radius;
 
-        // Calculate the angle of inclination of the two projection points
+        //// Create a rotation that aligns Z to the normal vector.
+        Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, planeNormal);
+
         Vector3 centerToRef;
         Vector3 centerToPoint;
 
+        // Rotation applied to the weapon's point in order to work with own axis system
         centerToRef = topRefPoint - centerRefPoint;
-        centerToPoint = topProjection - centerRefPoint;
-        topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, centerRefPoint);
+        centerToPoint = rotation * (topProjection - centerRefPoint);
+        topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, Vector3.zero);
+
 
         centerToRef = bottomRefPoint - centerRefPoint;
-        centerToPoint = topProjection - centerRefPoint;
-        bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, centerRefPoint);
+        centerToPoint = rotation * (topProjection - centerRefPoint);
+        bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, Vector3.zero);
+
     }
     void OnDrawGizmos()
     {

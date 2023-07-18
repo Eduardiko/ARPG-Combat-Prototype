@@ -61,6 +61,9 @@ public class WeaponDial : MonoBehaviour
         centerToRef = bottomRefPoint - centerRefPoint;
         centerToPoint = topProjection - centerRefPoint;
         bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, centerRefPoint);
+
+        print("Top Angle: " + topAngle);
+        print("Bottom Angle: " + bottomAngle);
     }
 
 

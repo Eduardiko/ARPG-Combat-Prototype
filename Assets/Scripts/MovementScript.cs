@@ -165,14 +165,8 @@ public class MovementScript : MonoBehaviour
         }
 
         // Set Animation
-        if(character.isLocking)
-        {
-            characterAnimator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
-            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
-        } else
-        {
-            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.magnitude);
-        }
+        characterAnimator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
+        characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
 
     }
     private void Walk()

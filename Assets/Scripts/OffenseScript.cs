@@ -9,8 +9,8 @@ public class OffenseScript : MonoBehaviour
     [SerializeField] private Transform bottomWeaponTransform;
 
     [Header("Weapon UI Sprites")]
-    [SerializeField] private GameObject topWeaponSprite;
-    [SerializeField] private GameObject bottomWeaponSprite;
+    [SerializeField] private RectTransform topWeaponRect;
+    [SerializeField] private RectTransform bottomWeaponRect;
 
     [Header("Plane Reference")]
     public Transform referencePlaneTransform;
@@ -61,7 +61,26 @@ public class OffenseScript : MonoBehaviour
 
     private void UpdateUI()
     {
+        // Convert angle to radians and subtract pi/2 to make 0 degrees point up
+        float radianTopAngle = (90 - topAngle) * Mathf.Deg2Rad;
 
+        // Calculate the new position
+        float x = 0.5f * Mathf.Cos(radianTopAngle);
+        float y = 0.5f * Mathf.Sin(radianTopAngle);
+
+        // Apply the new position
+        topWeaponRect.localPosition = new Vector3(x, y, topWeaponRect.localPosition.z);
+
+
+        // Convert angle to radians and subtract pi/2 to make 0 degrees point up
+        float radianBottomAngle = (90 - bottomAngle) * Mathf.Deg2Rad;
+
+        // Calculate the new position
+        x = 0.5f * Mathf.Cos(radianBottomAngle);
+        y = 0.5f * Mathf.Sin(radianBottomAngle);
+
+        // Apply the new position
+        bottomWeaponRect.localPosition = new Vector3(x, y, bottomWeaponRect.localPosition.z);
     }
 
     private void UpdatePossibleActions()
@@ -102,21 +121,19 @@ public class OffenseScript : MonoBehaviour
         topRefPoint = centerRefPoint + Vector3.up * radius;
         bottomRefPoint = centerRefPoint + Vector3.down * radius;
 
-        //// Create a rotation that aligns Z to the normal vector.
-        Quaternion rotation = Quaternion.FromToRotation(Vector3.forward, planeNormal);
-
         Vector3 centerToRef;
         Vector3 centerToPoint;
 
-        // Rotation applied to the weapon's point in order to work with own axis system
         centerToRef = topRefPoint - centerRefPoint;
-        centerToPoint = rotation * (topProjection - centerRefPoint);
-        topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, Vector3.zero);
-
+        centerToPoint = topProjection - centerRefPoint;
+        topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
 
         centerToRef = bottomRefPoint - centerRefPoint;
-        centerToPoint = rotation * (topProjection - centerRefPoint);
-        bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, Vector3.zero);
+        centerToPoint = topProjection - centerRefPoint;
+        bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
+
+        print(topAngle);
+        print(bottomAngle);
 
     }
     void OnDrawGizmos()
@@ -126,6 +143,7 @@ public class OffenseScript : MonoBehaviour
         Gizmos.DrawSphere(topProjection, 0.1f);
         Gizmos.DrawSphere(bottomProjection, 0.1f);
         Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(centerRefPoint, 0.1f);
         Gizmos.DrawWireSphere(centerRefPoint, radius);
 
         // Draw Lines For Top Point

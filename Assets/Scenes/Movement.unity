@@ -311,6 +311,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4968185957104686291, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
   m_PrefabInstance: {fileID: 8707652537814768257}
   m_PrefabAsset: {fileID: 0}
+--- !u!224 &186130131 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 5781016822208299026, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
+  m_PrefabInstance: {fileID: 8707652537814768257}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &354936393
 GameObject:
   m_ObjectHideFlags: 0
@@ -387,6 +392,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 354936393}
   m_CullTransparentMesh: 1
+--- !u!224 &469182223 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 2044836098256474133, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
+  m_PrefabInstance: {fileID: 8707652537814768257}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &482047530
 GameObject:
   m_ObjectHideFlags: 0
@@ -555,7 +565,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.018189467, y: -0.00000005354431, z: 0.000000010252371, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189467, y: 0.00000005606676, z: -0.000000010735356, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -730,7 +740,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: -0.000000007450581, y: -0.000000051600505, z: 0.000000008910402, w: 1}
+  m_LocalRotation: {x: -0.000000007450581, y: 0.000000051537324, z: -0.000000008899493, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1909,7 +1919,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141478, y: -0.000000039509242, z: 0.0000000060865326, w: 0.9998355}
+  m_LocalRotation: {x: -0.018141478, y: 0.000000039470137, z: -0.000000006080509, w: 0.9998355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2425,7 +2435,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: 0.085393004, y: -0.000000036648714, z: 0.0000000031410166, w: 0.99634737}
+  m_LocalRotation: {x: 0.085393004, y: 0.000000036637488, z: -0.0000000031400544, w: 0.99634737}
   m_LocalPosition: {x: -1.83, y: 2.592, z: -5.083}
   m_LocalScale: {x: 0.6187781, y: 0.61877805, z: 0.6187784}
   m_ConstrainProportionsScale: 0
@@ -2688,16 +2698,20 @@ PrefabInstance:
       value: -0.95
       objectReference: {fileID: 0}
     - target: {fileID: 4968185956831376240, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.7
+      objectReference: {fileID: 0}
+    - target: {fileID: 4968185956831376240, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.129
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4968185956831376240, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.791
+      value: -1.8
       objectReference: {fileID: 0}
     - target: {fileID: 4968185956831376242, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5781016822208299026, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
       propertyPath: m_LocalPosition.z
@@ -2867,6 +2881,14 @@ PrefabInstance:
       propertyPath: m_ActionEvents.Array.data[8].m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 8954123284109610138, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
+      propertyPath: topWeaponRect
+      value: 
+      objectReference: {fileID: 186130131}
+    - target: {fileID: 8954123284109610138, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
+      propertyPath: bottomWeaponRect
+      value: 
+      objectReference: {fileID: 469182223}
     - target: {fileID: 8954123284109610138, guid: 83f54da052d8a404d901a973c168e5a7, type: 3}
       propertyPath: topWeaponTransform
       value: 

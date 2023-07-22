@@ -11,6 +11,7 @@ public class OffenseScript : MonoBehaviour
     [Header("Weapon UI Sprites")]
     [SerializeField] private RectTransform topWeaponRect;
     [SerializeField] private RectTransform bottomWeaponRect;
+    [SerializeField] private RectTransform manualPointerRect;
 
     [Header("Plane Reference")]
     public Transform referencePlaneTransform;
@@ -23,6 +24,7 @@ public class OffenseScript : MonoBehaviour
     // Variables
     private float topAngle;
     private float bottomAngle;
+    private float manualAngle;
 
     private float radius;
 
@@ -37,9 +39,7 @@ public class OffenseScript : MonoBehaviour
 
     // Bools
     private bool ableToAttack = false;
-
-    // UI Parameters
-    private Vector3 positionInDial;
+    private bool isUIWeaponAttached = false;
 
     private void Start()
     {
@@ -81,6 +81,25 @@ public class OffenseScript : MonoBehaviour
 
         // Apply the new position
         bottomWeaponRect.localPosition = new Vector3(x, y, bottomWeaponRect.localPosition.z);
+
+        if(inputManager.inputWeaponDialVector != Vector2.zero && character.isLocking)
+        {
+            manualPointerRect.gameObject.SetActive(true);
+
+            // Convert angle to radians and subtract pi/2 to make 0 degrees point up
+            float radianManualAngle = (90 - manualAngle) * Mathf.Deg2Rad;
+
+            // Calculate the new position
+            x = 0.5f * Mathf.Cos(radianManualAngle);
+            y = 0.5f * Mathf.Sin(radianManualAngle);    
+
+            // Apply the new position
+            manualPointerRect.localPosition = new Vector3(x, y, manualPointerRect.localPosition.z);
+        } else
+        {
+            isUIWeaponAttached = false;
+            manualPointerRect.gameObject.SetActive(false);
+        }
     }
 
     private void UpdatePossibleActions()
@@ -121,21 +140,29 @@ public class OffenseScript : MonoBehaviour
         topRefPoint = centerRefPoint + Vector3.up * radius;
         bottomRefPoint = centerRefPoint + Vector3.down * radius;
 
+        // Calculate the angle between the two Vectors
         Vector3 centerToRef;
         Vector3 centerToPoint;
 
         centerToRef = topRefPoint - centerRefPoint;
         centerToPoint = topProjection - centerRefPoint;
         topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
+        // Convert the {-180, 180} returned by the SignedAngle function to {0, 360} for QoL -> condition ? true : false
+        topAngle = topAngle < 0 ? 360f + topAngle : topAngle;
 
         centerToRef = bottomRefPoint - centerRefPoint;
         centerToPoint = topProjection - centerRefPoint;
         bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
+        bottomAngle = bottomAngle < 0 ? 360f + bottomAngle : bottomAngle;
 
-        print(topAngle);
-        print(bottomAngle);
-
+        if (inputManager.inputWeaponDialVector != Vector2.zero)
+        {
+            float angleRadians = Mathf.Atan2(inputManager.inputWeaponDialVector.x, inputManager.inputWeaponDialVector.y);
+            manualAngle = angleRadians * Mathf.Rad2Deg;
+            manualAngle = manualAngle < 0 ? 360f + manualAngle : manualAngle;
+        }
     }
+
     void OnDrawGizmos()
     {
         // Draw the projection points and circle

@@ -31,9 +31,10 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public Vector2 inputLookVector = new Vector2();
 
     // Offensive Inputs
-    [HideInInspector] public bool tryingToAttack = false;               
+    [HideInInspector] public bool tryingToAttack = false;
+    [HideInInspector] public Vector2 inputWeaponDialVector = new Vector2();
 
-
+    // Input Manager Variables
     [HideInInspector] public BufferActions bufferedAction;
     private float bufferTime = 0.3f;
     private float bufferedTimeRemaining = 0f;
@@ -181,6 +182,10 @@ public class InputManager : MonoBehaviour
         }
     }
 
+    public void ActionAdjustWeaponDial(InputAction.CallbackContext context)
+    {
+        inputWeaponDialVector = context.ReadValue<Vector2>();
+    }
 
     #endregion
 }

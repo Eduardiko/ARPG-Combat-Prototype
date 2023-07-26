@@ -39,10 +39,10 @@ public class MovementScript : MonoBehaviour
 
     private void Start()
     {
-        characterController = GetComponent<CharacterController>();
-        characterAnimator = GetComponentInChildren<Animator>();
         character = GetComponentInChildren<Character>();
+        characterController = GetComponent<CharacterController>();
         inputManager = GetComponentInChildren<InputManager>();
+        characterAnimator = GetComponentInChildren<Animator>();
 
         jumpVelocity = Vector3.zero;
     }

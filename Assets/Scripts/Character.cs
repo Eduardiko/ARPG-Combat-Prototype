@@ -38,6 +38,13 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isBackstepping = false;
     [HideInInspector] public bool isDodging = false;
 
+    // Character Parameters
+    [HideInInspector] public float health = 100f;
+
+    // Attack Information
+    [HideInInspector] public float damageAmmount = 10f;
+
+
     // References that I need in more than one place, could be converted to the character parameters holder
     [HideInInspector] public GameObject target;
 

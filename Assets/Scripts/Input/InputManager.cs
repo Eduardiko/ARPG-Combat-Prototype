@@ -70,10 +70,8 @@ public class InputManager : MonoBehaviour
     {
         if (isBuffering)
         {
-            if (bufferedTimeRemaining <= 0)
+            if (bufferedTimeRemaining >= 0)
             {
-                isBuffering = false;
-
                 switch (bufferedAction)
                 {
                     case BufferActions.ACTION_RUN:
@@ -97,12 +95,12 @@ public class InputManager : MonoBehaviour
                     default:
                         break;
                 }
+            } else
+            {
+                isBuffering = false;
             }
 
             bufferedTimeRemaining -= Time.deltaTime;
-        } else
-        {
-
         }
     }
 

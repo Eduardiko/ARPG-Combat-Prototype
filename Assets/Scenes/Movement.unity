@@ -746,7 +746,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.018189505, y: 0.000000017482602, z: -2.4125063e-10, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189484, y: -0.000000017368949, z: 2.3968197e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1109,7 +1109,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: 0.000000003958121, y: 9.563298e-10, z: 4.200139e-12, w: 1}
+  m_LocalRotation: {x: 0.0000000037252903, y: -6.140957e-10, z: -2.69707e-12, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2103,7 +2103,7 @@ GameObject:
   - component: {fileID: 1272392115}
   - component: {fileID: 1272392116}
   m_Layer: 0
-  m_Name: Damager
+  m_Name: WeaponDamager
   m_TagString: Weapon
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2842,7 +2842,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141456, y: 0.000000017775262, z: 4.0062198e-10, w: 0.9998355}
+  m_LocalRotation: {x: -0.018141454, y: 0.000000016827316, z: 3.7925693e-10, w: 0.9998355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3511,6 +3511,7 @@ GameObject:
   - component: {fileID: 330069501826700822}
   - component: {fileID: 330069501826700821}
   - component: {fileID: 6985017023614976586}
+  - component: {fileID: 6985017023614976587}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -3836,13 +3837,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5252582a58d41004daa817d556b3ff4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachAcceptanceThreshold: 10
-  topWeaponTransform: {fileID: 678785540}
-  bottomWeaponTransform: {fileID: 242733122}
-  topWeaponRect: {fileID: 650721258}
-  bottomWeaponRect: {fileID: 530969943}
-  manualPointerRect: {fileID: 1517630080}
-  referencePlaneTransform: {fileID: 493139580}
+  weaponDamager: {fileID: 1272392114}
 --- !u!4 &332140216431626955
 Transform:
   m_ObjectHideFlags: 0
@@ -5765,7 +5760,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: -0.0021959539, y: 7.332504e-10, z: 1.6101877e-12, w: 0.9999976}
+  m_LocalRotation: {x: -0.0021959539, y: -4.8360066e-10, z: -1.0619679e-12, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 1.66, z: -5}
   m_LocalScale: {x: 0.6187781, y: 0.61877805, z: 0.6187784}
   m_ConstrainProportionsScale: 0
@@ -6003,6 +5998,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9cefe76179333a74c914c26d2002cf7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &6985017023614976587
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330069501817349247}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d3e426c05c9ff7847a8dfcd3223864eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attachAcceptanceThreshold: 15
+  topWeaponTransform: {fileID: 678785540}
+  bottomWeaponTransform: {fileID: 242733122}
+  topWeaponRect: {fileID: 650721258}
+  bottomWeaponRect: {fileID: 530969943}
+  manualPointerRect: {fileID: 1517630080}
+  referencePlaneTransform: {fileID: 493139580}
 --- !u!1 &6994529591178411588
 GameObject:
   m_ObjectHideFlags: 0

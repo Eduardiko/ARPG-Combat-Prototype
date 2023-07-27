@@ -47,7 +47,7 @@ public class EvasionScript : MonoBehaviour
     private void UpdateStatesAndAnimations()
     {
         // Backstep
-        if (inputManager.tryingToBackstep && ableToBackstep)
+        if (inputManager.tryingToBackstep && ableToBackstep && !character.isPerformingAnAction)
         {
             inputManager.tryingToBackstep = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
@@ -57,7 +57,7 @@ public class EvasionScript : MonoBehaviour
             inputManager.tryingToBackstep = false;
 
         // Dodge Right
-        if (inputManager.tryingToDodgeRight && ableToDodge)
+        if (inputManager.tryingToDodgeRight && ableToDodge && !character.isPerformingAnAction)
         {
             inputManager.tryingToDodgeRight = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
@@ -67,7 +67,7 @@ public class EvasionScript : MonoBehaviour
             inputManager.tryingToDodgeRight = false;
 
         // Dodge Left
-        if (inputManager.tryingToDodgeLeft && ableToDodge)
+        if (inputManager.tryingToDodgeLeft && ableToDodge && !character.isPerformingAnAction)
         {
             inputManager.tryingToDodgeLeft = false;
             inputManager.bufferedAction = BufferActions.CLEAR;

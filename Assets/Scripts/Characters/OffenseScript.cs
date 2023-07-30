@@ -44,11 +44,14 @@ public class OffenseScript : MonoBehaviour
         {
             inputManager.tryingToAttack = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
+            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
             characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
         }
         else
             inputManager.tryingToAttack = false;
     }
+
+    
 
     private void ActivateDamageCollider()
     {

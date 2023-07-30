@@ -1726,7 +1726,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.018189501, y: 0.000000016882154, z: -2.3296473e-10, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189503, y: 0.000000017499602, z: -2.414852e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2323,7 +2323,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: 0.000000005122274, y: -0.0000000017550792, z: -7.708192e-12, w: 1}
+  m_LocalRotation: {x: 0.000000005122274, y: 0.0000000018521321, z: 8.134442e-12, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -4270,7 +4270,6 @@ MonoBehaviour:
   isDodging: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
-  damageAmmount: 10
   target: {fileID: 0}
 --- !u!136 &1324207619
 CapsuleCollider:
@@ -5094,7 +5093,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141454, y: -0.000000017888466, z: -4.0317336e-10, w: 0.9998355}
+  m_LocalRotation: {x: -0.018141456, y: 0.00000001793856, z: 4.043024e-10, w: 0.9998355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5275,6 +5274,8 @@ MonoBehaviour:
   bottomWeaponRect: {fileID: 1990835689}
   manualPointerRect: {fileID: 1889233915}
   referencePlaneTransform: {fileID: 512955646}
+  topAngle: 0
+  bottomAngle: 0
 --- !u!54 &1594295740
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5407,7 +5408,6 @@ MonoBehaviour:
   isDodging: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
-  damageAmmount: 10
   target: {fileID: 0}
 --- !u!136 &1594295748
 CapsuleCollider:
@@ -6182,7 +6182,6 @@ MonoBehaviour:
   isDodging: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
-  damageAmmount: 10
   target: {fileID: 0}
 --- !u!1 &1901026536
 GameObject:
@@ -9229,7 +9228,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: -0.0021959539, y: -9.555297e-10, z: -2.098303e-12, w: 0.9999976}
+  m_LocalRotation: {x: -0.0021959539, y: 9.407072e-10, z: 2.065754e-12, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 1.66, z: -5}
   m_LocalScale: {x: 0.6187781, y: 0.61877805, z: 0.6187784}
   m_ConstrainProportionsScale: 0
@@ -9457,7 +9456,6 @@ MonoBehaviour:
   isDodging: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
-  damageAmmount: 10
   target: {fileID: 0}
 --- !u!114 &6985017023614976586
 MonoBehaviour:
@@ -9490,6 +9488,8 @@ MonoBehaviour:
   bottomWeaponRect: {fileID: 530969943}
   manualPointerRect: {fileID: 1517630080}
   referencePlaneTransform: {fileID: 493139580}
+  topAngle: 0
+  bottomAngle: 0
 --- !u!1 &6994529591178411588
 GameObject:
   m_ObjectHideFlags: 0

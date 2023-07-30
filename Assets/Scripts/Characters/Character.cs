@@ -25,6 +25,13 @@ public class AnimationTriggerKeys
     public string directionZKey;
 }
 
+public struct AttackInfo
+{
+    public float damageAmmount;
+    public float topAngle;
+    public float bottomAngle;
+}
+
 public class Character : MonoBehaviour
 {
     // Character Parameters
@@ -51,7 +58,7 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isImmuneToDamage = false;
 
     // Attack Information
-    [HideInInspector] public float damageAmmount = 10f;
+    [HideInInspector] public AttackInfo attackInfo;
 
 
     // References that I need in more than one place, could be converted to the character parameters holder
@@ -101,4 +108,10 @@ public class Character : MonoBehaviour
         isDodging = false;
     }
 
+    public void SetAttackInfo(float damageAmmount, float topAngle, float bottomAngle)
+    {
+        attackInfo.damageAmmount = damageAmmount;
+        attackInfo.topAngle = topAngle;
+        attackInfo.bottomAngle = bottomAngle;
+    }
 }

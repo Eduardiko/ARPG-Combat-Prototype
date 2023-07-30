@@ -21,7 +21,7 @@ public class DamagableScript : MonoBehaviour
         if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage)
         {
             Character attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
-            ReceiveDamage(attackerCharacter.damageAmmount);
+            ReceiveDamage(attackerCharacter.attackInfo.damageAmmount);
         }
     }
 

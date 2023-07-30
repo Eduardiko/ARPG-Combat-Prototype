@@ -24,8 +24,8 @@ public class WeaponDial : MonoBehaviour
     private InputManager inputManager;
 
     // Variables
-    private float topAngle;
-    private float bottomAngle;
+    [HideInInspector] public float topAngle;
+    [HideInInspector] public float bottomAngle;
     private float manualAngle;
 
     private float radius;

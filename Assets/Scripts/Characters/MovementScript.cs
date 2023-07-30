@@ -211,13 +211,17 @@ public class MovementScript : MonoBehaviour
     #region JUMP
     private void JumpingLogic()
     {
+
         //Set jumpVelocity negative so we don't get errors with positive velocities
         if (character.isGrounded && jumpVelocity.y < 0)
             jumpVelocity.y = -2f;
 
         //In-air logic
         if (jumpVelocity.y >= 0.3f)
+        {
+            character.isGrounded = false;
             jumpVelocity.y += (gravity - jumpVelocity.y) * Time.deltaTime;
+        }
         else if(jumpVelocity.y < 0.3f && jumpVelocity.y >= 0f)
             jumpVelocity.y += gravity/4f * Time.deltaTime;
         else

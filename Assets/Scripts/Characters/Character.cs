@@ -27,13 +27,18 @@ public class AnimationTriggerKeys
 
 public class Character : MonoBehaviour
 {
+    // Character Parameters
+    [Header("Parameters")]
+    public float health = 100f;
+    public Transform lookAtTransform;
+
     // Acess Character Animations
     [Header("Animations")]
     [SerializeField] public AnimationTriggerKeys animKeys;
 
     // State Bools - Changed By Code
+    [HideInInspector] public bool isGrounded = true;
     [HideInInspector] public bool isRunning = false;
-    [HideInInspector] public bool isGrounded = false;
     [HideInInspector] public bool isLocking = false;
 
     // State Bools - Changed By Animations
@@ -45,9 +50,6 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isPerformingAnAction = false;
     [HideInInspector] public bool isImmuneToDamage = false;
 
-    // Character Parameters
-    [HideInInspector] public float health = 100f;
-
     // Attack Information
     [HideInInspector] public float damageAmmount = 10f;
 
@@ -57,7 +59,8 @@ public class Character : MonoBehaviour
 
     private void Start()
     {
-        target = new GameObject();
+        // True values will need to be here in Start() cause they can't be set beforehand idk why
+        isGrounded = true;
     }
 
     private void Update()
@@ -71,6 +74,7 @@ public class Character : MonoBehaviour
             isImmuneToDamage = true;
         else
             isImmuneToDamage = false;
+
     }
 
     private void IsAttacking()

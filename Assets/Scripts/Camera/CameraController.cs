@@ -126,7 +126,9 @@ public class CameraController : MonoBehaviour
     }
     private void UpdateLockedCamera()
     {
-        lockCamera.LookAt = character.target.transform;
+        
+        Transform targetLookAtTransform = character.target.GetComponent<Character>().lookAtTransform;
+        lockCamera.LookAt = targetLookAtTransform;
 
         // Change To FreeLook Camera if being far from the locked enemy
         playerToNearestEnemyVector = character.target.transform.position - transform.position;
@@ -134,13 +136,13 @@ public class CameraController : MonoBehaviour
             SetFreeLookCamera();
 
         // Rotates the camera so that the forward Vector is always the Vector between enemy & player
-        Vector3 direction = character.target.transform.position - transform.position;
+        Vector3 direction = targetLookAtTransform.position - transform.position;
         Quaternion rotation = Quaternion.LookRotation(direction);
         lockCamera.transform.rotation = Quaternion.Slerp(lockCamera.transform.rotation, rotation, lookAtSmoothing * Time.deltaTime);
 
         // Updates the position & scale of the UI
-        Vector3 targetPos = character.target.transform.position;
-        targetPos.y = targetPos.y * character.target.GetComponent<CapsuleCollider>().height * 2 / 3;
+        Vector3 targetPos = targetLookAtTransform.position;
+        //targetPos.y = targetPos.y * character.target.GetComponent<CapsuleCollider>().height * 2 / 3;
         uiLock.transform.position = targetPos;
         uiLock.transform.localScale = Vector3.one * ((lockCamera.transform.position - targetPos).magnitude);
     }

@@ -6,6 +6,8 @@ public class StaticEnemy : MonoBehaviour
 {
     // References
     private InputManager inputManager;
+    private Character character;
+    public GameObject player;
 
     // Variables
     [SerializeField] private float actionTriggerTime = 5f;
@@ -14,6 +16,9 @@ public class StaticEnemy : MonoBehaviour
     private void Start()
     {
         inputManager = GetComponent<InputManager>();
+        character = GetComponent<Character>();
+        character.isLocking = true;
+        character.target = player;
     }
 
     // Update is called once per frame
@@ -23,6 +28,7 @@ public class StaticEnemy : MonoBehaviour
         {
             actionTriggerTimer = actionTriggerTime;
             inputManager.tryingToAttack = true;
+            inputManager.inputMoveVector = new Vector2(0.01f, 0.01f);
         } else
         {
             actionTriggerTimer -= Time.deltaTime;

@@ -16,6 +16,9 @@ public class WeaponDial : MonoBehaviour
     [SerializeField] private RectTransform bottomWeaponRect;
     [SerializeField] private RectTransform manualPointerRect;
 
+    [SerializeField] private RectTransform topTargetWeaponRect;
+    [SerializeField] private RectTransform bottomTargetWeaponRect;
+
     [Header("Plane Reference")]
     public Transform referencePlaneTransform;
 
@@ -126,6 +129,18 @@ public class WeaponDial : MonoBehaviour
             isUIWeaponAttached = false;
             manualPointerRect.gameObject.SetActive(false);
         }
+
+        if (character.isLocking && character.target != null)
+        {
+            topTargetWeaponRect.gameObject.SetActive(true);
+            bottomTargetWeaponRect.gameObject.SetActive(true);
+        }
+        else
+        {
+            topTargetWeaponRect.gameObject.SetActive(false);
+            bottomTargetWeaponRect.gameObject.SetActive(false);
+        }
+
     }
 
     private void UpdateUI()
@@ -163,6 +178,33 @@ public class WeaponDial : MonoBehaviour
             // Apply the new position
             manualPointerRect.localPosition = new Vector3(x, y, manualPointerRect.localPosition.z);
         }
+
+        if(topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
+        {
+            WeaponDial targetWeaponDial = character.target.GetComponent<WeaponDial>();
+
+            // Convert angle to radians and subtract pi/2 to make 0 degrees point up
+            radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
+
+            // Calculate the new position
+            x = 0.6f * Mathf.Cos(radianTopAngle);
+            y = 0.6f * Mathf.Sin(radianTopAngle);
+
+            // Apply the new position
+            topTargetWeaponRect.localPosition = new Vector3(x, y, topTargetWeaponRect.localPosition.z);
+
+
+            // Convert angle to radians and subtract pi/2 to make 0 degrees point up
+            radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
+
+            // Calculate the new position
+            x = 0.6f * Mathf.Cos(radianBottomAngle);
+            y = 0.6f * Mathf.Sin(radianBottomAngle);
+
+            // Apply the new position
+            bottomTargetWeaponRect.localPosition = new Vector3(x, y, bottomTargetWeaponRect.localPosition.z);
+        }
+        
     }
 
     void OnDrawGizmos()

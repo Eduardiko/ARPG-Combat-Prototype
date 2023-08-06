@@ -44,8 +44,8 @@ public class OffenseScript : MonoBehaviour
         {
             inputManager.tryingToAttack = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
             characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
+            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
         }
         else
             inputManager.tryingToAttack = false;

@@ -44,16 +44,7 @@ public class InputManager : MonoBehaviour
     void Update()
     {
         UpdateInputBuffer();
-
-        if (inputMoveVector != Vector2.zero)
-            tryingToMove = true;
-        else
-            tryingToMove= false;
-
-        if (inputLookVector != Vector2.zero)
-            tryingToLook = true;
-        else
-            tryingToLook = false;
+        UpdateConstantBools();
     }
 
 
@@ -108,6 +99,19 @@ public class InputManager : MonoBehaviour
 
 
     #region ACTIONS
+
+    public void UpdateConstantBools()
+    {
+        if (inputMoveVector != Vector2.zero)
+            tryingToMove = true;
+        else
+            tryingToMove = false;
+
+        if (inputLookVector != Vector2.zero)
+            tryingToLook = true;
+        else
+            tryingToLook = false;
+    }
 
     // Movement Actions
     public void ActionJump(InputAction.CallbackContext context)

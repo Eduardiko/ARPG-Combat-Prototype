@@ -56,57 +56,70 @@ public class WeaponDial : MonoBehaviour
         UpdateUI();
     }
 
+    #region ANGLES
+
     private void SetAngles()
     {
         if (!isUIWeaponAttached)
+            SetTopBottomAngles();
+        else
+            SetAttachedTopBottomAngles();
+
+        ManageManualAngle();
+    }
+
+    private void SetTopBottomAngles()
+    {
+        planeNormal = referencePlaneTransform.up;
+
+        // Calculate the projection of the two points onto the plane
+        topProjection = Vector3.ProjectOnPlane(topWeaponTransform.position - referencePlaneTransform.position, planeNormal) + referencePlaneTransform.position;
+        bottomProjection = Vector3.ProjectOnPlane(bottomWeaponTransform.position - referencePlaneTransform.position, planeNormal) + referencePlaneTransform.position;
+
+        // Calculate the center and radius of the circle that passes through both projection points
+        centerRefPoint = (topProjection + bottomProjection) / 2.0f;
+        radius = Vector3.Distance(centerRefPoint, topProjection);
+
+        // Calculate the points to use as reference
+        topRefPoint = centerRefPoint + Vector3.up * radius;
+        bottomRefPoint = centerRefPoint + Vector3.down * radius;
+
+        // Calculate the angle between the two Vectors
+        Vector3 centerToRef;
+        Vector3 centerToPoint;
+
+        centerToRef = topRefPoint - centerRefPoint;
+        centerToPoint = topProjection - centerRefPoint;
+        topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
+        // Convert the {-180, 180} returned by the SignedAngle function to {0, 360} for QoL -> condition ? true : false
+        topAngle = topAngle < 0 ? 360f + topAngle : topAngle;
+
+        centerToRef = bottomRefPoint - centerRefPoint;
+        centerToPoint = topProjection - centerRefPoint;
+        bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
+        bottomAngle = bottomAngle < 0 ? 360f + bottomAngle : bottomAngle;
+    }
+
+    private void SetAttachedTopBottomAngles()
+    {
+        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
+        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
+
+        // Attach the nearest part to the manual angle
+        if (angularTopDifference < angularBottomDifference)
         {
-            planeNormal = referencePlaneTransform.up;
-
-            // Calculate the projection of the two points onto the plane
-            topProjection = Vector3.ProjectOnPlane(topWeaponTransform.position - referencePlaneTransform.position, planeNormal) + referencePlaneTransform.position;
-            bottomProjection = Vector3.ProjectOnPlane(bottomWeaponTransform.position - referencePlaneTransform.position, planeNormal) + referencePlaneTransform.position;
-
-            // Calculate the center and radius of the circle that passes through both projection points
-            centerRefPoint = (topProjection + bottomProjection) / 2.0f;
-            radius = Vector3.Distance(centerRefPoint, topProjection);
-
-            // Calculate the points to use as reference
-            topRefPoint = centerRefPoint + Vector3.up * radius;
-            bottomRefPoint = centerRefPoint + Vector3.down * radius;
-
-            // Calculate the angle between the two Vectors
-            Vector3 centerToRef;
-            Vector3 centerToPoint;
-
-            centerToRef = topRefPoint - centerRefPoint;
-            centerToPoint = topProjection - centerRefPoint;
-            topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
-            // Convert the {-180, 180} returned by the SignedAngle function to {0, 360} for QoL -> condition ? true : false
-            topAngle = topAngle < 0 ? 360f + topAngle : topAngle;
-
-            centerToRef = bottomRefPoint - centerRefPoint;
-            centerToPoint = topProjection - centerRefPoint;
-            bottomAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
-            bottomAngle = bottomAngle < 0 ? 360f + bottomAngle : bottomAngle;
+            topAngle = manualAngle;
+            bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
         }
         else
         {
-            float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
-            float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
-
-            if (angularTopDifference < angularBottomDifference)
-            {
-                topAngle = manualAngle;
-                bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-            }
-            else
-            {
-                bottomAngle = manualAngle;
-                topAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-            }
-
+            bottomAngle = manualAngle;
+            topAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
         }
+    }
 
+    private void ManageManualAngle()
+    {
         if (inputManager.inputWeaponDialVector != Vector2.zero && character.isLocking)
         {
             // Set UI Active to be rendered
@@ -129,7 +142,51 @@ public class WeaponDial : MonoBehaviour
             isUIWeaponAttached = false;
             manualPointerRect.gameObject.SetActive(false);
         }
+    }
 
+    #endregion
+
+    #region UI
+    private void UpdateUI()
+    {
+        UpdateAnglesUI();
+
+        UpdateTargetAnglesUI();
+        
+    }
+
+    private void UpdateAnglesUI()
+    {
+        // Top Angle
+        // Convert angle to radians
+        float radianTopAngle = (90 - topAngle) * Mathf.Deg2Rad;
+
+        // Calculate the new position
+        float x = 0.5f * Mathf.Cos(radianTopAngle);
+        float y = 0.5f * Mathf.Sin(radianTopAngle);
+
+        // Apply the new position
+        topWeaponRect.localPosition = new Vector3(x, y, topWeaponRect.localPosition.z);
+
+        // Bottom Angle
+        float radianBottomAngle = (90 - bottomAngle) * Mathf.Deg2Rad;
+        x = 0.5f * Mathf.Cos(radianBottomAngle);
+        y = 0.5f * Mathf.Sin(radianBottomAngle);
+        bottomWeaponRect.localPosition = new Vector3(x, y, bottomWeaponRect.localPosition.z);
+
+        // Manual Angle
+        if (manualPointerRect.gameObject.activeSelf)
+        {
+            float radianManualAngle = (90 - manualAngle) * Mathf.Deg2Rad;
+            x = 0.5f * Mathf.Cos(radianManualAngle);
+            y = 0.5f * Mathf.Sin(radianManualAngle);
+            manualPointerRect.localPosition = new Vector3(x, y, manualPointerRect.localPosition.z);
+        }
+    }
+
+    private void UpdateTargetAnglesUI()
+    {
+        // Activate/Deactivate UI
         if (character.isLocking && character.target != null)
         {
             topTargetWeaponRect.gameObject.SetActive(true);
@@ -141,71 +198,26 @@ public class WeaponDial : MonoBehaviour
             bottomTargetWeaponRect.gameObject.SetActive(false);
         }
 
-    }
-
-    private void UpdateUI()
-    {
-        // Convert angle to radians and subtract pi/2 to make 0 degrees point up
-        float radianTopAngle = (90 - topAngle) * Mathf.Deg2Rad;
-
-        // Calculate the new position
-        float x = 0.5f * Mathf.Cos(radianTopAngle);
-        float y = 0.5f * Mathf.Sin(radianTopAngle);
-
-        // Apply the new position
-        topWeaponRect.localPosition = new Vector3(x, y, topWeaponRect.localPosition.z);
-
-
-        // Convert angle to radians and subtract pi/2 to make 0 degrees point up
-        float radianBottomAngle = (90 - bottomAngle) * Mathf.Deg2Rad;
-
-        // Calculate the new position
-        x = 0.5f * Mathf.Cos(radianBottomAngle);
-        y = 0.5f * Mathf.Sin(radianBottomAngle);
-
-        // Apply the new position
-        bottomWeaponRect.localPosition = new Vector3(x, y, bottomWeaponRect.localPosition.z);
-
-        if (manualPointerRect.gameObject.activeSelf)
-        {
-            // Convert angle to radians and subtract pi/2 to make 0 degrees point up
-            float radianManualAngle = (90 - manualAngle) * Mathf.Deg2Rad;
-
-            // Calculate the new position
-            x = 0.5f * Mathf.Cos(radianManualAngle);
-            y = 0.5f * Mathf.Sin(radianManualAngle);
-
-            // Apply the new position
-            manualPointerRect.localPosition = new Vector3(x, y, manualPointerRect.localPosition.z);
-        }
-
-        if(topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
+        // Target Angles (Enemy Angles)
+        if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
         {
             WeaponDial targetWeaponDial = character.target.GetComponent<WeaponDial>();
 
-            // Convert angle to radians and subtract pi/2 to make 0 degrees point up
-            radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
-
-            // Calculate the new position
-            x = 0.6f * Mathf.Cos(radianTopAngle);
-            y = 0.6f * Mathf.Sin(radianTopAngle);
-
-            // Apply the new position
+            float radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
+            float x = 0.6f * Mathf.Cos(radianTopAngle);
+            float y = 0.6f * Mathf.Sin(radianTopAngle);
             topTargetWeaponRect.localPosition = new Vector3(x, y, topTargetWeaponRect.localPosition.z);
 
-
-            // Convert angle to radians and subtract pi/2 to make 0 degrees point up
-            radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
-
-            // Calculate the new position
+            float radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
             x = 0.6f * Mathf.Cos(radianBottomAngle);
             y = 0.6f * Mathf.Sin(radianBottomAngle);
-
-            // Apply the new position
             bottomTargetWeaponRect.localPosition = new Vector3(x, y, bottomTargetWeaponRect.localPosition.z);
         }
-        
     }
+
+    #endregion
+
+    #region HELPERS
 
     void OnDrawGizmos()
     {
@@ -227,4 +239,6 @@ public class WeaponDial : MonoBehaviour
         Gizmos.DrawLine(centerRefPoint, bottomRefPoint);
         Gizmos.DrawLine(bottomProjection, centerRefPoint);
     }
+
+    #endregion
 }

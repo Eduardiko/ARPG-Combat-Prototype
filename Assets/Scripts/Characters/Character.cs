@@ -25,6 +25,7 @@ public class AnimationTriggerKeys
     public string directionZKey;
 }
 
+
 public struct AttackInfo
 {
     public float damageAmmount;
@@ -39,7 +40,7 @@ public class Character : MonoBehaviour
     public float health = 100f;
     public Transform lookAtTransform;
 
-    // Acess Character Animations
+    // Access Character Animations
     [Header("Animations")]
     [SerializeField] public AnimationTriggerKeys animKeys;
 
@@ -57,31 +58,36 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isPerformingAnAction = false;
     [HideInInspector] public bool isImmuneToDamage = false;
 
-    // Attack Information
+    // Combat Information
     [HideInInspector] public AttackInfo attackInfo;
-
-
-    // References that I need in more than one place, could be converted to the character parameters holder
     [HideInInspector] public GameObject target;
 
     private void Start()
     {
         // True values will need to be here in Start() cause they can't be set beforehand idk why
         isGrounded = true;
+        attackInfo.damageAmmount = 10;
     }
 
     private void Update()
+    {
+        UpdateGeneralBools();
+    }
+
+    #region STATES
+    
+    private void UpdateGeneralBools()
     {
         if (isAttacking || isBackstepping || isDodging)
             isPerformingAnAction = true;
         else
             isPerformingAnAction = false;
 
+
         if (isBackstepping || isDodging)
             isImmuneToDamage = true;
         else
             isImmuneToDamage = false;
-
     }
 
     private void IsAttacking()
@@ -107,6 +113,10 @@ public class Character : MonoBehaviour
     {
         isDodging = false;
     }
+    
+    #endregion
+
+    #region HELPERS
 
     public void SetAttackInfo(float damageAmmount, float topAngle, float bottomAngle)
     {
@@ -114,4 +124,6 @@ public class Character : MonoBehaviour
         attackInfo.topAngle = topAngle;
         attackInfo.bottomAngle = bottomAngle;
     }
+
+    #endregion
 }

@@ -31,16 +31,18 @@ public class OffenseScript : MonoBehaviour
     private void UpdatePossibleActions()
     {
         // Can The Player Attack?
-        if(character.isGrounded)
+        if(character.isGrounded && !character.isPerformingAnAction)
             ableToAttack = true;
         else
             ableToAttack = false;
+
     }
 
     private void UpdateStatesAndAnimations()
     {
+        
         // Weapon Top Attack
-        if (inputManager.tryingToWeaponTopAttack && ableToAttack && !character.isPerformingAnAction)
+        if (inputManager.tryingToWeaponTopAttack && ableToAttack)
         {
             // Division of the Weapon Dial in 8 parts with a 22.5 degree offset to set different animations 
             float thresholdAngle = weaponDial.topAngle + 22.5f > 360f ? (weaponDial.topAngle + 22.5f - 360f) / 45f : (weaponDial.topAngle + 22.5f) / 45f;
@@ -58,7 +60,7 @@ public class OffenseScript : MonoBehaviour
             inputManager.tryingToWeaponTopAttack = false;
 
         // Weapon Bottom Attack
-        if (inputManager.tryingToWeaponBottomAttack && ableToAttack && !character.isPerformingAnAction)
+        if (inputManager.tryingToWeaponBottomAttack && ableToAttack)
         {
             float thresholdAngle = weaponDial.bottomAngle + 22.5f > 360f ? (weaponDial.bottomAngle + 22.5f - 360f) / 45f : (weaponDial.bottomAngle + 22.5f) / 45f;
             float attackSector = Mathf.Ceil(thresholdAngle);

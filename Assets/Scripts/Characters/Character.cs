@@ -48,10 +48,11 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isRunning = false;
     [HideInInspector] public bool isLocking = false;
 
-    // State Bools - Changed By Animations
+    // State Bools - Changed By Animations - To Have More Control
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isBackstepping = false;
     [HideInInspector] public bool isDodging = false;
+    [HideInInspector] public bool isMovementRestriced = false;
 
     // State Bools - General Ones - Used when not caring about a specific state
     [HideInInspector] public bool isPerformingAnAction = false;
@@ -92,27 +93,49 @@ public class Character : MonoBehaviour
     private void IsAttacking()
     {
         isAttacking = true;
-        isBackstepping = false;
-        isDodging = false;
     }
 
     private void IsNotAttacking()
     {
         isAttacking = false;
+        isDodging = false;
+        isBackstepping = false;
     }
 
     private void IsDodging()
     {
         isDodging = true;
-        isBackstepping = false;
-        isAttacking = false;
     }
 
     private void IsNotDodging()
     {
+        isAttacking = false;
         isDodging = false;
+        isBackstepping = false;
     }
-    
+
+    private void IsBackstepping()
+    {
+        isBackstepping = true;
+    }
+
+    private void IsNotBackstepping()
+    {
+        isAttacking = false;
+        isDodging = false;
+        isBackstepping = false;
+    }
+
+    private void IsMovementRestricted()
+    {
+        isMovementRestriced = true;
+    }
+
+    private void IsNotMovementRestricted()
+    {
+        isMovementRestriced = false;
+    }
+
     #endregion
 
     #region HELPERS

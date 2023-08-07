@@ -68,7 +68,7 @@ public class MovementScript : MonoBehaviour
             ableToRun = false;
 
         // Can The Player Jump?
-        if (character.isGrounded && jumpVelocity.y < 0)
+        if (character.isGrounded && jumpVelocity.y < 0 && !character.isPerformingAnAction && !character.isLocking)
             ableToJump = true;
         else
             ableToJump = false;
@@ -84,7 +84,7 @@ public class MovementScript : MonoBehaviour
             characterAnimator.SetBool(character.animKeys.isLockingKey, false);
 
         // Walking
-        if (inputManager.tryingToMove)
+        if (inputManager.tryingToMove && !character.isMovementRestriced)
         {
             if (ableToRun && inputManager.tryingToRun)
                 EnterRunning();

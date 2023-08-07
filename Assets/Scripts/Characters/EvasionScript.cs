@@ -32,13 +32,13 @@ public class EvasionScript : MonoBehaviour
     private void UpdatePossibleActions()
     {
         // Can The Player Backstep?
-        if (character.isGrounded)
+        if (character.isGrounded && !character.isPerformingAnAction)
             ableToBackstep = true;
         else
             ableToBackstep = false;
 
         // Can The Player Dodge?
-        if (character.isGrounded)
+        if (character.isGrounded && !character.isPerformingAnAction)
             ableToDodge = true;
         else
             ableToDodge = false;
@@ -47,7 +47,7 @@ public class EvasionScript : MonoBehaviour
     private void UpdateStatesAndAnimations()
     {
         // Backstep
-        if (inputManager.tryingToBackstep && ableToBackstep && !character.isPerformingAnAction)
+        if (inputManager.tryingToBackstep && ableToBackstep)
         {
             inputManager.tryingToBackstep = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
@@ -58,7 +58,7 @@ public class EvasionScript : MonoBehaviour
             inputManager.tryingToBackstep = false;
 
         // Dodge Right
-        if (inputManager.tryingToDodgeRight && ableToDodge && !character.isPerformingAnAction)
+        if (inputManager.tryingToDodgeRight && ableToDodge)
         {
             inputManager.tryingToDodgeRight = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
@@ -69,7 +69,7 @@ public class EvasionScript : MonoBehaviour
             inputManager.tryingToDodgeRight = false;
 
         // Dodge Left
-        if (inputManager.tryingToDodgeLeft && ableToDodge && !character.isPerformingAnAction)
+        if (inputManager.tryingToDodgeLeft && ableToDodge)
         {
             inputManager.tryingToDodgeLeft = false;
             inputManager.bufferedAction = BufferActions.CLEAR;

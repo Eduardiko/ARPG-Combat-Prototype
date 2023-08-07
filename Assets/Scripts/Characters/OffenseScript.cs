@@ -39,16 +39,40 @@ public class OffenseScript : MonoBehaviour
 
     private void UpdateStatesAndAnimations()
     {
-        // Attack
-        if (inputManager.tryingToAttack && ableToAttack && !character.isPerformingAnAction)
+        // Weapon Top Attack
+        if (inputManager.tryingToWeaponTopAttack && ableToAttack && !character.isPerformingAnAction)
         {
-            inputManager.tryingToAttack = false;
+            // Division of the Weapon Dial in 8 parts with a 22.5 degree offset to set different animations 
+            float thresholdAngle = weaponDial.topAngle + 22.5f > 360f ? (weaponDial.topAngle + 22.5f - 360f) / 45f : (weaponDial.topAngle + 22.5f) / 45f;
+            float attackSector = Mathf.Ceil(thresholdAngle);
+
+            inputManager.tryingToWeaponTopAttack = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
+
+            characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
             characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
+
             character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
         }
         else
-            inputManager.tryingToAttack = false;
+            inputManager.tryingToWeaponTopAttack = false;
+
+        // Weapon Bottom Attack
+        if (inputManager.tryingToWeaponBottomAttack && ableToAttack && !character.isPerformingAnAction)
+        {
+            float thresholdAngle = weaponDial.bottomAngle + 22.5f > 360f ? (weaponDial.bottomAngle + 22.5f - 360f) / 45f : (weaponDial.bottomAngle + 22.5f) / 45f;
+            float attackSector = Mathf.Ceil(thresholdAngle);
+
+            inputManager.tryingToWeaponBottomAttack = false;
+            inputManager.bufferedAction = BufferActions.CLEAR;
+
+            characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
+            characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
+
+            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
+        }
+        else
+            inputManager.tryingToWeaponBottomAttack = false;
     }
 
     

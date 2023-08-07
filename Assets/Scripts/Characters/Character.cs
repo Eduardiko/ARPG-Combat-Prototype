@@ -9,12 +9,8 @@ public class AnimationTriggerKeys
     // Triggers
     public string jumpTriggerKey;
     public string runTriggerKey;
-
-    public string backstepTriggerKey;
-    public string dodgeRightTriggerKey;
-    public string dodgeLeftTriggerKey;
-
     public string attackTriggerKey;
+    public string dodgeTriggerKey;
 
     // Bools
     public string isRunningKey;
@@ -23,8 +19,11 @@ public class AnimationTriggerKeys
     // Floats
     public string directionXKey;
     public string directionZKey;
-}
 
+    // Ints
+    public string attackDirection;
+    public string dodgeDirection;
+}
 
 public struct AttackInfo
 {

@@ -27,7 +27,7 @@ public class StaticEnemy : MonoBehaviour
         if(actionTriggerTimer < 0f)
         {
             actionTriggerTimer = actionTriggerTime;
-            inputManager.tryingToAttack = true;
+            inputManager.tryingToWeaponTopAttack = true;
             inputManager.inputMoveVector = new Vector2(0.01f, 0.01f);
         } else
         {

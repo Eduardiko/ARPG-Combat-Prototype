@@ -7,7 +7,8 @@ public enum BufferActions
 {
     ACTION_RUN,
     ACTION_JUMP,
-    ACTION_ATTACK,
+    ACTION_WEAPON_TOP_ATTACK,
+    ACTION_WEAPON_BOTTOM_ATTACK,
     ACTION_BACKSTEP,
     ACTION_DODGE_RIGHT,
     ACTION_DODGE_LEFT,
@@ -31,7 +32,8 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public Vector2 inputLookVector = new Vector2();
 
     // Offensive Inputs
-    [HideInInspector] public bool tryingToAttack = false;
+    [HideInInspector] public bool tryingToWeaponTopAttack = false;
+    [HideInInspector] public bool tryingToWeaponBottomAttack = false;
     [HideInInspector] public Vector2 inputWeaponDialVector = new Vector2();
 
     // Input Manager Variables
@@ -71,8 +73,11 @@ public class InputManager : MonoBehaviour
                     case BufferActions.ACTION_JUMP:
                         tryingToJump = true;
                         break;
-                    case BufferActions.ACTION_ATTACK:
-                        tryingToAttack = true;
+                    case BufferActions.ACTION_WEAPON_TOP_ATTACK:
+                        tryingToWeaponTopAttack = true;
+                        break;
+                    case BufferActions.ACTION_WEAPON_BOTTOM_ATTACK:
+                        tryingToWeaponBottomAttack = true;
                         break;
                     case BufferActions.ACTION_BACKSTEP:
                         tryingToBackstep = true;
@@ -175,12 +180,21 @@ public class InputManager : MonoBehaviour
     }
 
     // Offensive Actions
-    public void ActionAttack(InputAction.CallbackContext context)
+    public void ActionWeaponTopAttack(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            tryingToAttack = true;
-            SendActionToInputBuffer(BufferActions.ACTION_ATTACK);
+            tryingToWeaponTopAttack = true;
+            SendActionToInputBuffer(BufferActions.ACTION_WEAPON_TOP_ATTACK);
+        }
+    }
+
+    public void ActionWeaponBottomAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            tryingToWeaponBottomAttack = true;
+            SendActionToInputBuffer(BufferActions.ACTION_WEAPON_BOTTOM_ATTACK);
         }
     }
 

@@ -51,7 +51,8 @@ public class EvasionScript : MonoBehaviour
         {
             inputManager.tryingToBackstep = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetTrigger(character.animKeys.backstepTriggerKey);
+            characterAnimator.SetFloat(character.animKeys.dodgeDirection, 0f);
+            characterAnimator.SetTrigger(character.animKeys.dodgeTriggerKey);
         }
         else
             inputManager.tryingToBackstep = false;
@@ -61,7 +62,8 @@ public class EvasionScript : MonoBehaviour
         {
             inputManager.tryingToDodgeRight = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetTrigger(character.animKeys.dodgeRightTriggerKey);
+            characterAnimator.SetFloat(character.animKeys.dodgeDirection, 1f);
+            characterAnimator.SetTrigger(character.animKeys.dodgeTriggerKey);
         }
         else
             inputManager.tryingToDodgeRight = false;
@@ -71,7 +73,8 @@ public class EvasionScript : MonoBehaviour
         {
             inputManager.tryingToDodgeLeft = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetTrigger(character.animKeys.dodgeLeftTriggerKey);
+            characterAnimator.SetFloat(character.animKeys.dodgeDirection, -1f);
+            characterAnimator.SetTrigger(character.animKeys.dodgeTriggerKey);
         }
         else
             inputManager.tryingToDodgeLeft = false;

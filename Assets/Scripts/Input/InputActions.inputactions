@@ -51,9 +51,18 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Attack",
+                    "name": "WeaponTopAttack",
                     "type": "Button",
                     "id": "c6e48b52-ce23-48ac-877f-2949141717c8",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "WeaponBottomAttack",
+                    "type": "Button",
+                    "id": "6d90c565-f8ec-4baa-aa83-ce703404f0a8",
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": "",
@@ -302,7 +311,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "WeaponTopAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -313,7 +322,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": "",
-                    "action": "Attack",
+                    "action": "WeaponTopAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -358,6 +367,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "AdjustWeaponDial",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "89207cc8-959a-4ea9-9d4e-9f70307cd455",
+                    "path": "<Gamepad>/leftShoulder",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WeaponBottomAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

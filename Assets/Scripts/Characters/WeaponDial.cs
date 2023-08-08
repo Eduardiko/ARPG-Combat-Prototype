@@ -206,12 +206,12 @@ public class WeaponDial : MonoBehaviour
             float radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
             float x = 0.6f * Mathf.Cos(radianTopAngle);
             float y = 0.6f * Mathf.Sin(radianTopAngle);
-            topTargetWeaponRect.localPosition = new Vector3(x, y, topTargetWeaponRect.localPosition.z);
+            topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
 
             float radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
             x = 0.6f * Mathf.Cos(radianBottomAngle);
             y = 0.6f * Mathf.Sin(radianBottomAngle);
-            bottomTargetWeaponRect.localPosition = new Vector3(x, y, bottomTargetWeaponRect.localPosition.z);
+            bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
         }
     }
 

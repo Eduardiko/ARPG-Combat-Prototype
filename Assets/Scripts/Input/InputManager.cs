@@ -38,10 +38,9 @@ public class InputManager : MonoBehaviour
 
     // Input Manager Variables
     [HideInInspector] public BufferActions bufferedAction;
-    private float bufferTime = 0.3f;
+    private float bufferTime = 0.20f;
     private float bufferedTimeRemaining = 0f;
-    private bool isBuffering = false; 
-
+    private bool isBuffering = false;
 
     void Update()
     {

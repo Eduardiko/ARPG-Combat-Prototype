@@ -13,6 +13,7 @@ public class OffenseScript : MonoBehaviour
     
     // Bools
     private bool ableToAttack = false;
+    private bool attackSpamLimiterActive = false;
 
     private void Start()
     {
@@ -30,12 +31,15 @@ public class OffenseScript : MonoBehaviour
     
     private void UpdatePossibleActions()
     {
+        // If any action is successfully performed, the limiter is deactivated
+        if (character.isPerformingAnAction)
+            attackSpamLimiterActive = false;
+        
         // Can The Player Attack?
-        if(character.isGrounded && !character.isPerformingAnAction)
+        if(character.isGrounded && !character.isPerformingAnAction && !attackSpamLimiterActive)
             ableToAttack = true;
         else
             ableToAttack = false;
-
     }
 
     private void UpdateStatesAndAnimations()
@@ -44,6 +48,8 @@ public class OffenseScript : MonoBehaviour
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
         {
+            attackSpamLimiterActive = true;
+
             // Division of the Weapon Dial in 8 parts with a 22.5 degree offset to set different animations 
             float thresholdAngle = weaponDial.topAngle + 22.5f > 360f ? (weaponDial.topAngle + 22.5f - 360f) / 45f : (weaponDial.topAngle + 22.5f) / 45f;
             float attackSector = Mathf.Ceil(thresholdAngle);
@@ -62,6 +68,8 @@ public class OffenseScript : MonoBehaviour
         // Weapon Bottom Attack
         if (inputManager.tryingToWeaponBottomAttack && ableToAttack)
         {
+            attackSpamLimiterActive = true;
+
             float thresholdAngle = weaponDial.bottomAngle + 22.5f > 360f ? (weaponDial.bottomAngle + 22.5f - 360f) / 45f : (weaponDial.bottomAngle + 22.5f) / 45f;
             float attackSector = Mathf.Ceil(thresholdAngle);
 

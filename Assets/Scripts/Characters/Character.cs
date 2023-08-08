@@ -19,10 +19,9 @@ public class AnimationTriggerKeys
     // Floats
     public string directionXKey;
     public string directionZKey;
-
-    // Ints
     public string attackDirection;
     public string dodgeDirection;
+
 }
 
 public struct AttackInfo

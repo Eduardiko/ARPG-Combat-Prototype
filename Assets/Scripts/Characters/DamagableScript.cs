@@ -27,9 +27,11 @@ public class DamagableScript : MonoBehaviour
 
     public void ManageDamage(AttackInfo attackInfo)
     {
+     
+
         // Check if any of the two Weapon Angles is inside the threshold
-        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, attackInfo.topAngle));
-        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.bottomAngle, attackInfo.bottomAngle));
+        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackInfo.topAngle));
+        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.bottomAngle, 360f - attackInfo.bottomAngle));
 
         if (angularTopDifference > 30)
             ReceiveDamage(attackInfo.damageAmmount);

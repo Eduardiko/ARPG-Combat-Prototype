@@ -13,6 +13,9 @@ public class OffenseScript : MonoBehaviour
     
     // Bools
     private bool ableToAttack = false;
+
+    // Comment - this limiter is added so that attacks don't perform
+    //           animation cancelling at the start of another attack
     private bool attackSpamLimiterActive = false;
 
     private void Start()

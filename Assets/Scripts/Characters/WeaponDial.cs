@@ -29,7 +29,8 @@ public class WeaponDial : MonoBehaviour
     // Variables
     [HideInInspector] public float topAngle;
     [HideInInspector] public float bottomAngle;
-    private float manualAngle;
+    [HideInInspector] public bool isUIWeaponAttached = true;
+    [HideInInspector] public float manualAngle;
 
     private float radius;
 
@@ -42,7 +43,6 @@ public class WeaponDial : MonoBehaviour
     private Vector3 centerRefPoint;
     private Vector3 bottomRefPoint;
 
-    private bool isUIWeaponAttached = true;
 
     private void Start()
     {
@@ -102,20 +102,26 @@ public class WeaponDial : MonoBehaviour
 
     private void SetAttachedTopBottomAngles()
     {
-        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
-        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
+        topAngle = manualAngle;
+        bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
 
-        // Attach the nearest part to the manual angle
-        if (angularTopDifference < angularBottomDifference)
-        {
-            topAngle = manualAngle;
-            bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-        }
-        else
-        {
-            bottomAngle = manualAngle;
-            topAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-        }
+
+        // ---- Uncomment To Use Threshold System (and delete ?? code) ----
+
+        //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
+        //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
+
+        //// Attach the nearest part to the manual angle
+        //if (angularTopDifference < angularBottomDifference)
+        //{
+        //    topAngle = manualAngle;
+        //    bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
+        //}
+        //else
+        //{
+        //    bottomAngle = manualAngle;
+        //    topAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
+        //}
     }
 
     private void ManageManualAngle()
@@ -124,17 +130,20 @@ public class WeaponDial : MonoBehaviour
         {
             // Set UI Active to be rendered
             manualPointerRect.gameObject.SetActive(true);
+            isUIWeaponAttached = true;
 
             // Calculate manual angle
             float angleRadians = Mathf.Atan2(inputManager.inputWeaponDialVector.x, inputManager.inputWeaponDialVector.y);
             manualAngle = angleRadians * Mathf.Rad2Deg;
             manualAngle = manualAngle < 0 ? 360f + manualAngle : manualAngle;
 
-            // Check if any of the two Weapon Angles is inside the threshold
-            float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
-            float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
-            if (angularTopDifference <= attachAcceptanceThreshold || angularBottomDifference <= attachAcceptanceThreshold)
-                isUIWeaponAttached = true;
+
+            // ---- Uncomment To Use Threshold System (and delete ?? isUIWeaponattached) ----
+
+            //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
+            //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
+            //if (angularTopDifference <= attachAcceptanceThreshold || angularBottomDifference <= attachAcceptanceThreshold)
+            //    isUIWeaponAttached = true;
         }
         else
         {
@@ -150,9 +159,7 @@ public class WeaponDial : MonoBehaviour
     private void UpdateUI()
     {
         UpdateAnglesUI();
-
         UpdateTargetAnglesUI();
-        
     }
 
     private void UpdateAnglesUI()
@@ -187,31 +194,54 @@ public class WeaponDial : MonoBehaviour
     private void UpdateTargetAnglesUI()
     {
         // Activate/Deactivate UI
+
         if (character.isLocking && character.target != null)
         {
-            topTargetWeaponRect.gameObject.SetActive(true);
-            bottomTargetWeaponRect.gameObject.SetActive(true);
-        }
-        else
-        {
-            topTargetWeaponRect.gameObject.SetActive(false);
-            bottomTargetWeaponRect.gameObject.SetActive(false);
-        }
+            Character targetCharacter = character.target.GetComponent<Character>();
 
-        // Target Angles (Enemy Angles)
-        if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
-        {
-            WeaponDial targetWeaponDial = character.target.GetComponent<WeaponDial>();
+            // ---- To constantly render Target Angles put 'else' outside this 'if' & delete if(targetCharacter.isAttacking) ----
+            if (targetCharacter.isAttacking)
+            {
+                topTargetWeaponRect.gameObject.SetActive(true);
+                bottomTargetWeaponRect.gameObject.SetActive(true);
+            }
+            else
+            {
+                topTargetWeaponRect.gameObject.SetActive(false);
+                bottomTargetWeaponRect.gameObject.SetActive(false);
+            }
 
-            float radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
-            float x = 0.6f * Mathf.Cos(radianTopAngle);
-            float y = 0.6f * Mathf.Sin(radianTopAngle);
-            topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
+            // Target Angles (Enemy Angles)
+            if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
+            {
 
-            float radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
-            x = 0.6f * Mathf.Cos(radianBottomAngle);
-            y = 0.6f * Mathf.Sin(radianBottomAngle);
-            bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
+                float radianTopAngle = (90 - targetCharacter.attackInfo.topAngle) * Mathf.Deg2Rad;
+                float x = 0.6f * Mathf.Cos(radianTopAngle);
+                float y = 0.6f * Mathf.Sin(radianTopAngle);
+                topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
+
+                float radianBottomAngle = (90 - targetCharacter.attackInfo.bottomAngle) * Mathf.Deg2Rad;
+                x = 0.6f * Mathf.Cos(radianBottomAngle);
+                y = 0.6f * Mathf.Sin(radianBottomAngle);
+                bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
+            }
+
+            // ---- Uncomment to constantly render Target Angles (replace by ?? code) ----
+
+            //if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
+            //{
+            //    WeaponDial targetWeaponDial = character.target.GetComponent<WeaponDial>();
+
+            //    float radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
+            //    float x = 0.6f * Mathf.Cos(radianTopAngle);
+            //    float y = 0.6f * Mathf.Sin(radianTopAngle);
+            //    topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
+
+            //    float radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
+            //    x = 0.6f * Mathf.Cos(radianBottomAngle);
+            //    y = 0.6f * Mathf.Sin(radianBottomAngle);
+            //    bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
+            //}
         }
     }
 

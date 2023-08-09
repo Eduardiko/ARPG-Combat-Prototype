@@ -103,7 +103,7 @@ public class MovementScript : MonoBehaviour
         }
         else
         {
-            if (character.isRunning)
+            if (character.isRunning && !character.isMovementRestriced)
                 QuitRunning();
 
             Idle();

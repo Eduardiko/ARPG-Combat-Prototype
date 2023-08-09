@@ -6,6 +6,7 @@ public class StaticEnemy : MonoBehaviour
 {
     // References
     private InputManager inputManager;
+    private WeaponDial weaponDial;
     private Character character;
     public GameObject player;
 
@@ -16,6 +17,7 @@ public class StaticEnemy : MonoBehaviour
     private void Start()
     {
         inputManager = GetComponent<InputManager>();
+        weaponDial = GetComponent<WeaponDial>();
         character = GetComponent<Character>();
         character.isLocking = true;
         character.target = player;
@@ -28,6 +30,16 @@ public class StaticEnemy : MonoBehaviour
         {
             actionTriggerTimer = actionTriggerTime;
             inputManager.tryingToWeaponTopAttack = true;
+
+            // Force a random angle for each attack
+            float randomAngle = Random.Range(Random.Range(0f, 360f), Random.Range(0f, 360f));
+            float oppositeAngle = randomAngle + 180 > 360 ? randomAngle - 180 : randomAngle + 180;
+
+            weaponDial.isUIWeaponAttached = true;
+            weaponDial.manualAngle = randomAngle;
+            weaponDial.topAngle = randomAngle;
+            weaponDial.bottomAngle = oppositeAngle;
+
             inputManager.inputMoveVector = new Vector2(0.01f, 0.01f);
         } else
         {

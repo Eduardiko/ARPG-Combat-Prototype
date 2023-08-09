@@ -49,6 +49,8 @@ public class EvasionScript : MonoBehaviour
         // Backstep
         if (inputManager.tryingToBackstep && ableToBackstep)
         {
+            StopCoroutine(character.BackStep());
+            StartCoroutine(character.BackStep());
             inputManager.tryingToBackstep = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
             characterAnimator.SetFloat(character.animKeys.dodgeDirection, 0f);
@@ -60,6 +62,8 @@ public class EvasionScript : MonoBehaviour
         // Dodge Right
         if (inputManager.tryingToDodgeRight && ableToDodge)
         {
+            StopCoroutine(character.BackStep());
+            StartCoroutine(character.BackStep(1));
             inputManager.tryingToDodgeRight = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
             characterAnimator.SetFloat(character.animKeys.dodgeDirection, 1f);
@@ -71,6 +75,8 @@ public class EvasionScript : MonoBehaviour
         // Dodge Left
         if (inputManager.tryingToDodgeLeft && ableToDodge)
         {
+            StopCoroutine(character.BackStep());
+            StartCoroutine(character.BackStep(-1));
             inputManager.tryingToDodgeLeft = false;
             inputManager.bufferedAction = BufferActions.CLEAR;
             characterAnimator.SetFloat(character.animKeys.dodgeDirection, -1f);

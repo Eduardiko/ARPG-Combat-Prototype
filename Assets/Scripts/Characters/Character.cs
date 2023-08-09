@@ -37,6 +37,8 @@ public class Character : MonoBehaviour
     [Header("Parameters")]
     public float health = 100f;
     public Transform lookAtTransform;
+    [SerializeField] private float stepLengthMultiplier = 1;
+    [SerializeField] private float stepTime;
 
     // Access Character Animations
     [Header("Animations")]
@@ -144,6 +146,79 @@ public class Character : MonoBehaviour
         attackInfo.damageAmmount = damageAmmount;
         attackInfo.topAngle = topAngle;
         attackInfo.bottomAngle = bottomAngle;
+    }
+
+    public IEnumerator Step()
+    {
+        float elapsedTime = 0;
+
+        // Rotate the character to the target one last time
+        if(isLocking && target != null)
+        {
+            // Y axis to 0 so Vector is calculated at same height
+            Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
+            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+        }
+
+        while (elapsedTime < stepTime)
+        {
+            float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
+
+            // Calculate the new position after stepping forward
+            Vector3 newPosition = transform.position + transform.forward * stepDistance;
+
+            // Move the GameObject to the new position
+            transform.position = newPosition;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+    }
+
+    public IEnumerator BackStep(int direction=0)
+    {
+        float elapsedTime = 0;
+
+        // Rotate the character to the target one last time
+        if (isLocking && target != null)
+        {
+            // Y axis to 0 so Vector is calculated at same height
+            Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
+            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+        }
+
+        while (elapsedTime < stepTime)
+        {
+            float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
+
+            Vector3 newPosition = new Vector3();
+
+            switch (direction)
+            {
+                case 0:
+                    // Calculate the new position after stepping forward
+                    newPosition = transform.position - transform.forward * stepDistance * 2;
+                    break;
+                case 1:
+                    // Calculate the new position after stepping forward
+                    newPosition = transform.position + transform.right * stepDistance * 2;
+                    break;
+                case -1:
+                    // Calculate the new position after stepping forward
+                    newPosition = transform.position - transform.right * stepDistance * 2;
+                    break;
+                default:
+                    break;
+            }
+
+            // Move the GameObject to the new position
+            transform.position = newPosition;
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
     }
 
     #endregion

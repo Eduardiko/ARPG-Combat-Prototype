@@ -59908,6 +59908,13 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
+  - time: 0
+    functionName: LockUI
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
   - time: 0.25
     functionName: IsAttacking
     data: 
@@ -59931,6 +59938,13 @@ AnimationClip:
     messageOptions: 0
   - time: 0.8333333
     functionName: IsNotAttacking
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.8333333
+    functionName: UnlockUI
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

@@ -60,23 +60,8 @@ public class OffenseScript : MonoBehaviour
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
         {
-            StopCoroutine(character.Step());
-            StartCoroutine(character.Step());
-            attackSpamLimiterActive = true;
-            combo = combo + 1 > 2 ? combo : combo + 1;
-            
-
-            // Division of the Weapon Dial in 8 parts with a 22.5 degree offset to set different animations 
-            float thresholdAngle = weaponDial.topAngle + 22.5f > 360f ? (weaponDial.topAngle + 22.5f - 360f) / 45f : (weaponDial.topAngle + 22.5f) / 45f;
-            float attackSector = Mathf.Ceil(thresholdAngle);
-
             inputManager.tryingToWeaponTopAttack = false;
-            inputManager.bufferedAction = BufferActions.CLEAR;
-
-            characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
-            characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
-
-            character.SetAttackInfo(5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+            Attack(weaponDial.topAngle);
         }
         else
             inputManager.tryingToWeaponTopAttack = false;
@@ -84,30 +69,45 @@ public class OffenseScript : MonoBehaviour
         // Weapon Bottom Attack
         if (inputManager.tryingToWeaponBottomAttack && ableToAttack)
         {
-            StopCoroutine(character.Step());
-            StartCoroutine(character.Step());
-            attackSpamLimiterActive = true;
-            combo = combo + 1 > 2 ? combo : combo + 1;
-
-            float thresholdAngle = weaponDial.bottomAngle + 22.5f > 360f ? (weaponDial.bottomAngle + 22.5f - 360f) / 45f : (weaponDial.bottomAngle + 22.5f) / 45f;
-            float attackSector = Mathf.Ceil(thresholdAngle);
-
             inputManager.tryingToWeaponBottomAttack = false;
-            inputManager.bufferedAction = BufferActions.CLEAR;
-
-            characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
-            characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
-
-            character.SetAttackInfo(5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+            Attack(weaponDial.bottomAngle);
         }
         else
             inputManager.tryingToWeaponBottomAttack = false;
     }
 
-    
-    
+    private void Attack(float angle)
+    {
+        StopCoroutine(character.Step());
+        StartCoroutine(character.Step());
+        attackSpamLimiterActive = true;
+        combo = combo + 1 > 2 ? combo : combo + 1;
 
+        inputManager.bufferedAction = BufferActions.CLEAR;
 
+        float thresholdAngle = angle + 22.5f > 360f ? (angle + 22.5f - 360f) / 45f : (angle + 22.5f) / 45f;
+        float attackSector = Mathf.Ceil(thresholdAngle);
+
+        if(combo < 2)
+        {
+            switch (attackSector)
+            {
+                case 1:
+                    attackSector = angle > 337.5f ? 8 : 2;
+                    break;
+                case 5:
+                    attackSector = angle > 180 ? 6 : 4;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
+        characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
+
+        character.SetAttackInfo(5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+    }
 
     private void ActivateDamageCollider()
     {

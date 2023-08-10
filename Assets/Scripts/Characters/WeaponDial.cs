@@ -25,11 +25,13 @@ public class WeaponDial : MonoBehaviour
     // References
     private Character character;
     private InputManager inputManager;
+    private Animator characterAnimator;
 
     // Variables
     [HideInInspector] public float topAngle;
     [HideInInspector] public float bottomAngle;
     [HideInInspector] public bool isUIWeaponAttached = true;
+    [HideInInspector] public bool isUILocked = false;
     [HideInInspector] public float manualAngle;
 
     private float radius;
@@ -48,6 +50,7 @@ public class WeaponDial : MonoBehaviour
     {
         character = GetComponent<Character>();
         inputManager = GetComponent<InputManager>();
+        characterAnimator = GetComponent<Animator>();
     }
 
     private void Update()
@@ -106,7 +109,7 @@ public class WeaponDial : MonoBehaviour
         bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
 
 
-        // ---- Uncomment To Use Threshold System (and delete ?? code) ----
+        // ---- Uncomment To Use Threshold System (and delete upper code) ----
 
         //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
         //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
@@ -138,7 +141,7 @@ public class WeaponDial : MonoBehaviour
             manualAngle = manualAngle < 0 ? 360f + manualAngle : manualAngle;
 
 
-            // ---- Uncomment To Use Threshold System (and delete ?? isUIWeaponattached) ----
+            // ---- Uncomment To Use Threshold System (and delete upper isUIWeaponattached) ----
 
             //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
             //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
@@ -158,7 +161,9 @@ public class WeaponDial : MonoBehaviour
     #region UI
     private void UpdateUI()
     {
-        UpdateAnglesUI();
+        if(isUIWeaponAttached || !isUILocked)
+            UpdateAnglesUI();
+        
         UpdateTargetAnglesUI();
     }
 
@@ -226,7 +231,7 @@ public class WeaponDial : MonoBehaviour
                 bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
             }
 
-            // ---- Uncomment to constantly render Target Angles (replace by ?? code) ----
+            // ---- Uncomment to constantly render Target Angles (replace upper code) ----
 
             //if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
             //{
@@ -269,6 +274,18 @@ public class WeaponDial : MonoBehaviour
         Gizmos.DrawLine(centerRefPoint, bottomRefPoint);
         Gizmos.DrawLine(bottomProjection, centerRefPoint);
     }
+
+
+    private void LockUI()
+    {
+        isUILocked = true;
+    }
+
+    private void UnlockUI()
+    {
+        isUILocked = false;
+    }
+
 
     #endregion
 }

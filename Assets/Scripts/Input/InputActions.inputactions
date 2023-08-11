@@ -69,6 +69,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "WeaponThrustAttack",
+                    "type": "Button",
+                    "id": "1d38caed-c16c-405f-a34b-eecb015961c2",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Backstep",
                     "type": "Button",
                     "id": "1cfc5d93-dee1-40f5-abe3-7564815611ff",
@@ -378,6 +387,17 @@
                     "processors": "",
                     "groups": "",
                     "action": "WeaponBottomAttack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "35a06a37-ae9e-48db-a35b-1078dc03600a",
+                    "path": "<Gamepad>/buttonNorth",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "WeaponThrustAttack",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

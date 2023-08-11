@@ -102,6 +102,22 @@ public class OffenseScript : MonoBehaviour
         }
         else
             inputManager.tryingToWeaponBottomAttack = false;
+
+        // Weapon Thrust Attack
+        if (inputManager.tryingToWeaponThrustAttack && ableToAttack)
+        {
+            if (isWeaponUpsideDown)
+            {
+                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+                isWeaponUpsideDown = false;
+            }
+
+            inputManager.tryingToWeaponThrustAttack = false;
+            ThrustAttack();
+        }
+        else
+            inputManager.tryingToWeaponThrustAttack = false;
     }
 
     private void Attack(float angle)
@@ -109,10 +125,14 @@ public class OffenseScript : MonoBehaviour
         weaponDial.isUILocked = true;
         character.isMovementRestriced = true;
 
-        StopCoroutine(character.Step());
-        StartCoroutine(character.Step());
+        if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
+        {
+            StopCoroutine(character.Step());
+            StartCoroutine(character.Step());
+        }
+        
         attackSpamLimiterActive = true;
-        combo = combo + 1 > 2 ? 0 : combo + 1;
+        
 
         inputManager.bufferedAction = BufferActions.CLEAR;
 
@@ -154,7 +174,38 @@ public class OffenseScript : MonoBehaviour
         characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
         characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
 
-        character.SetAttackInfo(5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+        if(combo == 0)
+            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
+        else
+            character.SetAttackInfo(5f + 5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+
+        combo = combo + 1 > 2 ? 0 : combo + 1;
+    }
+
+    private void ThrustAttack()
+    {
+        weaponDial.isUILocked = true;
+        character.isMovementRestriced = true;
+
+        if (!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
+        {
+            StopCoroutine(character.Step());
+            StartCoroutine(character.Step());
+        }
+
+        attackSpamLimiterActive = true;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        UpdateWeapon(false, true);
+        characterAnimator.SetFloat(character.animKeys.attackDirection, 0f);
+        characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
+
+        if (combo == 0)
+            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
+        else
+            character.SetAttackInfo(5f + 5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+
+        combo = combo + 1 > 2 ? 0 : combo + 1;
     }
 
     private void ActivateDamageCollider()

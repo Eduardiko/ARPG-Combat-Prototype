@@ -647,6 +647,14 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: c0e905a92c989fd48ac6af72f962ca67, type: 2}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: WalkDirectionX
+    m_Mirror: 0
+  - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 2cecace89775cbb4f9c1e89a716c0c26, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 1}
@@ -712,7 +720,7 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: AttackDirection
   m_BlendParameterY: WalkDirectionX
-  m_MinThreshold: 1
+  m_MinThreshold: 0
   m_MaxThreshold: 8
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
@@ -1769,6 +1777,14 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 04999d32e59bb414a9578526b20bbdc6, type: 2}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: WalkDirectionX
+    m_Mirror: 0
+  - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 2cecace89775cbb4f9c1e89a716c0c26, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 1}
@@ -1834,7 +1850,7 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: AttackDirection
   m_BlendParameterY: WalkDirectionX
-  m_MinThreshold: 1
+  m_MinThreshold: 0
   m_MaxThreshold: 8
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
@@ -2091,6 +2107,14 @@ BlendTree:
   m_Name: Blend Tree
   m_Childs:
   - serializedVersion: 2
+    m_Motion: {fileID: 7400000, guid: 04999d32e59bb414a9578526b20bbdc6, type: 2}
+    m_Threshold: 0
+    m_Position: {x: 0, y: 0}
+    m_TimeScale: 1
+    m_CycleOffset: 0
+    m_DirectBlendParameter: WalkDirectionX
+    m_Mirror: 0
+  - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 2cecace89775cbb4f9c1e89a716c0c26, type: 2}
     m_Threshold: 1
     m_Position: {x: 0, y: 1}
@@ -2156,7 +2180,7 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: AttackDirection
   m_BlendParameterY: WalkDirectionX
-  m_MinThreshold: 1
+  m_MinThreshold: 0
   m_MaxThreshold: 8
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0

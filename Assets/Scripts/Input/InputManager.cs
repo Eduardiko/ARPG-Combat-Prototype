@@ -9,6 +9,7 @@ public enum BufferActions
     ACTION_JUMP,
     ACTION_WEAPON_TOP_ATTACK,
     ACTION_WEAPON_BOTTOM_ATTACK,
+    ACTION_WEAPON_THRUST_ATTACK,
     ACTION_BACKSTEP,
     ACTION_DODGE_RIGHT,
     ACTION_DODGE_LEFT,
@@ -34,6 +35,7 @@ public class InputManager : MonoBehaviour
     // Offensive Inputs
     [HideInInspector] public bool tryingToWeaponTopAttack = false;
     [HideInInspector] public bool tryingToWeaponBottomAttack = false;
+    [HideInInspector] public bool tryingToWeaponThrustAttack = false;
     [HideInInspector] public Vector2 inputWeaponDialVector = new Vector2();
 
     // Input Manager Variables
@@ -77,6 +79,9 @@ public class InputManager : MonoBehaviour
                         break;
                     case BufferActions.ACTION_WEAPON_BOTTOM_ATTACK:
                         tryingToWeaponBottomAttack = true;
+                        break;
+                    case BufferActions.ACTION_WEAPON_THRUST_ATTACK:
+                        tryingToWeaponThrustAttack = true;
                         break;
                     case BufferActions.ACTION_BACKSTEP:
                         tryingToBackstep = true;
@@ -144,6 +149,7 @@ public class InputManager : MonoBehaviour
             SendActionToInputBuffer(BufferActions.ACTION_BACKSTEP);
         }
     }
+
     public void ActionDodgeRight(InputAction.CallbackContext context)
     {
         if (context.performed)
@@ -194,6 +200,15 @@ public class InputManager : MonoBehaviour
         {
             tryingToWeaponBottomAttack = true;
             SendActionToInputBuffer(BufferActions.ACTION_WEAPON_BOTTOM_ATTACK);
+        }
+    }
+
+    public void ActionWeaponThrustAttack(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            tryingToWeaponThrustAttack = true;
+            SendActionToInputBuffer(BufferActions.ACTION_WEAPON_THRUST_ATTACK);
         }
     }
 

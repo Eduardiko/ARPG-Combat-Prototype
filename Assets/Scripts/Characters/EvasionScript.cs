@@ -62,6 +62,8 @@ public class EvasionScript : MonoBehaviour
         // Dodge Right
         if (inputManager.tryingToDodgeRight && ableToDodge)
         {
+            UpdateWeapon(false, true);
+
             StopCoroutine(character.BackStep());
             StartCoroutine(character.BackStep(1));
             inputManager.tryingToDodgeRight = false;
@@ -75,6 +77,8 @@ public class EvasionScript : MonoBehaviour
         // Dodge Left
         if (inputManager.tryingToDodgeLeft && ableToDodge)
         {
+            UpdateWeapon(true, false);
+
             StopCoroutine(character.BackStep());
             StartCoroutine(character.BackStep(-1));
             inputManager.tryingToDodgeLeft = false;
@@ -86,4 +90,9 @@ public class EvasionScript : MonoBehaviour
             inputManager.tryingToDodgeLeft = false;
     }
 
+    private void UpdateWeapon(bool lActive, bool rActive)
+    {
+        character.RWeapon.SetActive(rActive);
+        character.LWeapon.SetActive(lActive);
+    }
 }

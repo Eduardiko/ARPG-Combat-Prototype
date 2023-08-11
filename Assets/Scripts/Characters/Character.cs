@@ -37,12 +37,18 @@ public class Character : MonoBehaviour
     [Header("Parameters")]
     public float health = 100f;
     public Transform lookAtTransform;
+    [SerializeField] private float attackStepLengthMultiplier = 1;
+    [SerializeField] private float attackStepTime;
     [SerializeField] private float stepLengthMultiplier = 1;
     [SerializeField] private float stepTime;
 
     // Access Character Animations
     [Header("Animations")]
     [SerializeField] public AnimationTriggerKeys animKeys;
+
+    // Fake It Until U Make It References
+    public GameObject RWeapon;
+    public GameObject LWeapon;
 
     // State Bools - Changed By Code
     [HideInInspector] public bool isGrounded = true;
@@ -62,6 +68,7 @@ public class Character : MonoBehaviour
     // Combat Information
     [HideInInspector] public AttackInfo attackInfo;
     [HideInInspector] public GameObject target;
+
 
     private void Start()
     {
@@ -153,7 +160,7 @@ public class Character : MonoBehaviour
         float elapsedTime = 0;
 
         // Rotate the character to the target one last time
-        if(isLocking && target != null)
+        if (isLocking && target != null)
         {
             // Y axis to 0 so Vector is calculated at same height
             Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
@@ -161,9 +168,9 @@ public class Character : MonoBehaviour
             transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
         }
 
-        while (elapsedTime < stepTime)
+        while (elapsedTime < attackStepTime)
         {
-            float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
+            float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime);
 
             // Calculate the new position after stepping forward
             Vector3 newPosition = transform.position + transform.forward * stepDistance;
@@ -178,6 +185,7 @@ public class Character : MonoBehaviour
 
     public IEnumerator BackStep(int direction=0)
     {
+
         float elapsedTime = 0;
 
         // Rotate the character to the target one last time

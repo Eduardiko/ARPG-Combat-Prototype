@@ -52,6 +52,8 @@ public class MovementScript : MonoBehaviour
         UpdatePossibleActions();
         UpdateStatesAndAnimations();
 
+        UpdateWeapon();
+
         MoveLogic();
         JumpingLogic();
     }
@@ -275,4 +277,22 @@ public class MovementScript : MonoBehaviour
     }
 
     #endregion
+
+
+    private void UpdateWeapon()
+    {
+        if(inputManager.inputMoveVector != Vector2.zero && !character.isMovementRestriced)
+        {
+            if(inputManager.inputMoveVector.x > 0)
+            {
+                character.RWeapon.SetActive(true);
+                character.LWeapon.SetActive(false);
+            } 
+            else
+            {
+                character.RWeapon.SetActive(false);
+                character.LWeapon.SetActive(true);
+            }
+        }
+    }
 }

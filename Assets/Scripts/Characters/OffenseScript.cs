@@ -4,7 +4,10 @@ using UnityEngine.InputSystem;
 
 public class OffenseScript : MonoBehaviour
 {
-    [SerializeField] private GameObject weaponDamager;
+    [SerializeField] private GameObject weaponRDamager;
+    [SerializeField] private GameObject weaponLDamager;
+
+    private GameObject weaponDamager;
 
 
     // References
@@ -23,6 +26,8 @@ public class OffenseScript : MonoBehaviour
     // Comment - this limiter is added so that attacks don't perform
     //           animation cancelling at the start of another attack
     private bool attackSpamLimiterActive = false;
+
+    private bool isWeaponUpsideDown = false;
 
     private void Start()
     {
@@ -55,11 +60,27 @@ public class OffenseScript : MonoBehaviour
     {
         // Reset Combo
         if (!character.isMovementRestriced || character.isImmuneToDamage)
+        {
             combo = 0;
+            
+            if(isWeaponUpsideDown)
+            {
+                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+                isWeaponUpsideDown = false;
+            }
+        }
 
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
         {
+            if(isWeaponUpsideDown)
+            {
+                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+                isWeaponUpsideDown = false;
+            }
+
             inputManager.tryingToWeaponTopAttack = false;
             Attack(weaponDial.topAngle);
         }
@@ -69,6 +90,13 @@ public class OffenseScript : MonoBehaviour
         // Weapon Bottom Attack
         if (inputManager.tryingToWeaponBottomAttack && ableToAttack)
         {
+            if(!isWeaponUpsideDown)
+            {
+                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+                isWeaponUpsideDown = true;
+            }
+
             inputManager.tryingToWeaponBottomAttack = false;
             Attack(weaponDial.bottomAngle);
         }
@@ -78,10 +106,13 @@ public class OffenseScript : MonoBehaviour
 
     private void Attack(float angle)
     {
+        weaponDial.isUILocked = true;
+        character.isMovementRestriced = true;
+
         StopCoroutine(character.Step());
         StartCoroutine(character.Step());
         attackSpamLimiterActive = true;
-        combo = combo + 1 > 2 ? combo : combo + 1;
+        combo = combo + 1 > 2 ? 0 : combo + 1;
 
         inputManager.bufferedAction = BufferActions.CLEAR;
 
@@ -103,6 +134,23 @@ public class OffenseScript : MonoBehaviour
             }
         }
 
+        if(angle <= 180f)
+            UpdateWeapon(false, true);
+        else
+            UpdateWeapon(true, false);
+
+        switch (attackSector)
+        {
+            case 3:
+                UpdateWeapon(true, false);
+                break;
+            case 7:
+                UpdateWeapon(false, true);
+                break;
+            default:
+                break;
+        }
+
         characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
         characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
 
@@ -117,5 +165,16 @@ public class OffenseScript : MonoBehaviour
     private void DeactivateDamageCollider()
     {
         weaponDamager.SetActive(false);
+    }
+
+    private void UpdateWeapon(bool lActive, bool rActive)
+    {
+        character.RWeapon.SetActive(rActive);
+        character.LWeapon.SetActive(lActive);
+
+        if (character.RWeapon.activeSelf)
+            weaponDamager = weaponRDamager;
+        else
+            weaponDamager = weaponLDamager;
     }
 }

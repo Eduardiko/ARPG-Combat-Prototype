@@ -59936,15 +59936,15 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.8333333
-    functionName: IsNotAttacking
+  - time: 0.81666666
+    functionName: UnlockUI
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.8333333
-    functionName: UnlockUI
+    functionName: IsNotAttacking
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

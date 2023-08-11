@@ -35957,7 +35957,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.48333332
+  - time: 0.31666666
+    functionName: UnlockUI
+    data: 
+    objectReferenceParameter: {fileID: 0}
+    floatParameter: 0
+    intParameter: 0
+    messageOptions: 0
+  - time: 0.33333334
     functionName: IsNotDodging
     data: 
     objectReferenceParameter: {fileID: 0}

@@ -8,8 +8,13 @@ public class WeaponDial : MonoBehaviour
     [SerializeField] private float attachAcceptanceThreshold = 15f;
 
     [Header("Weapon Transforms")]
-    [SerializeField] private Transform topWeaponTransform;
-    [SerializeField] private Transform bottomWeaponTransform;
+    [SerializeField] private Transform topRWeaponTransform;
+    [SerializeField] private Transform bottomRWeaponTransform;
+    [SerializeField] private Transform topLWeaponTransform;
+    [SerializeField] private Transform bottomLWeaponTransform;
+
+    private Transform topWeaponTransform;
+    private Transform bottomWeaponTransform;
 
     [Header("Weapon UI Sprites")]
     [SerializeField] private RectTransform topWeaponRect;
@@ -55,8 +60,23 @@ public class WeaponDial : MonoBehaviour
 
     private void Update()
     {
+        UpdateWeapon();
+
         SetAngles();
         UpdateUI();
+    }
+
+    private void UpdateWeapon()
+    {
+        if(character.RWeapon.activeSelf)
+        {
+            topWeaponTransform = topRWeaponTransform;
+            bottomWeaponTransform = bottomRWeaponTransform;
+        } else
+        {
+            topWeaponTransform = topLWeaponTransform;
+            bottomWeaponTransform = bottomLWeaponTransform;
+        }
     }
 
     #region ANGLES

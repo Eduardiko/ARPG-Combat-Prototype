@@ -42854,15 +42854,15 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.75
-    functionName: IsNotAttacking
+  - time: 0.73333335
+    functionName: UnlockUI
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
   - time: 0.75
-    functionName: UnlockUI
+    functionName: IsNotAttacking
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0

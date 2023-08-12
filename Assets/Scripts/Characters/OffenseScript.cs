@@ -125,7 +125,7 @@ public class OffenseScript : MonoBehaviour
         weaponDial.isUILocked = true;
         character.isMovementRestriced = true;
 
-        if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
+        if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2.3f)
         {
             StopCoroutine(character.Step());
             StartCoroutine(character.Step());

@@ -125,7 +125,7 @@ public class OffenseScript : MonoBehaviour
         weaponDial.isUILocked = true;
         character.isMovementRestriced = true;
 
-        if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2.3f)
+        if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
         {
             StopCoroutine(character.Step());
             StartCoroutine(character.Step());
@@ -171,6 +171,7 @@ public class OffenseScript : MonoBehaviour
                 break;
         }
 
+        characterAnimator.SetInteger(character.animKeys.comboKey, combo);
         characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
         characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
 
@@ -197,6 +198,7 @@ public class OffenseScript : MonoBehaviour
         inputManager.bufferedAction = BufferActions.CLEAR;
 
         UpdateWeapon(false, true);
+        characterAnimator.SetInteger(character.animKeys.comboKey, combo);
         characterAnimator.SetFloat(character.animKeys.attackDirection, 0f);
         characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
 

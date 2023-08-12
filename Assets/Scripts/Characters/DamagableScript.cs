@@ -9,6 +9,9 @@ public class DamagableScript : MonoBehaviour
     private Animator characterAnimator;
     private WeaponDial weaponDial;
 
+    private float damageResetTime = 0.3f;
+    private float damageResetTimer = 0.3f;
+
     private void Start()
     {
         character = GetComponentInChildren<Character>();
@@ -16,19 +19,24 @@ public class DamagableScript : MonoBehaviour
         weaponDial = GetComponent<WeaponDial>();
     }
 
+    private void Update()
+    {
+        if(damageResetTimer < damageResetTime)
+            damageResetTimer += Time.deltaTime;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage)
+        if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage && damageResetTimer >= damageResetTime)
         {
             Character attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
             ManageDamage(attackerCharacter.attackInfo);
+            damageResetTimer = 0f;
         }
     }
 
     public void ManageDamage(AttackInfo attackInfo)
     {
-     
-
         // Check if any of the two Weapon Angles is inside the threshold
         float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackInfo.topAngle));
         float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.bottomAngle, 360f - attackInfo.bottomAngle));
@@ -36,19 +44,49 @@ public class DamagableScript : MonoBehaviour
         if (angularTopDifference > 30)
             ReceiveDamage(attackInfo.damageAmmount);
         else if (angularTopDifference < 10)
-            print("UN PARY LOCO");
+            Parry();
         else
-            print("Has been foken warded");
+            Guard();
     }
 
     public void ReceiveDamage(float damageAmmount)
     {
         character.health -= damageAmmount;
         print(gameObject.name + "'s remaining health: " + character.health);
+
+        if (character.health < 0)
+        {
+            Die();
+            return;
+        } 
+
+        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+        float randomAnimID = Random.Range(1f, 5f);
+        characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+    }
+
+    public void Guard()
+    {
+        print("guard");
+        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+
+        float randomAnimID = Random.Range(6f, 8f);
+        characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
     }
 
     public void Parry()
     {
-        // Trigger Parry To Other Man
+        print("parry");
+        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+
+        //float randomAnimID = Random.Range(6f, 8f);
+        characterAnimator.SetFloat(character.animKeys.hitID, 9f);
+    }
+
+    public void Die()
+    {
+        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+        float randomAnimID = Random.Range(11f, 12f);
+        characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
     }
 }

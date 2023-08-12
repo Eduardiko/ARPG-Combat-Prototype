@@ -11,6 +11,7 @@ public class AnimationTriggerKeys
     public string runTriggerKey;
     public string attackTriggerKey;
     public string dodgeTriggerKey;
+    public string hitTriggerKey;
 
     // Bools
     public string isRunningKey;
@@ -21,7 +22,10 @@ public class AnimationTriggerKeys
     public string directionZKey;
     public string attackDirection;
     public string dodgeDirection;
+    public string hitID;
 
+    // Ints
+    public string comboKey;
 }
 
 public struct AttackInfo
@@ -54,12 +58,14 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isGrounded = true;
     [HideInInspector] public bool isRunning = false;
     [HideInInspector] public bool isLocking = false;
+    [HideInInspector] public bool isDead = false;
 
     // State Bools - Changed By Animations - To Have More Control
     [HideInInspector] public bool isAttacking = false;
     [HideInInspector] public bool isBackstepping = false;
     [HideInInspector] public bool isDodging = false;
     [HideInInspector] public bool isMovementRestriced = false;
+    [HideInInspector] public bool isStaggered = false;
 
     // State Bools - General Ones - Used when not caring about a specific state
     [HideInInspector] public bool isPerformingAnAction = false;
@@ -75,6 +81,7 @@ public class Character : MonoBehaviour
         // True values will need to be here in Start() cause they can't be set beforehand idk why
         isGrounded = true;
         attackInfo.damageAmmount = 10;
+        attackInfo.topAngle = 180f;
     }
 
     private void Update()
@@ -86,11 +93,10 @@ public class Character : MonoBehaviour
     
     private void UpdateGeneralBools()
     {
-        if (isAttacking || isBackstepping || isDodging)
+        if (isAttacking || isBackstepping || isDodging || isStaggered || isDead)
             isPerformingAnAction = true;
         else
             isPerformingAnAction = false;
-
 
         if (isBackstepping || isDodging)
             isImmuneToDamage = true;
@@ -106,8 +112,6 @@ public class Character : MonoBehaviour
     private void IsNotAttacking()
     {
         isAttacking = false;
-        isDodging = false;
-        isBackstepping = false;
     }
 
     private void IsDodging()
@@ -117,9 +121,7 @@ public class Character : MonoBehaviour
 
     private void IsNotDodging()
     {
-        isAttacking = false;
         isDodging = false;
-        isBackstepping = false;
     }
 
     private void IsBackstepping()
@@ -129,8 +131,6 @@ public class Character : MonoBehaviour
 
     private void IsNotBackstepping()
     {
-        isAttacking = false;
-        isDodging = false;
         isBackstepping = false;
     }
 
@@ -142,6 +142,21 @@ public class Character : MonoBehaviour
     private void IsNotMovementRestricted()
     {
         isMovementRestriced = false;
+    }
+
+    private void IsStaggered()
+    {
+        isStaggered = true;
+    }
+
+    private void IsNotStaggered()
+    {
+        isStaggered = false;
+    }
+
+    private void IsDead()
+    {
+        isDead = true;
     }
 
     #endregion

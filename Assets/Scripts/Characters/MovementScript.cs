@@ -64,7 +64,7 @@ public class MovementScript : MonoBehaviour
         character.isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
 
         // Can The Player Run?
-        if (character.isGrounded)
+        if (character.isGrounded && !character.isPerformingAnAction)
             ableToRun = true;
         else
             ableToRun = false;
@@ -105,7 +105,7 @@ public class MovementScript : MonoBehaviour
         }
         else
         {
-            if (character.isRunning && !character.isMovementRestriced)
+            if (character.isRunning)
                 QuitRunning();
 
             Idle();

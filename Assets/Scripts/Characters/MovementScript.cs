@@ -35,6 +35,7 @@ public class MovementScript : MonoBehaviour
     // Bools
     private bool ableToJump = false;
     private bool ableToRun = false;
+    private bool ableToMove = false;
 
 
     private void Start()
@@ -49,13 +50,16 @@ public class MovementScript : MonoBehaviour
 
     private void Update()
     {
-        UpdatePossibleActions();
-        UpdateStatesAndAnimations();
+        if(!character.isDead)
+        {
+            UpdatePossibleActions();
+            UpdateStatesAndAnimations();
 
-        UpdateWeapon();
+            UpdateWeapon();
 
-        MoveLogic();
-        JumpingLogic();
+            MoveLogic();
+            JumpingLogic();
+        }
     }
 
     private void UpdatePossibleActions()
@@ -74,7 +78,6 @@ public class MovementScript : MonoBehaviour
             ableToJump = true;
         else
             ableToJump = false;
-
     }
 
     private void UpdateStatesAndAnimations()
@@ -108,7 +111,7 @@ public class MovementScript : MonoBehaviour
             if (character.isRunning)
                 QuitRunning();
 
-            Idle();
+                Idle();
         }
 
         // Jumping

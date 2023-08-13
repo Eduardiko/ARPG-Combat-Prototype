@@ -147,6 +147,9 @@ public class Character : MonoBehaviour
     private void IsStaggered()
     {
         isStaggered = true;
+        isAttacking = false;
+        isDodging = false;
+        isBackstepping = false;
     }
 
     private void IsNotStaggered()

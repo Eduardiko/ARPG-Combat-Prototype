@@ -30,33 +30,33 @@ public class DamagableScript : MonoBehaviour
         if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage && damageResetTimer >= damageResetTime)
         {
             Character attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
-            ManageDamage(attackerCharacter.attackInfo);
+            ManageDamage(attackerCharacter);
             damageResetTimer = 0f;
         }
     }
 
-    public void ManageDamage(AttackInfo attackInfo)
+    public void ManageDamage(Character attackerCharacter)
     {
         // Check if any of the two Weapon Angles is inside the threshold
-        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackInfo.topAngle));
-        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.bottomAngle, 360f - attackInfo.bottomAngle));
+        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.topAngle));
+        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.bottomAngle, 360f - attackerCharacter.attackInfo.bottomAngle));
 
         if (angularTopDifference > 30)
-            ReceiveDamage(attackInfo.damageAmmount);
+            ReceiveDamage(attackerCharacter);
         else if (angularTopDifference < 10)
             Parry();
         else
             Guard();
     }
 
-    public void ReceiveDamage(float damageAmmount)
+    public void ReceiveDamage(Character attackerCharacter)
     {
-        character.health -= damageAmmount;
+        character.health -= attackerCharacter.attackInfo.damageAmmount;
         print(gameObject.name + "'s remaining health: " + character.health);
 
         if (character.health < 0)
         {
-            Die();
+            Die(attackerCharacter);
             return;
         } 
 
@@ -83,10 +83,13 @@ public class DamagableScript : MonoBehaviour
         characterAnimator.SetFloat(character.animKeys.hitID, 9f);
     }
 
-    public void Die()
+    public void Die(Character attackerCharacter)
     {
+        attackerCharacter.isLocking = false;
         characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
-        float randomAnimID = Random.Range(11f, 12f);
+        float randomAnimID = Mathf.Round(Random.Range(11f, 12f));
         characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        gameObject.tag = "Corpse";
+        gameObject.layer = 8;
     }
 }

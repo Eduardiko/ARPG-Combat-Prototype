@@ -87,6 +87,8 @@ public class CameraController : MonoBehaviour
         // Updates camera so player is always in-sight
         if (character.isLocking)
             UpdateLockedCamera();
+        else
+            SetFreeLookCamera();
     }
     #endregion
 

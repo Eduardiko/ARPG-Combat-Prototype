@@ -28,11 +28,19 @@ public class AnimationTriggerKeys
     public string comboKey;
 }
 
+public enum AttackType
+{
+    SLASH_WEAPON_TOP,
+    SLASH_WEAPON_BOTTOM,
+    THRUST
+}
+
 public struct AttackInfo
 {
     public float damageAmmount;
     public float topAngle;
     public float bottomAngle;
+    public AttackType type;
 }
 
 public class Character : MonoBehaviour
@@ -49,6 +57,7 @@ public class Character : MonoBehaviour
     // Access Character Animations
     [Header("Animations")]
     [SerializeField] public AnimationTriggerKeys animKeys;
+    [HideInInspector] public Animator characterAnimator;
 
     // Fake It Until U Make It References
     public GameObject RWeapon;
@@ -82,6 +91,7 @@ public class Character : MonoBehaviour
         isGrounded = true;
         attackInfo.damageAmmount = 10;
         attackInfo.topAngle = 180f;
+        characterAnimator = GetComponentInChildren<Animator>();
     }
 
     private void Update()
@@ -166,11 +176,12 @@ public class Character : MonoBehaviour
 
     #region HELPERS
 
-    public void SetAttackInfo(float damageAmmount, float topAngle, float bottomAngle)
+    public void SetAttackInfo(float damageAmmount, float topAngle, float bottomAngle, AttackType type)
     {
         attackInfo.damageAmmount = damageAmmount;
         attackInfo.topAngle = topAngle;
         attackInfo.bottomAngle = bottomAngle;
+        attackInfo.type = type;
     }
 
     public IEnumerator Step()

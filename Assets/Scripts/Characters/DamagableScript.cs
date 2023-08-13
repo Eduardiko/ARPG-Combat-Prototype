@@ -12,6 +12,9 @@ public class DamagableScript : MonoBehaviour
     private float damageResetTime = 0.3f;
     private float damageResetTimer = 0.3f;
 
+    private float guardThresholdAngle = 30f;
+    private float parryThresholdAngle = 10f;
+
     private void Start()
     {
         character = GetComponentInChildren<Character>();
@@ -38,15 +41,20 @@ public class DamagableScript : MonoBehaviour
     public void ManageDamage(Character attackerCharacter)
     {
         // Check if any of the two Weapon Angles is inside the threshold
-        float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.topAngle));
-        float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.bottomAngle, 360f - attackerCharacter.attackInfo.bottomAngle));
+        float angularDifference;
 
-        if (angularTopDifference > 30)
-            ReceiveDamage(attackerCharacter);
-        else if (angularTopDifference < 10)
-            Parry();
+        if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
+            angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.topAngle));
         else
-            Guard();
+            angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.bottomAngle));
+
+        if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST)
+            ReceiveDamage(attackerCharacter);
+        else if (angularDifference < parryThresholdAngle)
+            Parry(attackerCharacter);
+        else
+            Guard(attackerCharacter, angularDifference);
+
     }
 
     public void ReceiveDamage(Character attackerCharacter)
@@ -54,33 +62,54 @@ public class DamagableScript : MonoBehaviour
         character.health -= attackerCharacter.attackInfo.damageAmmount;
         print(gameObject.name + "'s remaining health: " + character.health);
 
-        if (character.health < 0)
+        if (character.health <= 0f)
         {
             Die(attackerCharacter);
             return;
-        } 
+        }
 
-        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
-        float randomAnimID = Random.Range(1f, 5f);
-        characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        if(!character.isPerformingAnAction)
+        {
+            characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+            float randomAnimID = Random.Range(1f, 5f);
+            characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        }
     }
 
-    public void Guard()
+    public void Guard(Character attackerCharacter, float angularDifference)
     {
-        print("guard");
-        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+        float mitigationMultiplier = angularDifference / guardThresholdAngle;
+        
+        float damage = attackerCharacter.attackInfo.damageAmmount * mitigationMultiplier / 1.5f;
+        print(damage);
+        character.health -= damage;
+        //print(gameObject.name + "'s remaining health: " + character.health);
 
-        float randomAnimID = Random.Range(6f, 8f);
-        characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        if (character.health <= 0f)
+        {
+            Die(attackerCharacter);
+            return;
+        }
+
+        if (!character.isPerformingAnAction)
+        {
+            characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+            float randomAnimID = Random.Range(6f, 8f);
+            characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        }
     }
 
-    public void Parry()
+    public void Parry(Character attackerCharacter)
     {
-        print("parry");
-        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+        if (!character.isPerformingAnAction)
+        {
+            print("parry");
+            characterAnimator.SetFloat(character.animKeys.hitID, 9f);
+            characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
 
-        //float randomAnimID = Random.Range(6f, 8f);
-        characterAnimator.SetFloat(character.animKeys.hitID, 9f);
+            attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
+            attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+        }
     }
 
     public void Die(Character attackerCharacter)

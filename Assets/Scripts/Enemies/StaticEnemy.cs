@@ -30,6 +30,7 @@ public class StaticEnemy : MonoBehaviour
         {
             actionTriggerTimer = actionTriggerTime;
             inputManager.tryingToWeaponTopAttack = true;
+            //inputManager.tryingToWeaponThrustAttack = true;
 
             // Force a random angle for each attack
             float randomAngle = Random.Range(Random.Range(0f, 360f), Random.Range(0f, 360f));

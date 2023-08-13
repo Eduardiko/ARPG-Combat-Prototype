@@ -82,7 +82,7 @@ public class OffenseScript : MonoBehaviour
             }
 
             inputManager.tryingToWeaponTopAttack = false;
-            Attack(weaponDial.topAngle);
+            Attack(weaponDial.topAngle, AttackType.SLASH_WEAPON_TOP);
         }
         else
             inputManager.tryingToWeaponTopAttack = false;
@@ -98,7 +98,7 @@ public class OffenseScript : MonoBehaviour
             }
 
             inputManager.tryingToWeaponBottomAttack = false;
-            Attack(weaponDial.bottomAngle);
+            Attack(weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
         }
         else
             inputManager.tryingToWeaponBottomAttack = false;
@@ -120,7 +120,7 @@ public class OffenseScript : MonoBehaviour
             inputManager.tryingToWeaponThrustAttack = false;
     }
 
-    private void Attack(float angle)
+    private void Attack(float angle, AttackType type)
     {
         weaponDial.isUILocked = true;
         character.isMovementRestriced = true;
@@ -176,9 +176,9 @@ public class OffenseScript : MonoBehaviour
         characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
 
         if(combo == 0)
-            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
+            character.SetAttackInfo(10f, weaponDial.topAngle, weaponDial.bottomAngle, type);
         else
-            character.SetAttackInfo(5f + 5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+            character.SetAttackInfo(10f * combo, weaponDial.topAngle, weaponDial.bottomAngle, type);
 
         combo = combo + 1 > 2 ? 0 : combo + 1;
     }
@@ -203,9 +203,9 @@ public class OffenseScript : MonoBehaviour
         characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
 
         if (combo == 0)
-            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle);
+            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
         else
-            character.SetAttackInfo(5f + 5f * combo, weaponDial.topAngle, weaponDial.bottomAngle);
+            character.SetAttackInfo(5f * combo, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
 
         combo = combo + 1 > 2 ? 0 : combo + 1;
     }

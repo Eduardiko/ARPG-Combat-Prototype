@@ -73,6 +73,10 @@ public class DamagableScript : MonoBehaviour
             characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
             float randomAnimID = Random.Range(1f, 5f);
             characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        } else if (character.isAttacking && character.attackInfo.type == AttackType.THRUST)
+        {
+            attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
+            attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
         }
     }
 
@@ -107,7 +111,6 @@ public class DamagableScript : MonoBehaviour
 
         attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
         attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
-        
     }
 
     public void Die(Character attackerCharacter)

@@ -14,6 +14,8 @@ public class StaticEnemy : MonoBehaviour
     [SerializeField] private float actionTriggerTime = 5f;
     private float actionTriggerTimer = 0f;
 
+    public float forcedAngle = 0f;
+
     private void Start()
     {
         inputManager = GetComponent<InputManager>();
@@ -34,6 +36,10 @@ public class StaticEnemy : MonoBehaviour
 
             // Force a random angle for each attack
             float randomAngle = Random.Range(Random.Range(0f, 360f), Random.Range(0f, 360f));
+
+            if (forcedAngle != 0f)
+                randomAngle = forcedAngle;
+
             float oppositeAngle = randomAngle + 180 > 360 ? randomAngle - 180 : randomAngle + 180;
 
             weaponDial.isUIWeaponAttached = true;

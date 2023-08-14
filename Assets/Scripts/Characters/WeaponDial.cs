@@ -36,7 +36,6 @@ public class WeaponDial : MonoBehaviour
     [HideInInspector] public float topAngle;
     [HideInInspector] public float bottomAngle;
     [HideInInspector] public bool isUIWeaponAttached = true;
-    [HideInInspector] public bool isUILocked = false;
     [HideInInspector] public float manualAngle;
 
     private float radius;
@@ -181,7 +180,7 @@ public class WeaponDial : MonoBehaviour
     #region UI
     private void UpdateUI()
     {
-        if(isUIWeaponAttached || !isUILocked)
+        if(isUIWeaponAttached || !character.isUILocked)
             UpdateAnglesUI();
         
         UpdateTargetAnglesUI();
@@ -225,7 +224,7 @@ public class WeaponDial : MonoBehaviour
             Character targetCharacter = character.target.GetComponent<Character>();
 
             // ---- To constantly render Target Angles put 'else' outside this 'if' & delete if(targetCharacter.isAttacking) ----
-            if (targetCharacter.isAttacking)
+            if (targetCharacter.isUILocked)
             {
                 topTargetWeaponRect.gameObject.SetActive(true);
                 bottomTargetWeaponRect.gameObject.SetActive(true);
@@ -298,12 +297,12 @@ public class WeaponDial : MonoBehaviour
 
     private void LockUI()
     {
-        isUILocked = true;
+        character.isUILocked = true;
     }
 
     private void UnlockUI()
     {
-        isUILocked = false;
+        character.isUILocked = false;
     }
 
 

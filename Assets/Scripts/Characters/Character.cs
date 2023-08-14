@@ -75,6 +75,8 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isDodging = false;
     [HideInInspector] public bool isMovementRestriced = false;
     [HideInInspector] public bool isStaggered = false;
+    [HideInInspector] public bool isUILocked = false;
+    [HideInInspector] public bool isWeaponColliderActive = false;
 
     // State Bools - General Ones - Used when not caring about a specific state
     [HideInInspector] public bool isPerformingAnAction = false;
@@ -160,6 +162,7 @@ public class Character : MonoBehaviour
         isAttacking = false;
         isDodging = false;
         isBackstepping = false;
+        isUILocked = false;
     }
 
     private void IsNotStaggered()
@@ -188,17 +191,17 @@ public class Character : MonoBehaviour
     {
         float elapsedTime = 0;
 
-        // Rotate the character to the target one last time
-        if (isLocking && target != null)
-        {
-            // Y axis to 0 so Vector is calculated at same height
-            Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
-            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
-            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
-        }
-
         while (elapsedTime < attackStepTime)
         {
+            // Rotate the character to the target one last time
+            if (isLocking && target != null)
+            {
+                // Y axis to 0 so Vector is calculated at same height
+                Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
+                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+            }
+
             float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime);
 
             // Calculate the new position after stepping forward
@@ -217,17 +220,17 @@ public class Character : MonoBehaviour
 
         float elapsedTime = 0;
 
-        // Rotate the character to the target one last time
-        if (isLocking && target != null)
-        {
-            // Y axis to 0 so Vector is calculated at same height
-            Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
-            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
-            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
-        }
-
         while (elapsedTime < stepTime)
         {
+            // Rotate the character to the target one last time
+            if (isLocking && target != null)
+            {
+                // Y axis to 0 so Vector is calculated at same height
+                Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
+                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+            }
+
             float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
 
             Vector3 newPosition = new Vector3();
@@ -236,7 +239,7 @@ public class Character : MonoBehaviour
             {
                 case 0:
                     // Calculate the new position after stepping forward
-                    newPosition = transform.position - transform.forward * stepDistance * 2;
+                    newPosition = transform.position - transform.forward * stepDistance * 4;
                     break;
                 case 1:
                     // Calculate the new position after stepping forward

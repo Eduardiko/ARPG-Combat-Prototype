@@ -8,7 +8,8 @@ public class OffenseScript : MonoBehaviour
     [SerializeField] private GameObject weaponLDamager;
 
     private GameObject weaponDamager;
-
+    private Vector3 damagerTopPos = new Vector3(0f, 1.3f, 0f);
+    private Vector3 damagerBottomPos = new Vector3(0f, -0.7f, 0f);
 
     // References
     private Character character;
@@ -54,12 +55,13 @@ public class OffenseScript : MonoBehaviour
             ableToAttack = true;
         else
             ableToAttack = false;
+
     }
 
     private void UpdateStatesAndAnimations()
     {
         // Reset Combo
-        if (!character.isMovementRestriced || character.isImmuneToDamage)
+        if (!character.isMovementRestriced || character.isImmuneToDamage || character.isStaggered)
         {
             combo = 0;
             
@@ -70,6 +72,10 @@ public class OffenseScript : MonoBehaviour
                 isWeaponUpsideDown = false;
             }
         }
+
+        // Reset Collider
+        if(weaponDamager != null && character.isStaggered)
+            DeactivateDamageCollider();
 
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
@@ -83,6 +89,8 @@ public class OffenseScript : MonoBehaviour
 
             inputManager.tryingToWeaponTopAttack = false;
             Attack(weaponDial.topAngle, AttackType.SLASH_WEAPON_TOP);
+
+            weaponDamager.transform.localPosition = damagerTopPos;
         }
         else
             inputManager.tryingToWeaponTopAttack = false;
@@ -99,6 +107,8 @@ public class OffenseScript : MonoBehaviour
 
             inputManager.tryingToWeaponBottomAttack = false;
             Attack(weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
+
+            weaponDamager.transform.localPosition = damagerBottomPos;
         }
         else
             inputManager.tryingToWeaponBottomAttack = false;
@@ -115,6 +125,8 @@ public class OffenseScript : MonoBehaviour
 
             inputManager.tryingToWeaponThrustAttack = false;
             ThrustAttack();
+
+            weaponDamager.transform.localPosition = damagerTopPos;
         }
         else
             inputManager.tryingToWeaponThrustAttack = false;
@@ -122,7 +134,9 @@ public class OffenseScript : MonoBehaviour
 
     private void Attack(float angle, AttackType type)
     {
-        weaponDial.isUILocked = true;
+        LookAtTarget();
+        
+        character.isUILocked = true;
         character.isMovementRestriced = true;
 
         if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
@@ -185,7 +199,9 @@ public class OffenseScript : MonoBehaviour
 
     private void ThrustAttack()
     {
-        weaponDial.isUILocked = true;
+        LookAtTarget();
+
+        character.isUILocked = true;
         character.isMovementRestriced = true;
 
         if (!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
@@ -210,13 +226,27 @@ public class OffenseScript : MonoBehaviour
         combo = combo + 1 > 2 ? 0 : combo + 1;
     }
 
+    private void LookAtTarget()
+    {
+        // Rotate the character to the target one last time
+        if (character.isLocking && character.target != null)
+        {
+            // Y axis to 0 so Vector is calculated at same height
+            Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
+            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+        }
+    }
+
     private void ActivateDamageCollider()
     {
+        character.isWeaponColliderActive = true;
         weaponDamager.SetActive(true);
     }
 
     private void DeactivateDamageCollider()
     {
+        character.isWeaponColliderActive = false;
         weaponDamager.SetActive(false);
     }
 

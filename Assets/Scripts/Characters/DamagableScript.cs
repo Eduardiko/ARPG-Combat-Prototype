@@ -48,7 +48,7 @@ public class DamagableScript : MonoBehaviour
         else
             angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.bottomAngle));
 
-        if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST)
+        if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
             ReceiveDamage(attackerCharacter);
         else if (angularDifference < parryThresholdAngle)
             Parry(attackerCharacter);
@@ -81,7 +81,6 @@ public class DamagableScript : MonoBehaviour
         float mitigationMultiplier = angularDifference / guardThresholdAngle;
         
         float damage = attackerCharacter.attackInfo.damageAmmount * mitigationMultiplier / 1.5f;
-        print(damage);
         character.health -= damage;
         //print(gameObject.name + "'s remaining health: " + character.health);
 
@@ -101,15 +100,14 @@ public class DamagableScript : MonoBehaviour
 
     public void Parry(Character attackerCharacter)
     {
-        if (!character.isPerformingAnAction)
-        {
-            print("parry");
-            characterAnimator.SetFloat(character.animKeys.hitID, 9f);
-            characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+        
+        print("parry");
+        characterAnimator.SetFloat(character.animKeys.hitID, 9f);
+        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
 
-            attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
-            attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
-        }
+        attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
+        attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+        
     }
 
     public void Die(Character attackerCharacter)

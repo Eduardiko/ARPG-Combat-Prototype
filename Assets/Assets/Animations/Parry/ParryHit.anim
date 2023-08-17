@@ -34578,14 +34578,14 @@ AnimationClip:
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.6666667
+  - time: 0.8333333
     functionName: IsNotStaggered
     data: 
     objectReferenceParameter: {fileID: 0}
     floatParameter: 0
     intParameter: 0
     messageOptions: 0
-  - time: 0.8333333
+  - time: 0.9166667
     functionName: IsNotMovementRestricted
     data: 
     objectReferenceParameter: {fileID: 0}

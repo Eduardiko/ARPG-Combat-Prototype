@@ -60,9 +60,9 @@ public class DamagableScript : MonoBehaviour
         // Depending on the angular difference, choose what to apply
         if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
             Hit();
-        else if (angularDifference < parryThresholdAngle)
+        else if (angularDifference < parryThresholdAngle && !character.isMovementRestriced)
             Parry();
-        else
+        else if (!character.isMovementRestriced)
             Guard(angularDifference);
     }
 

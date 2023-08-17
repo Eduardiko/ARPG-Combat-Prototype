@@ -5798,7 +5798,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e426c05c9ff7847a8dfcd3223864eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachAcceptanceThreshold: 15
   topRWeaponTransform: {fileID: 1658413789}
   bottomRWeaponTransform: {fileID: 2088887974}
   topLWeaponTransform: {fileID: 1399155541}
@@ -5811,8 +5810,8 @@ MonoBehaviour:
   referencePlaneTransform: {fileID: 512955646}
   topAngle: 0
   bottomAngle: 0
-  isUIWeaponAttached: 1
   manualAngle: 0
+  isUIWeaponAttached: 1
 --- !u!54 &1594295740
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -5888,8 +5887,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 330069501817349247}
-  actionTriggerTime: 3
-  forcedAngle: 145
+  actionTriggerTime: 0.2
+  forcedAngle: 0
 --- !u!114 &1594295746
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5949,7 +5948,7 @@ MonoBehaviour:
     dodgeDirection: DodgeDirection
     hitID: HitID
     comboKey: Combo
-  characterAnimator: {fileID: 0}
+  animator: {fileID: 0}
   RWeapon: {fileID: 1810907731}
   LWeapon: {fileID: 395260550}
   isGrounded: 0
@@ -5957,12 +5956,12 @@ MonoBehaviour:
   isLocking: 0
   isDead: 0
   isAttacking: 0
-  isBackstepping: 0
+  isWeaponColliderActive: 0
   isDodging: 0
-  isMovementRestriced: 0
+  isBackstepping: 0
   isStaggered: 0
   isUILocked: 0
-  isWeaponColliderActive: 0
+  isMovementRestriced: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
   target: {fileID: 0}
@@ -7009,7 +7008,7 @@ MonoBehaviour:
     dodgeDirection: 
     hitID: 
     comboKey: 
-  characterAnimator: {fileID: 0}
+  animator: {fileID: 0}
   RWeapon: {fileID: 0}
   LWeapon: {fileID: 0}
   isGrounded: 0
@@ -7017,12 +7016,12 @@ MonoBehaviour:
   isLocking: 0
   isDead: 0
   isAttacking: 0
-  isBackstepping: 0
+  isWeaponColliderActive: 0
   isDodging: 0
-  isMovementRestriced: 0
+  isBackstepping: 0
   isStaggered: 0
   isUILocked: 0
-  isWeaponColliderActive: 0
+  isMovementRestriced: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
   target: {fileID: 0}
@@ -7792,16 +7791,16 @@ GameObject:
   m_Component:
   - component: {fileID: 330069501817452959}
   - component: {fileID: 6985017023614976585}
-  - component: {fileID: 330069501826700827}
+  - component: {fileID: 2076425168707333086}
+  - component: {fileID: 330069501826700825}
+  - component: {fileID: 330069501826700826}
   - component: {fileID: 4989885346272624503}
   - component: {fileID: 6985017023614976587}
-  - component: {fileID: 2076425168707333086}
-  - component: {fileID: 330069501826700826}
-  - component: {fileID: 330069501826700825}
+  - component: {fileID: 330069501826700827}
+  - component: {fileID: 6985017023614976586}
   - component: {fileID: 330069501826700824}
   - component: {fileID: 330069501826700823}
   - component: {fileID: 330069501826700822}
-  - component: {fileID: 6985017023614976586}
   - component: {fileID: 330069501826700821}
   m_Layer: 0
   m_Name: Player
@@ -10298,7 +10297,7 @@ MonoBehaviour:
   lookAtTransform: {fileID: 590051982}
   attackStepLengthMultiplier: 0.15
   attackStepTime: 0.2
-  stepLengthMultiplier: 0.075
+  stepLengthMultiplier: 0.1
   stepTime: 0.3
   animKeys:
     jumpTriggerKey: JumpTrigger
@@ -10314,7 +10313,7 @@ MonoBehaviour:
     dodgeDirection: DodgeDirection
     hitID: HitID
     comboKey: Combo
-  characterAnimator: {fileID: 0}
+  animator: {fileID: 0}
   RWeapon: {fileID: 602024854}
   LWeapon: {fileID: 349268084}
   isGrounded: 0
@@ -10322,12 +10321,12 @@ MonoBehaviour:
   isLocking: 0
   isDead: 0
   isAttacking: 0
-  isBackstepping: 0
+  isWeaponColliderActive: 0
   isDodging: 0
-  isMovementRestriced: 0
+  isBackstepping: 0
   isStaggered: 0
   isUILocked: 0
-  isWeaponColliderActive: 0
+  isMovementRestriced: 0
   isPerformingAnAction: 0
   isImmuneToDamage: 0
   target: {fileID: 0}
@@ -10355,7 +10354,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3e426c05c9ff7847a8dfcd3223864eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachAcceptanceThreshold: 15
   topRWeaponTransform: {fileID: 678785540}
   bottomRWeaponTransform: {fileID: 242733122}
   topLWeaponTransform: {fileID: 1242829827}
@@ -10368,8 +10366,8 @@ MonoBehaviour:
   referencePlaneTransform: {fileID: 493139580}
   topAngle: 0
   bottomAngle: 0
-  isUIWeaponAttached: 1
   manualAngle: 0
+  isUIWeaponAttached: 1
 --- !u!1 &6994529591178411588
 GameObject:
   m_ObjectHideFlags: 0

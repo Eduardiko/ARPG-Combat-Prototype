@@ -663,7 +663,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 3223a43fbfec5f442b4a2ec558f5a6f9, type: 2}
     m_Threshold: 3
     m_Position: {x: 1, y: 0}
-    m_TimeScale: 0.5
+    m_TimeScale: 0.55
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -671,7 +671,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: fde1a1fc3d8856c448d2b4f188c7da95, type: 2}
     m_Threshold: 4
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1.5
+    m_TimeScale: 0.8
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -679,7 +679,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: ee877a59b037cd14faf5014034b64a8a, type: 2}
     m_Threshold: 5
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 0.45
+    m_TimeScale: 0.55
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -687,7 +687,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 339250385c2462542943ad49847d7145, type: 2}
     m_Threshold: 6
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1.5
+    m_TimeScale: 0.8
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -695,7 +695,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 5006accdf7574a1449b2cca3d5f50c5b, type: 2}
     m_Threshold: 7
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 0.5
+    m_TimeScale: 0.55
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -1811,7 +1811,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: 17c0aad5f5c46aa49b6e2b669f09ec3a, type: 2}
     m_Threshold: 4
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1.5
+    m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -1827,7 +1827,7 @@ BlendTree:
     m_Motion: {fileID: 7400000, guid: fe61e70199d931e42b004c81387a25aa, type: 2}
     m_Threshold: 6
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1.5
+    m_TimeScale: 1
     m_CycleOffset: 0
     m_DirectBlendParameter: WalkDirectionX
     m_Mirror: 0
@@ -1885,7 +1885,7 @@ AnimatorState:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: BLT_Lock_Light_Attack
-  m_Speed: 1
+  m_Speed: 0.9
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -2173918395677913607}
@@ -2001,7 +2001,7 @@ AnimatorStateTransition:
   m_TransitionDuration: 0.06
   m_TransitionOffset: 0
   m_ExitTime: 0.98
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_HasFixedDuration: 0
   m_InterruptionSource: 2
   m_OrderedInterruption: 1

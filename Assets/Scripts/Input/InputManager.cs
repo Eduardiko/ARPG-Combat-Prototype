@@ -50,7 +50,6 @@ public class InputManager : MonoBehaviour
         UpdateConstantBools();
     }
 
-
     #region INPUT BUFFER
 
     public void SendActionToInputBuffer(BufferActions actionToBuffer)
@@ -105,7 +104,6 @@ public class InputManager : MonoBehaviour
     }
 
     #endregion
-
 
     #region ACTIONS
 

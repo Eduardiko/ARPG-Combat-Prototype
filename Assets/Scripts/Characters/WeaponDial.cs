@@ -4,17 +4,11 @@ using UnityEngine;
 
 public class WeaponDial : MonoBehaviour
 {
-    [Header("Parameters")]
-    [SerializeField] private float attachAcceptanceThreshold = 15f;
-
     [Header("Weapon Transforms")]
     [SerializeField] private Transform topRWeaponTransform;
     [SerializeField] private Transform bottomRWeaponTransform;
     [SerializeField] private Transform topLWeaponTransform;
     [SerializeField] private Transform bottomLWeaponTransform;
-
-    private Transform topWeaponTransform;
-    private Transform bottomWeaponTransform;
 
     [Header("Weapon UI Sprites")]
     [SerializeField] private RectTransform topWeaponRect;
@@ -25,18 +19,17 @@ public class WeaponDial : MonoBehaviour
     [SerializeField] private RectTransform bottomTargetWeaponRect;
 
     [Header("Plane Reference")]
-    public Transform referencePlaneTransform;
+    [SerializeField] private Transform referencePlaneTransform;
 
     // References
     private Character character;
     private InputManager inputManager;
-    private Animator characterAnimator;
 
     // Variables
     [HideInInspector] public float topAngle;
     [HideInInspector] public float bottomAngle;
-    [HideInInspector] public bool isUIWeaponAttached = true;
     [HideInInspector] public float manualAngle;
+    [HideInInspector] public bool isUIWeaponAttached = true;
 
     private float radius;
 
@@ -49,32 +42,24 @@ public class WeaponDial : MonoBehaviour
     private Vector3 centerRefPoint;
     private Vector3 bottomRefPoint;
 
+    private Transform topWeaponTransform;
+    private Transform bottomWeaponTransform;
+
 
     private void Start()
     {
         character = GetComponent<Character>();
         inputManager = GetComponent<InputManager>();
-        characterAnimator = GetComponent<Animator>();
     }
 
     private void Update()
     {
-        UpdateWeapon();
-
-        SetAngles();
-        UpdateUI();
-    }
-
-    private void UpdateWeapon()
-    {
-        if(character.RWeapon.activeSelf)
+        if(!character.isDead)
         {
-            topWeaponTransform = topRWeaponTransform;
-            bottomWeaponTransform = bottomRWeaponTransform;
-        } else
-        {
-            topWeaponTransform = topLWeaponTransform;
-            bottomWeaponTransform = bottomLWeaponTransform;
+            UpdateWeapon();
+
+            SetAngles();
+            UpdateUI();
         }
     }
 
@@ -106,14 +91,14 @@ public class WeaponDial : MonoBehaviour
         topRefPoint = centerRefPoint + Vector3.up * radius;
         bottomRefPoint = centerRefPoint + Vector3.down * radius;
 
-        // Calculate the angle between the two Vectors
+        // Calculate the angles
         Vector3 centerToRef;
         Vector3 centerToPoint;
 
+        // Convert the {-180, 180} returned by the SignedAngle function to {0, 360} for QoL -> condition ? true : false
         centerToRef = topRefPoint - centerRefPoint;
         centerToPoint = topProjection - centerRefPoint;
         topAngle = Vector3.SignedAngle(centerToPoint, centerToRef, planeNormal);
-        // Convert the {-180, 180} returned by the SignedAngle function to {0, 360} for QoL -> condition ? true : false
         topAngle = topAngle < 0 ? 360f + topAngle : topAngle;
 
         centerToRef = bottomRefPoint - centerRefPoint;
@@ -124,26 +109,9 @@ public class WeaponDial : MonoBehaviour
 
     private void SetAttachedTopBottomAngles()
     {
+        // Attach Top Angle and set Bottom Angle to + 180º
         topAngle = manualAngle;
         bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-
-
-        // ---- Uncomment To Use Threshold System (and delete upper code) ----
-
-        //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
-        //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
-
-        //// Attach the nearest part to the manual angle
-        //if (angularTopDifference < angularBottomDifference)
-        //{
-        //    topAngle = manualAngle;
-        //    bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-        //}
-        //else
-        //{
-        //    bottomAngle = manualAngle;
-        //    topAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
-        //}
     }
 
     private void ManageManualAngle()
@@ -158,14 +126,6 @@ public class WeaponDial : MonoBehaviour
             float angleRadians = Mathf.Atan2(inputManager.inputWeaponDialVector.x, inputManager.inputWeaponDialVector.y);
             manualAngle = angleRadians * Mathf.Rad2Deg;
             manualAngle = manualAngle < 0 ? 360f + manualAngle : manualAngle;
-
-
-            // ---- Uncomment To Use Threshold System (and delete upper isUIWeaponattached) ----
-
-            //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
-            //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
-            //if (angularTopDifference <= attachAcceptanceThreshold || angularBottomDifference <= attachAcceptanceThreshold)
-            //    isUIWeaponAttached = true;
         }
         else
         {
@@ -175,6 +135,35 @@ public class WeaponDial : MonoBehaviour
         }
     }
 
+    // ---- Uncomment To Use Threshold System - Add at the beggining ----
+
+    //[Header("Parameters")]
+    //[SerializeField] private float attachAcceptanceThreshold = 15f;
+
+    // ---- Uncomment To Use Threshold System - Replace SetAttachedTopBottomAngles() code ----
+
+    //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
+    //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
+
+    //// Attach the nearest part to the manual angle
+    //if (angularTopDifference < angularBottomDifference)
+    //{
+    //    topAngle = manualAngle;
+    //    bottomAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
+    //}
+    //else
+    //{
+    //    bottomAngle = manualAngle;
+    //    topAngle = manualAngle + 180 > 360 ? manualAngle + 180 - 360 : manualAngle + 180;
+    //}
+
+    // ---- Uncomment To Use Threshold System - Add code in ManageManualAngle() ----
+
+    //float angularTopDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, topAngle));
+    //float angularBottomDifference = Mathf.Abs(Mathf.DeltaAngle(manualAngle, bottomAngle));
+    //if (angularTopDifference <= attachAcceptanceThreshold || angularBottomDifference <= attachAcceptanceThreshold)
+    //    isUIWeaponAttached = true;
+
     #endregion
 
     #region UI
@@ -182,8 +171,9 @@ public class WeaponDial : MonoBehaviour
     {
         if(isUIWeaponAttached || !character.isUILocked)
             UpdateAnglesUI();
-        
-        UpdateTargetAnglesUI();
+
+        if (character.isLocking && character.target != null)
+            UpdateTargetAnglesUI();
     }
 
     private void UpdateAnglesUI()
@@ -217,61 +207,54 @@ public class WeaponDial : MonoBehaviour
 
     private void UpdateTargetAnglesUI()
     {
-        // Activate/Deactivate UI
+        Character targetCharacter = character.target.GetComponent<Character>();
 
-        if (character.isLocking && character.target != null)
+        // Activate/Deactivate render
+        if (targetCharacter.isUILocked)
         {
-            Character targetCharacter = character.target.GetComponent<Character>();
+            topTargetWeaponRect.gameObject.SetActive(true);
+            bottomTargetWeaponRect.gameObject.SetActive(true);
+        }
+        else
+        {
+            topTargetWeaponRect.gameObject.SetActive(false);
+            bottomTargetWeaponRect.gameObject.SetActive(false);
+        }
 
-            // ---- To constantly render Target Angles put 'else' outside this 'if' & delete if(targetCharacter.isAttacking) ----
-            if (targetCharacter.isUILocked)
-            {
-                topTargetWeaponRect.gameObject.SetActive(true);
-                bottomTargetWeaponRect.gameObject.SetActive(true);
-            }
-            else
-            {
-                topTargetWeaponRect.gameObject.SetActive(false);
-                bottomTargetWeaponRect.gameObject.SetActive(false);
-            }
+        // Target Angles (Enemy Angles)
+        if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
+        {
 
-            // Target Angles (Enemy Angles)
-            if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
-            {
+            float radianTopAngle = (90 - targetCharacter.attackInfo.topAngle) * Mathf.Deg2Rad;
+            float x = 0.6f * Mathf.Cos(radianTopAngle);
+            float y = 0.6f * Mathf.Sin(radianTopAngle);
+            topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
 
-                float radianTopAngle = (90 - targetCharacter.attackInfo.topAngle) * Mathf.Deg2Rad;
-                float x = 0.6f * Mathf.Cos(radianTopAngle);
-                float y = 0.6f * Mathf.Sin(radianTopAngle);
-                topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
-
-                float radianBottomAngle = (90 - targetCharacter.attackInfo.bottomAngle) * Mathf.Deg2Rad;
-                x = 0.6f * Mathf.Cos(radianBottomAngle);
-                y = 0.6f * Mathf.Sin(radianBottomAngle);
-                bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
-            }
-
-            // ---- Uncomment to constantly render Target Angles (replace upper code) ----
-
-            //if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
-            //{
-            //    WeaponDial targetWeaponDial = character.target.GetComponent<WeaponDial>();
-
-            //    float radianTopAngle = (90 - targetWeaponDial.topAngle) * Mathf.Deg2Rad;
-            //    float x = 0.6f * Mathf.Cos(radianTopAngle);
-            //    float y = 0.6f * Mathf.Sin(radianTopAngle);
-            //    topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
-
-            //    float radianBottomAngle = (90 - targetWeaponDial.bottomAngle) * Mathf.Deg2Rad;
-            //    x = 0.6f * Mathf.Cos(radianBottomAngle);
-            //    y = 0.6f * Mathf.Sin(radianBottomAngle);
-            //    bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
-            //}
+            float radianBottomAngle = (90 - targetCharacter.attackInfo.bottomAngle) * Mathf.Deg2Rad;
+            x = 0.6f * Mathf.Cos(radianBottomAngle);
+            y = 0.6f * Mathf.Sin(radianBottomAngle);
+            bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
         }
     }
 
     #endregion
 
     #region HELPERS
+
+    private void UpdateWeapon()
+    {
+        // Update Top/Bottom Transforms to match active weapon (Left/Right)
+        if(character.RWeapon.activeSelf)
+        {
+            topWeaponTransform = topRWeaponTransform;
+            bottomWeaponTransform = bottomRWeaponTransform;
+        } else
+        {
+            topWeaponTransform = topLWeaponTransform;
+            bottomWeaponTransform = bottomLWeaponTransform;
+        }
+    }
+
 
     void OnDrawGizmos()
     {

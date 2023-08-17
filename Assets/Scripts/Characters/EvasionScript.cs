@@ -8,27 +8,28 @@ public class EvasionScript : MonoBehaviour
     // References
     private Character character;
     private InputManager inputManager;
-    private Animator characterAnimator;
 
     // Bools
     private bool ableToBackstep = false;
     private bool ableToDodge = false;
 
-    // Start is called before the first frame update
+
     void Start()
     {
         character = GetComponent<Character>();
         inputManager = GetComponent<InputManager>();
-        characterAnimator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        UpdatePossibleActions();
-        UpdateStatesAndAnimations();
+        if (!character.isDead)
+        {
+            UpdatePossibleActions();
+            UpdateStatesAndAnimations();
+        }
     }
 
+    #region MAIN
     private void UpdatePossibleActions()
     {
         // Can The Player Backstep?
@@ -48,51 +49,78 @@ public class EvasionScript : MonoBehaviour
     {
         // Backstep
         if (inputManager.tryingToBackstep && ableToBackstep)
-        {
-            StopCoroutine(character.BackStep());
-            StartCoroutine(character.BackStep());
-            inputManager.tryingToBackstep = false;
-            inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetFloat(character.animKeys.dodgeDirection, 0f);
-            characterAnimator.SetTrigger(character.animKeys.dodgeTriggerKey);
-        }
+            BackStep();
         else
             inputManager.tryingToBackstep = false;
 
         // Dodge Right
         if (inputManager.tryingToDodgeRight && ableToDodge)
-        {
-            UpdateWeapon(false, true);
-
-            StopCoroutine(character.BackStep());
-            StartCoroutine(character.BackStep(1));
-            inputManager.tryingToDodgeRight = false;
-            inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetFloat(character.animKeys.dodgeDirection, 1f);
-            characterAnimator.SetTrigger(character.animKeys.dodgeTriggerKey);
-        }
+            DodgeRight();
         else
             inputManager.tryingToDodgeRight = false;
 
         // Dodge Left
         if (inputManager.tryingToDodgeLeft && ableToDodge)
-        {
-            UpdateWeapon(true, false);
-
-            StopCoroutine(character.BackStep());
-            StartCoroutine(character.BackStep(-1));
-            inputManager.tryingToDodgeLeft = false;
-            inputManager.bufferedAction = BufferActions.CLEAR;
-            characterAnimator.SetFloat(character.animKeys.dodgeDirection, -1f);
-            characterAnimator.SetTrigger(character.animKeys.dodgeTriggerKey);
-        }
+            DodgeLeft();
         else
             inputManager.tryingToDodgeLeft = false;
     }
 
-    private void UpdateWeapon(bool lActive, bool rActive)
+    #endregion
+
+    #region ACTIONS
+
+    private void BackStep()
     {
-        character.RWeapon.SetActive(rActive);
-        character.LWeapon.SetActive(lActive);
+        // Perform Stepc
+        StopCoroutine(character.BackStep());
+        StartCoroutine(character.BackStep());
+
+        // Clear Input
+        inputManager.tryingToBackstep = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        // Set Animation
+        character.animator.SetFloat(character.animKeys.dodgeDirection, 0f);
+        character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
     }
+
+    private void DodgeRight()
+    {
+        // Update hand weapon
+        character.UpdateWeapon(false, true);
+
+        // Perform Step
+        StopCoroutine(character.BackStep());
+        StartCoroutine(character.BackStep(1));
+
+        // Clear Input
+        inputManager.tryingToDodgeRight = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        // Set Animation
+        character.animator.SetFloat(character.animKeys.dodgeDirection, 1f);
+        character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
+    }
+
+    private void DodgeLeft()
+    {
+        // Update hand weapon
+        character.UpdateWeapon(true, false);
+
+        // Perform Step
+        StopCoroutine(character.BackStep());
+        StartCoroutine(character.BackStep(-1));
+
+        // Clear Input
+        inputManager.tryingToDodgeLeft = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        // Set Animation
+        character.animator.SetFloat(character.animKeys.dodgeDirection, -1f);
+        character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
+    }
+
+    #endregion
+
 }

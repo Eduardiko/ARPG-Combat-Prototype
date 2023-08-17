@@ -18,14 +18,17 @@ public class CameraController : MonoBehaviour
     // References
     private Character character;
     private InputManager inputManager;
+
+    // Variables
     private List<GameObject> lockableEnemies = new List<GameObject>();
     private Vector3 playerToNearestEnemyVector = new Vector3();
 
     private void Start()
     {
-        uiLock.SetActive(false);
-        inputManager = GetComponent<InputManager>();
         character = GetComponent<Character>();
+        inputManager = GetComponent<InputManager>();
+
+        uiLock.SetActive(false);
     }
 
     void Update()
@@ -92,6 +95,31 @@ public class CameraController : MonoBehaviour
     }
     #endregion
 
+    #region SETTERS
+    private void SetFreeLookCamera()
+    {
+        // Set Bools
+        uiLock.SetActive(false);
+        character.isLocking = false;
+
+        // Change Cameras
+        freeLookCamera.gameObject.SetActive(true);
+        lockCamera.gameObject.SetActive(false);
+    }
+
+    private void SetLockCamera()
+    {
+        // Set Booleans
+        uiLock.SetActive(true);
+        character.isLocking = true;
+
+        // Change Cameras
+        lockCamera.gameObject.SetActive(true);
+        freeLookCamera.gameObject.SetActive(false);
+    }
+
+    #endregion
+
     #region HELPERS
     private bool FindLockableTargets()
     {
@@ -109,7 +137,7 @@ public class CameraController : MonoBehaviour
             Vector3 dir = collider.gameObject.transform.position - freeLookCamera.transform.position;
             float angle = Vector3.Angle(lookDir, dir);
 
-            if (collider.gameObject.tag == "Enemy" && angle < maxLockAngle)
+            if (collider.gameObject.tag == "Enemy" && angle <= maxLockAngle)
             {
                 lockableEnemies.Add(collider.gameObject);
 
@@ -126,15 +154,15 @@ public class CameraController : MonoBehaviour
 
         return true;
     }
+
     private void UpdateLockedCamera()
     {
-        
         Transform targetLookAtTransform = character.target.GetComponent<Character>().lookAtTransform;
         lockCamera.LookAt = targetLookAtTransform;
 
         // Change To FreeLook Camera if being far from the locked enemy
         playerToNearestEnemyVector = character.target.transform.position - transform.position;
-        if(playerToNearestEnemyVector.magnitude > lockDetectionRadius + lockDetectionRadius / 6f)
+        if (playerToNearestEnemyVector.magnitude > lockDetectionRadius + lockDetectionRadius / 6f)
             SetFreeLookCamera();
 
         // Rotates the camera so that the forward Vector is always the Vector between enemy & player
@@ -144,34 +172,8 @@ public class CameraController : MonoBehaviour
 
         // Updates the position & scale of the UI
         Vector3 targetPos = targetLookAtTransform.position;
-        //targetPos.y = targetPos.y * character.target.GetComponent<CapsuleCollider>().height * 2 / 3;
         uiLock.transform.position = targetPos;
         uiLock.transform.localScale = Vector3.one * ((lockCamera.transform.position - targetPos).magnitude);
-    }
-
-    #endregion
-
-    #region SETTERS
-    private void SetFreeLookCamera()
-    {
-        // Set Bools
-        uiLock.SetActive(false);
-        character.isLocking = false;
-
-        // Change Cameras
-        freeLookCamera.gameObject.SetActive(true);
-        lockCamera.gameObject.SetActive(false);
-    }
-
-    private void SetLockCamera()
-    {
-        // Set Booleans
-        character.isLocking = true;
-        uiLock.SetActive(true);
-
-        // Change Cameras
-        lockCamera.gameObject.SetActive(true);
-        freeLookCamera.gameObject.SetActive(false);
     }
 
     #endregion

@@ -18,9 +18,8 @@ public class MovementScript : MonoBehaviour
     
     // References
     private Character character;
-    private CharacterController characterController;
     private InputManager inputManager;
-    private Animator characterAnimator;
+    private CharacterController characterController;
 
     // Variables
     private float moveSpeed = 0f;
@@ -35,15 +34,13 @@ public class MovementScript : MonoBehaviour
     // Bools
     private bool ableToJump = false;
     private bool ableToRun = false;
-    private bool ableToMove = false;
 
 
     private void Start()
     {
         character = GetComponentInChildren<Character>();
-        characterController = GetComponent<CharacterController>();
         inputManager = GetComponentInChildren<InputManager>();
-        characterAnimator = GetComponentInChildren<Animator>();
+        characterController = GetComponent<CharacterController>();
 
         jumpVelocity = Vector3.zero;
     }
@@ -62,11 +59,10 @@ public class MovementScript : MonoBehaviour
         }
     }
 
+    #region MAIN
+
     private void UpdatePossibleActions()
     {
-        // Check if the player is on the ground
-        character.isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
-
         // Can The Player Run?
         if (character.isGrounded && !character.isPerformingAnAction)
             ableToRun = true;
@@ -84,9 +80,9 @@ public class MovementScript : MonoBehaviour
     {
         // Animation Mode
         if (character.isLocking)
-            characterAnimator.SetBool(character.animKeys.isLockingKey, true);
+            character.animator.SetBool(character.animKeys.isLockingKey, true);
         else
-            characterAnimator.SetBool(character.animKeys.isLockingKey, false);
+            character.animator.SetBool(character.animKeys.isLockingKey, false);
 
         // Walking
         if (inputManager.tryingToMove && !character.isMovementRestriced)
@@ -119,9 +115,13 @@ public class MovementScript : MonoBehaviour
             Jump();
         else 
             inputManager.tryingToJump = false;
+
     }
 
+    #endregion
+
     #region MOVEMENT
+
     private void MoveLogic()
     {
         //Smooth Movement
@@ -147,7 +147,7 @@ public class MovementScript : MonoBehaviour
                 // Rotate the player to face the direction of movement
                 float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
-            } else
+            } else if (!character.isMovementRestriced)
             {
                 // Y axis to 0 so Vector is calculated at same height
                 Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
@@ -158,6 +158,7 @@ public class MovementScript : MonoBehaviour
             characterController.Move(moveDirection);
         }
     }
+
     private void Idle()
     {
         // Set Speed
@@ -170,10 +171,10 @@ public class MovementScript : MonoBehaviour
         }
 
         // Set Animation
-        characterAnimator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
-        characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
-
+        character.animator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
+        character.animator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
     }
+
     private void Walk()
     {
         // Set Speed
@@ -194,12 +195,12 @@ public class MovementScript : MonoBehaviour
         // Set Animation
         if (character.isLocking)
         {
-            characterAnimator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
-            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
+            character.animator.SetFloat(character.animKeys.directionXKey, currentInputVector.x);
+            character.animator.SetFloat(character.animKeys.directionZKey, currentInputVector.y);
         }
         else
         {
-            characterAnimator.SetFloat(character.animKeys.directionZKey, currentInputVector.magnitude);
+            character.animator.SetFloat(character.animKeys.directionZKey, currentInputVector.magnitude);
         }
     }
 
@@ -211,11 +212,15 @@ public class MovementScript : MonoBehaviour
         if(moveSpeed > runSpeed) moveSpeed = runSpeed;
 
     }
+
     #endregion
 
     #region JUMP
+
     private void JumpingLogic()
     {
+        // Check if the player is on the ground
+        character.isGrounded = Physics.Raycast(groundCheck.position, Vector3.down, groundRayDistance, groundMask);
 
         //Set jumpVelocity negative so we don't get errors with positive velocities
         if (character.isGrounded && jumpVelocity.y < 0)
@@ -235,15 +240,18 @@ public class MovementScript : MonoBehaviour
         // Move vertically
         characterController.Move(jumpVelocity * Time.deltaTime);
     }
+
     private void Jump()
     {
+        // Set States
+        character.isGrounded = false;
         jumpVelocity.y = Mathf.Sqrt(jumpHeight * -2 * gravity);
+        inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Set Animation
-        characterAnimator.SetTrigger(character.animKeys.jumpTriggerKey);
-
-        inputManager.bufferedAction = BufferActions.CLEAR;
+        character.animator.SetTrigger(character.animKeys.jumpTriggerKey);
     }
+
     #endregion
 
     #region HERLPERS
@@ -263,39 +271,36 @@ public class MovementScript : MonoBehaviour
 
     private void EnterRunning()
     {
+        // Set States
         character.isRunning = true;
         inputManager.tryingToRun = false;
         inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Set Animation
-        characterAnimator.SetBool(character.animKeys.isRunningKey, true);
+        character.animator.SetBool(character.animKeys.isRunningKey, true);
     }
     private void QuitRunning()
     {
+        // Set States
         character.isRunning = false;
         inputManager.tryingToRun = false;
 
         // Set Animation
-        characterAnimator.SetBool(character.animKeys.isRunningKey, false);
+        character.animator.SetBool(character.animKeys.isRunningKey, false);
+    }
+
+    private void UpdateWeapon()
+    {
+        // Switch between Left/Right hand to hold the weapon and match animations
+        if (!character.isMovementRestriced && inputManager.inputMoveVector != Vector2.zero)
+        {
+            if (inputManager.inputMoveVector.x > 0 && !character.RWeapon.activeSelf)
+                character.UpdateWeapon(false, true);
+            else if (inputManager.inputMoveVector.x < 0 && !character.LWeapon.activeSelf)
+                character.UpdateWeapon(true, false);
+        }
     }
 
     #endregion
 
-
-    private void UpdateWeapon()
-    {
-        if(inputManager.inputMoveVector != Vector2.zero && !character.isMovementRestriced)
-        {
-            if(inputManager.inputMoveVector.x > 0)
-            {
-                character.RWeapon.SetActive(true);
-                character.LWeapon.SetActive(false);
-            } 
-            else
-            {
-                character.RWeapon.SetActive(false);
-                character.LWeapon.SetActive(true);
-            }
-        }
-    }
 }

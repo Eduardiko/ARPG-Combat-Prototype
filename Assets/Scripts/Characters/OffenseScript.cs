@@ -4,46 +4,53 @@ using UnityEngine.InputSystem;
 
 public class OffenseScript : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private GameObject weaponRDamager;
     [SerializeField] private GameObject weaponLDamager;
-
-    private GameObject weaponDamager;
-    private Vector3 damagerTopPos = new Vector3(0f, 1.3f, 0f);
-    private Vector3 damagerBottomPos = new Vector3(0f, -0.7f, 0f);
 
     // References
     private Character character;
     private InputManager inputManager;
-    private Animator characterAnimator;
     private WeaponDial weaponDial;
 
-    // Parameters
+    // Variables
     private int combo = 0;
-    
+    private float attackSector = 0f;
 
+    private GameObject weaponDamager;
+
+    private Vector3 damagerTopPos = new Vector3(0f, 1.3f, 0f);
+    private Vector3 damagerBottomPos = new Vector3(0f, -0.7f, 0f);
+    
     // Bools
     private bool ableToAttack = false;
+    private bool isWeaponUpsideDown = false;
 
     // Comment - this limiter is added so that attacks don't perform
     //           animation cancelling at the start of another attack
     private bool attackSpamLimiterActive = false;
 
-    private bool isWeaponUpsideDown = false;
 
     private void Start()
     {
-        characterAnimator = GetComponent<Animator>();
-        inputManager = GetComponent<InputManager>();
         character = GetComponent<Character>();
+        inputManager = GetComponent<InputManager>();
         weaponDial = GetComponent<WeaponDial>();
+
+        weaponDamager = weaponRDamager;
     }
 
     private void Update()
     {
-        UpdatePossibleActions();
-        UpdateStatesAndAnimations();
+        if(!character.isDead)
+        { 
+            UpdatePossibleActions();
+            UpdateStatesAndAnimations();
+        }
     }
-    
+
+    #region MAIN
+
     private void UpdatePossibleActions()
     {
         // If any action is successfully performed, the limiter is deactivated
@@ -55,140 +62,77 @@ public class OffenseScript : MonoBehaviour
             ableToAttack = true;
         else
             ableToAttack = false;
-
     }
 
     private void UpdateStatesAndAnimations()
     {
-        // Reset Combo
+        // Check for reset
         if (!character.isMovementRestriced || character.isImmuneToDamage || character.isStaggered)
-        {
-            combo = 0;
-            
-            if(isWeaponUpsideDown)
-            {
-                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
-                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
-                isWeaponUpsideDown = false;
-            }
-        }
-
-        // Reset Collider
-        if(weaponDamager != null && character.isStaggered)
-            DeactivateDamageCollider();
+            PeformResets();
 
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
-        {
-            if(isWeaponUpsideDown)
-            {
-                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
-                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
-                isWeaponUpsideDown = false;
-            }
-
-            inputManager.tryingToWeaponTopAttack = false;
-            Attack(weaponDial.topAngle, AttackType.SLASH_WEAPON_TOP);
-
-            weaponDamager.transform.localPosition = damagerTopPos;
-        }
+            Attack(AttackType.SLASH_WEAPON_TOP, weaponDial.topAngle);
         else
             inputManager.tryingToWeaponTopAttack = false;
 
         // Weapon Bottom Attack
         if (inputManager.tryingToWeaponBottomAttack && ableToAttack)
-        {
-            if(!isWeaponUpsideDown)
-            {
-                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
-                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
-                isWeaponUpsideDown = true;
-            }
-
-            inputManager.tryingToWeaponBottomAttack = false;
-            Attack(weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
-
-            weaponDamager.transform.localPosition = damagerBottomPos;
-        }
+            Attack(AttackType.SLASH_WEAPON_BOTTOM, weaponDial.bottomAngle);
         else
             inputManager.tryingToWeaponBottomAttack = false;
 
         // Weapon Thrust Attack
         if (inputManager.tryingToWeaponThrustAttack && ableToAttack)
-        {
-            if (isWeaponUpsideDown)
-            {
-                character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
-                character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
-                isWeaponUpsideDown = false;
-            }
-
-            inputManager.tryingToWeaponThrustAttack = false;
-            ThrustAttack();
-
-            weaponDamager.transform.localPosition = damagerTopPos;
-        }
+            Attack(AttackType.THRUST);
         else
             inputManager.tryingToWeaponThrustAttack = false;
     }
 
-    private void Attack(float angle, AttackType type)
+    #endregion
+
+    #region ATTACK
+
+    private void Attack(AttackType type, float angle=0f)
     {
-        LookAtTarget();
-        
+        // Update States
         character.isUILocked = true;
         character.isMovementRestriced = true;
 
-        if(!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
+        inputManager.tryingToWeaponTopAttack = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        attackSpamLimiterActive = true;
+
+        // Rotate the character to the target
+        if (character.isLocking && character.target != null)
+            LookAtTarget();
+
+        // Perform a step
+        if(!character.isLocking || (character.target != null && (character.target.transform.position - transform.position).magnitude > 2f))
         {
             StopCoroutine(character.Step());
             StartCoroutine(character.Step());
         }
-        
-        attackSpamLimiterActive = true;
-        
 
-        inputManager.bufferedAction = BufferActions.CLEAR;
-
-        float thresholdAngle = angle + 22.5f > 360f ? (angle + 22.5f - 360f) / 45f : (angle + 22.5f) / 45f;
-        float attackSector = Mathf.Ceil(thresholdAngle);
-
-        if(combo < 2)
+        // Calculate sector to define animation - 8 sectors & 22.5 degree offset
+        if (type != AttackType.THRUST)
         {
-            switch (attackSector)
-            {
-                case 1:
-                    attackSector = angle > 337.5f ? 8 : 2;
-                    break;
-                case 5:
-                    attackSector = angle > 180 ? 6 : 4;
-                    break;
-                default:
-                    break;
-            }
+            float thresholdAngle = angle + 22.5f > 360f ? (angle + 22.5f - 360f) / 45f : (angle + 22.5f) / 45f;
+            attackSector = Mathf.Ceil(thresholdAngle);
         }
-
-        if(angle <= 180f)
-            UpdateWeapon(false, true);
         else
-            UpdateWeapon(true, false);
+            attackSector = 0f;
 
-        switch (attackSector)
-        {
-            case 3:
-                UpdateWeapon(true, false);
-                break;
-            case 7:
-                UpdateWeapon(false, true);
-                break;
-            default:
-                break;
-        }
+        // Change weapon's hand, rotate and adjust collider
+        UpdateWeapon(type, angle);
 
-        characterAnimator.SetInteger(character.animKeys.comboKey, combo);
-        characterAnimator.SetFloat(character.animKeys.attackDirection, attackSector);
-        characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
+        // Set Animation
+        character.animator.SetInteger(character.animKeys.comboKey, combo);
+        character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
+        character.animator.SetTrigger(character.animKeys.attackTriggerKey);
 
+        // Set combo
         if(combo == 0)
             character.SetAttackInfo(10f, weaponDial.topAngle, weaponDial.bottomAngle, type);
         else
@@ -197,45 +141,123 @@ public class OffenseScript : MonoBehaviour
         combo = combo + 1 > 2 ? 0 : combo + 1;
     }
 
-    private void ThrustAttack()
+    #endregion
+
+    #region WEAPON
+
+    private void UpdateWeapon(AttackType type, float angle = 0f)
     {
-        LookAtTarget();
-
-        character.isUILocked = true;
-        character.isMovementRestriced = true;
-
-        if (!character.isLocking || (character.target.transform.position - transform.position).magnitude > 2f)
+        if (type != AttackType.THRUST)
         {
-            StopCoroutine(character.Step());
-            StartCoroutine(character.Step());
+            // Hardcoded - As I didn't find light top/bottom attack animations, it will perform light high/low attacks
+            if (combo < 2)
+            {
+                switch (attackSector)
+                {
+                    case 1:
+                        attackSector = angle > 337.5f ? 8 : 2;
+                        break;
+                    case 5:
+                        attackSector = angle > 180 ? 6 : 4;
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            // Switch between Left/Right hand depending on Left/Right part of the dial
+            if (angle <= 180f)
+                UpdateWeaponHand(false, true);
+            else
+                UpdateWeaponHand(true, false);
+
+            // Hardcoded - For Light/Strong Mid Attack animations, the hand needs to be inversed for the combos to work
+            switch (attackSector)
+            {
+                case 3:
+                    UpdateWeaponHand(true, false);
+                    break;
+                case 7:
+                    UpdateWeaponHand(false, true);
+                    break;
+                default:
+                    break;
+            }
         }
-
-        attackSpamLimiterActive = true;
-        inputManager.bufferedAction = BufferActions.CLEAR;
-
-        UpdateWeapon(false, true);
-        characterAnimator.SetInteger(character.animKeys.comboKey, combo);
-        characterAnimator.SetFloat(character.animKeys.attackDirection, 0f);
-        characterAnimator.SetTrigger(character.animKeys.attackTriggerKey);
-
-        if (combo == 0)
-            character.SetAttackInfo(5f, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
         else
-            character.SetAttackInfo(5f * combo, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
+            UpdateWeaponHand(false, true);
 
-        combo = combo + 1 > 2 ? 0 : combo + 1;
+        // Rotate Weapon and Move Collider
+        if (type != AttackType.SLASH_WEAPON_BOTTOM)
+        {
+            if (isWeaponUpsideDown)
+                SwitchWeaponRotation();
+
+            weaponDamager.transform.localPosition = damagerTopPos;
+        }
+        else
+        {
+            if (!isWeaponUpsideDown)
+                SwitchWeaponRotation();
+
+            weaponDamager.transform.localPosition = damagerBottomPos;
+        }
     }
+
+    private void UpdateWeaponHand(bool lActive, bool rActive)
+    {
+        character.UpdateWeapon(lActive, rActive);
+
+        if (character.RWeapon.activeSelf)
+            weaponDamager = weaponRDamager;
+        else
+            weaponDamager = weaponLDamager;
+    }
+
+    private void SwitchWeaponRotation()
+    {
+        if (isWeaponUpsideDown)
+        {
+            character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+            character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+            isWeaponUpsideDown = false;
+        }
+        else
+        {
+            character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+            character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+            isWeaponUpsideDown = true;
+        }
+    }
+
+    #endregion
+
+    #region HELPERS
 
     private void LookAtTarget()
     {
-        // Rotate the character to the target one last time
-        if (character.isLocking && character.target != null)
+        // Y axis to 0 so Vector is calculated at same height
+        Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
+        Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+        transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+    }
+
+    private void PeformResets()
+    {
+        // Reset Combo
+        combo = 0;
+
+        // Return Weapon to default
+        if (isWeaponUpsideDown)
         {
-            // Y axis to 0 so Vector is calculated at same height
-            Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
-            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
-            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+            character.RWeapon.transform.Rotate(180f, 0f, 0f, Space.Self);
+            character.LWeapon.transform.Rotate(0f, 0f, 180f, Space.Self);
+            isWeaponUpsideDown = false;
         }
+
+        // Reset Collider
+        if (weaponDamager != null)
+            DeactivateDamageCollider();
     }
 
     private void ActivateDamageCollider()
@@ -250,14 +272,5 @@ public class OffenseScript : MonoBehaviour
         weaponDamager.SetActive(false);
     }
 
-    private void UpdateWeapon(bool lActive, bool rActive)
-    {
-        character.RWeapon.SetActive(rActive);
-        character.LWeapon.SetActive(lActive);
-
-        if (character.RWeapon.activeSelf)
-            weaponDamager = weaponRDamager;
-        else
-            weaponDamager = weaponLDamager;
-    }
+    #endregion
 }

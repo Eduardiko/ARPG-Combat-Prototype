@@ -6,11 +6,13 @@ public class DamagableScript : MonoBehaviour
 {
     // References
     private Character character;
-    private Animator characterAnimator;
     private WeaponDial weaponDial;
 
+    // Vatiables
+    Character attackerCharacter;
+
     private float damageResetTime = 0.3f;
-    private float damageResetTimer = 0.3f;
+    private float damageResetTimer = 0f;
 
     private float guardThresholdAngle = 30f;
     private float parryThresholdAngle = 10f;
@@ -18,27 +20,34 @@ public class DamagableScript : MonoBehaviour
     private void Start()
     {
         character = GetComponentInChildren<Character>();
-        characterAnimator = GetComponentInChildren<Animator>();
         weaponDial = GetComponent<WeaponDial>();
+
+        damageResetTimer = damageResetTime;
     }
 
     private void Update()
     {
+        // When taken damage, give invincibility for a short ammount of time
         if(damageResetTimer < damageResetTime)
             damageResetTimer += Time.deltaTime;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage && damageResetTimer >= damageResetTime)
+        if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage && !character.isDead && damageResetTimer >= damageResetTime)
         {
-            Character attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
-            ManageDamage(attackerCharacter);
+            attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
+            ManageDamage();
+
+            // Resets
             damageResetTimer = 0f;
+            attackerCharacter.ClearAttackInfo();
         }
     }
 
-    public void ManageDamage(Character attackerCharacter)
+    #region MAIN
+    
+    public void ManageDamage()
     {
         // Check if any of the two Weapon Angles is inside the threshold
         float angularDifference;
@@ -48,78 +57,98 @@ public class DamagableScript : MonoBehaviour
         else
             angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.bottomAngle));
 
+        // Depending on the angular difference, choose what to apply
         if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
-            ReceiveDamage(attackerCharacter);
+            Hit();
         else if (angularDifference < parryThresholdAngle)
-            Parry(attackerCharacter);
+            Parry();
         else
-            Guard(attackerCharacter, angularDifference);
-
+            Guard(angularDifference);
     }
 
-    public void ReceiveDamage(Character attackerCharacter)
+    #endregion
+
+    #region HELPERS
+    public void Hit()
     {
+        // Trigger Counter Parry to attacker
+        if (character.isAttacking && character.attackInfo.type == AttackType.THRUST && attackerCharacter.attackInfo.type == AttackType.THRUST)
+        {
+            attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
+            attackerCharacter.animator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+            return;
+        }
+
+        // Apply Damage
         character.health -= attackerCharacter.attackInfo.damageAmmount;
         print(gameObject.name + "'s remaining health: " + character.health);
 
+        // Check Death
         if (character.health <= 0f)
         {
-            Die(attackerCharacter);
+            Die();
             return;
         }
 
-        if(!character.isPerformingAnAction)
+        // Apply/Not apply staggered animation
+        if (!character.isWeaponColliderActive)
         {
-            characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
             float randomAnimID = Random.Range(1f, 5f);
-            characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
-        } else if (character.isAttacking && character.attackInfo.type == AttackType.THRUST)
-        {
-            attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
-            attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+            character.animator.SetFloat(character.animKeys.hitID, randomAnimID);
+            character.animator.SetTrigger(character.animKeys.hitTriggerKey);
         }
     }
 
-    public void Guard(Character attackerCharacter, float angularDifference)
+    public void Guard(float angularDifference)
     {
+        // Calculate damage received based on accuracy && apply damage
         float mitigationMultiplier = angularDifference / guardThresholdAngle;
-        
         float damage = attackerCharacter.attackInfo.damageAmmount * mitigationMultiplier / 1.5f;
         character.health -= damage;
-        //print(gameObject.name + "'s remaining health: " + character.health);
 
+        print(gameObject.name + "'s remaining health: " + character.health);
+
+        // Check Death
         if (character.health <= 0f)
         {
-            Die(attackerCharacter);
+            Die();
             return;
         }
 
+        // Apply/Not apply staggered animation
         if (!character.isPerformingAnAction)
         {
-            characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+            character.animator.SetTrigger(character.animKeys.hitTriggerKey);
             float randomAnimID = Random.Range(6f, 8f);
-            characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+            character.animator.SetFloat(character.animKeys.hitID, randomAnimID);
         }
     }
 
-    public void Parry(Character attackerCharacter)
+    public void Parry()
     {
-        
-        print("parry");
-        characterAnimator.SetFloat(character.animKeys.hitID, 9f);
-        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+        // Parry animation
+        character.animator.SetFloat(character.animKeys.hitID, 9f);
+        character.animator.SetTrigger(character.animKeys.hitTriggerKey);
 
-        attackerCharacter.characterAnimator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
-        attackerCharacter.characterAnimator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+        // Trigger Counter Parry to attacker
+        attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
+        attackerCharacter.animator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
     }
 
-    public void Die(Character attackerCharacter)
+    public void Die()
     {
+        // Make attacker stop locking
         attackerCharacter.isLocking = false;
-        characterAnimator.SetTrigger(character.animKeys.hitTriggerKey);
+
+        // Trigger Death animation
         float randomAnimID = Mathf.Round(Random.Range(11f, 12f));
-        characterAnimator.SetFloat(character.animKeys.hitID, randomAnimID);
+        character.animator.SetFloat(character.animKeys.hitID, randomAnimID);
+        character.animator.SetTrigger(character.animKeys.hitTriggerKey);
+
+        // Update tag & layer
         gameObject.tag = "Corpse";
         gameObject.layer = 8;
     }
+
+    #endregion
 }

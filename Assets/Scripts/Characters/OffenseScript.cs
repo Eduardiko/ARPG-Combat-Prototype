@@ -67,7 +67,7 @@ public class OffenseScript : MonoBehaviour
     private void UpdateStatesAndAnimations()
     {
         // Check for reset
-        if (!character.isMovementRestriced || character.isImmuneToDamage || character.isStaggered)
+        if (!character.isMovementRestriced || character.isStaggered)
             PeformResets();
 
         // Weapon Top Attack
@@ -109,11 +109,8 @@ public class OffenseScript : MonoBehaviour
             LookAtTarget();
 
         // Perform a step
-        if(!character.isLocking || (character.target != null && (character.target.transform.position - transform.position).magnitude > 2f))
-        {
-            StopCoroutine(character.Step());
-            StartCoroutine(character.Step());
-        }
+        StopCoroutine(character.Step());
+        StartCoroutine(character.Step());
 
         // Calculate sector to define animation - 8 sectors & 22.5 degree offset
         if (type != AttackType.THRUST)

@@ -1831,7 +1831,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.018189503, y: 0.000000017560653, z: -2.423277e-10, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189484, y: -0.000000016967485, z: 2.3414193e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2559,7 +2559,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: 0.000000005355105, y: 0.000000002115111, z: 9.289427e-12, w: 1}
+  m_LocalRotation: {x: 0.000000003958121, y: 9.563298e-10, z: 4.200139e-12, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5540,7 +5540,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141454, y: 0.000000018071262, z: 4.0729323e-10, w: 0.9998355}
+  m_LocalRotation: {x: -0.018141454, y: 0.000000017775259, z: 4.0062184e-10, w: 0.9998355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -5752,12 +5752,12 @@ GameObject:
   - component: {fileID: 1594295747}
   - component: {fileID: 1594295746}
   - component: {fileID: 1594295745}
+  - component: {fileID: 1594295751}
   - component: {fileID: 1594295742}
   - component: {fileID: 1594295741}
   - component: {fileID: 1594295740}
   - component: {fileID: 1594295739}
   - component: {fileID: 1594295738}
-  - component: {fileID: 1594295749}
   - component: {fileID: 1594295750}
   m_Layer: 6
   m_Name: Enemy
@@ -5881,13 +5881,13 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1594295737}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f4255524c5cf68419f3687461f85da4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 330069501817349247}
-  actionTriggerTime: 0.2
+  actionTriggerTime: 0.5
   forcedAngle: 0
 --- !u!114 &1594295746
 MonoBehaviour:
@@ -5928,7 +5928,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a6d9b361802ad5b4cb251b7fa7b4660c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
+  health: 10000
   lookAtTransform: {fileID: 173840236}
   attackStepLengthMultiplier: 0.15
   attackStepTime: 0.2
@@ -5960,32 +5960,11 @@ MonoBehaviour:
   isDodging: 0
   isBackstepping: 0
   isStaggered: 0
+  isImmuneToDamage: 0
   isUILocked: 0
   isMovementRestriced: 0
   isPerformingAnAction: 0
-  isImmuneToDamage: 0
   target: {fileID: 0}
---- !u!114 &1594295749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1594295737}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb79ceb150b53641b2d3de3eea50e25, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 5
-  runSpeed: 8
-  jumpHeight: 0.5
-  gravity: -9.81
-  cameraTransform: {fileID: 6522471014971820064}
-  groundCheck: {fileID: 1594295744}
-  groundMask:
-    serializedVersion: 2
-    m_Bits: 8
 --- !u!143 &1594295750
 CharacterController:
   m_ObjectHideFlags: 0
@@ -6004,6 +5983,24 @@ CharacterController:
   m_SkinWidth: 0.08
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1.02, z: 0}
+--- !u!114 &1594295751
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1594295737}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: de062e4591ac13f4780e33b1b28057b0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  player: {fileID: 330069501817349247}
+  actionAttackMaxTriggerTime: 0.3
+  actionAttackMinTriggerTime: 5
+  thrustAttackProbability: 50
+  forcedAngle: 0
+  moveSpeed: 4
 --- !u!1 &1634276337
 GameObject:
   m_ObjectHideFlags: 0
@@ -7020,10 +7017,10 @@ MonoBehaviour:
   isDodging: 0
   isBackstepping: 0
   isStaggered: 0
+  isImmuneToDamage: 0
   isUILocked: 0
   isMovementRestriced: 0
   isPerformingAnAction: 0
-  isImmuneToDamage: 0
   target: {fileID: 0}
 --- !u!1 &1915630482
 GameObject:
@@ -10086,7 +10083,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: -0.0021959539, y: 0.0000000011088224, z: 2.4349268e-12, w: 0.9999976}
+  m_LocalRotation: {x: -0.0021959539, y: 7.332504e-10, z: 1.6101877e-12, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 1.66, z: -5}
   m_LocalScale: {x: 0.6187781, y: 0.61877805, z: 0.6187784}
   m_ConstrainProportionsScale: 0
@@ -10297,8 +10294,8 @@ MonoBehaviour:
   lookAtTransform: {fileID: 590051982}
   attackStepLengthMultiplier: 0.15
   attackStepTime: 0.2
-  stepLengthMultiplier: 0.1
-  stepTime: 0.3
+  stepLengthMultiplier: 0.08
+  stepTime: 0.4
   animKeys:
     jumpTriggerKey: JumpTrigger
     runTriggerKey: RunTrigger
@@ -10325,10 +10322,10 @@ MonoBehaviour:
   isDodging: 0
   isBackstepping: 0
   isStaggered: 0
+  isImmuneToDamage: 0
   isUILocked: 0
   isMovementRestriced: 0
   isPerformingAnAction: 0
-  isImmuneToDamage: 0
   target: {fileID: 0}
 --- !u!114 &6985017023614976586
 MonoBehaviour:

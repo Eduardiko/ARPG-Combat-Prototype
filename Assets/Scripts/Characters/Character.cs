@@ -77,13 +77,13 @@ public class Character : MonoBehaviour
     [HideInInspector] public bool isDodging = false;
     [HideInInspector] public bool isBackstepping = false;
     [HideInInspector] public bool isStaggered = false;
+    [HideInInspector] public bool isImmuneToDamage = false;
 
     [HideInInspector] public bool isUILocked = false;
     [HideInInspector] public bool isMovementRestriced = false;
 
     // State Bools - General Ones - Dependent previous states
     [HideInInspector] public bool isPerformingAnAction = false;
-    [HideInInspector] public bool isImmuneToDamage = false;
 
     // Combat Information
     [HideInInspector] public AttackInfo attackInfo;
@@ -112,12 +112,6 @@ public class Character : MonoBehaviour
             isPerformingAnAction = true;
         else
             isPerformingAnAction = false;
-
-        // Actions that make the player immune
-        if (isBackstepping || isDodging)
-            isImmuneToDamage = true;
-        else
-            isImmuneToDamage = false;
     }
 
     #endregion
@@ -155,6 +149,16 @@ public class Character : MonoBehaviour
     private void IsNotBackstepping()
     {
         isBackstepping = false;
+    }
+
+    private void IsImmuneToDamage()
+    {
+        isImmuneToDamage = true;
+    }
+
+    private void IsNotImmuneToDamage()
+    {
+        isImmuneToDamage = false;
     }
 
     // General States
@@ -223,13 +227,16 @@ public class Character : MonoBehaviour
 
         while (elapsedTime < attackStepTime)
         {
-            float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime);
+            if (!isLocking || (target != null && (target.transform.position - transform.position).magnitude > 1.2f))
+            {
+                float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime);
 
-            // Calculate the new position after stepping forward
-            Vector3 newPosition = transform.position + transform.forward * stepDistance;
+                // Calculate the new position after stepping forward
+                Vector3 newPosition = transform.position + transform.forward * stepDistance;
 
-            // Move the GameObject to the new position
-            transform.position = newPosition;
+                // Move the GameObject to the new position
+                transform.position = newPosition;
+            }
 
             elapsedTime += Time.deltaTime;
             yield return null;

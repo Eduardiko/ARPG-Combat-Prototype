@@ -35,6 +35,7 @@ public class MovementScript : MonoBehaviour
     private bool ableToJump = false;
     private bool ableToRun = false;
 
+    private bool manualNotLookAtActive = false;
 
     private void Start()
     {
@@ -138,22 +139,32 @@ public class MovementScript : MonoBehaviour
         moveDirection = cameraForward * moveDirection.z + cameraTransform.right * moveDirection.x;
         moveDirection *= moveSpeed * Time.deltaTime;
 
-
         // Move and rotate the player
         if (moveDirection != Vector3.zero)
         {
-            if(!character.isLocking || character.isRunning || !character.isGrounded)
+            if (!character.isLocking || character.isRunning || !character.isGrounded)
             {
                 // Rotate the player to face the direction of movement
                 float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
                 transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
-            } else if (!character.isMovementRestriced)
+            }
+            else if (!character.isWeaponColliderActive || manualNotLookAtActive)
             {
+                // This way it stops looking at the player from the moment the collider is active until the end of the action, giving a sense of locked attack
+                if (character.isPerformingAnAction && manualNotLookAtActive)
+                    return;
+                else if (manualNotLookAtActive)
+                    manualNotLookAtActive = false;
+
+                // Rotate the player to face the target
                 // Y axis to 0 so Vector is calculated at same height
                 Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
                 Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
                 transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
             }
+            else if (character.isWeaponColliderActive && !manualNotLookAtActive)
+                manualNotLookAtActive = true;
+
 
             characterController.Move(moveDirection);
         }

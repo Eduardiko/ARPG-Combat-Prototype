@@ -7,6 +7,7 @@ public class SmartEnemy : MonoBehaviour
     // References
     public GameObject player;
     private Character character;
+    private Character targetCharacter;
     private InputManager inputManager;
     private WeaponDial weaponDial;
     private CharacterController characterController;
@@ -19,6 +20,12 @@ public class SmartEnemy : MonoBehaviour
     [Range(0.0f, 100.0f)]
     [SerializeField] private float thrustAttackProbability = 5f;
 
+    [Range(0.0f, 100.0f)]
+    [SerializeField] private float evadeProbability = 5f;
+
+    [Range(0.0f, 100.0f)]
+    [SerializeField] private float backstepProbability = 5f;
+
     public float forcedAngle = 0f;
 
     public float moveSpeed = 0.5f;
@@ -28,6 +35,9 @@ public class SmartEnemy : MonoBehaviour
     private Vector3 toTargetVector;
     private Vector3 toInitVector;
 
+    private bool manualNotLookAtActive = false;
+
+
     private void Start()
     {
         inputManager = GetComponent<InputManager>();
@@ -36,6 +46,7 @@ public class SmartEnemy : MonoBehaviour
         characterController = GetComponent<CharacterController>();
 
         character.target = player;
+        targetCharacter = player.GetComponent<Character>();
 
         initialPosition = transform.position;
     }
@@ -43,11 +54,38 @@ public class SmartEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(!character.isPerformingAnAction)
+        if(!character.isMovementRestriced)
             MoveToTarget();
 
+        // Animation Mode
         if (character.isLocking)
+            character.animator.SetBool(character.animKeys.isLockingKey, true);
+        else
+            character.animator.SetBool(character.animKeys.isLockingKey, false);
+
+        if (character.isLocking)
+        {
+            if (!character.isWeaponColliderActive || manualNotLookAtActive)
+            {
+                // This way it stops looking at the player from the moment the collider is active until the end of the action, giving a sense of locked attack
+                if (character.isMovementRestriced && manualNotLookAtActive)
+                    return;
+                else if (manualNotLookAtActive)
+                    manualNotLookAtActive = false;
+
+                // Rotate the player to face the target
+                // Y axis to 0 so Vector is calculated at same height
+                Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
+                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+            }
+            else if (character.isWeaponColliderActive && !manualNotLookAtActive)
+                manualNotLookAtActive = true;
+
             Attack();
+
+            Dodge();
+        }
     }
 
     private void MoveToTarget()
@@ -99,25 +137,12 @@ public class SmartEnemy : MonoBehaviour
         else
         {
             character.animator.SetFloat(character.animKeys.directionZKey, 0f);
-
-            if (toTargetVector.magnitude <= 3f)
-            {
-                character.isLocking = true;
-            }
+            character.isLocking = true;
         }
     }
 
     private void Attack()
     {
-        if (!character.isMovementRestriced)
-        {
-            // Rotate the player to face the target
-            // Y axis to 0 so Vector is calculated at same height
-            Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
-            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
-            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
-        }
-
         if (actionAttackTriggerTime < 0f)
         {
             actionAttackTriggerTime = Random.Range(actionAttackMinTriggerTime, actionAttackMaxTriggerTime);
@@ -141,12 +166,63 @@ public class SmartEnemy : MonoBehaviour
 
                 inputManager.tryingToWeaponTopAttack = true;
             }
-
-            weaponDial.isUIWeaponAttached = true;
         }
         else
         {
             actionAttackTriggerTime -= Time.deltaTime;
+        }
+    }
+
+    private void Dodge()
+    {
+        if(targetCharacter.isWeaponColliderActive)
+        {
+            float randomEvade = Random.Range(0f, 100f);
+            if(randomEvade <= evadeProbability)
+            {
+                float randomBackstep = Random.Range(0f, 100f);
+                if (randomBackstep <= backstepProbability)
+                {
+                    inputManager.tryingToBackstep = true;
+                }
+                else
+                {
+                    switch (targetCharacter.attackInfo.type)
+                    {
+                        case AttackType.SLASH_WEAPON_TOP:
+                            if (targetCharacter.attackInfo.topAngle <= 180)
+                            {
+                                inputManager.tryingToDodgeRight = true;
+                                inputManager.SendActionToInputBuffer(BufferActions.ACTION_DODGE_RIGHT);
+                            }
+                            else
+                            {
+                                inputManager.tryingToDodgeLeft = true;
+                                inputManager.SendActionToInputBuffer(BufferActions.ACTION_DODGE_LEFT);
+                            }
+                            break;
+                        case AttackType.SLASH_WEAPON_BOTTOM:
+                            if (targetCharacter.attackInfo.bottomAngle <= 180)
+                            {
+                                inputManager.tryingToDodgeRight = true;
+                                inputManager.SendActionToInputBuffer(BufferActions.ACTION_DODGE_RIGHT);
+                            }
+                            else
+                            {
+                                inputManager.tryingToDodgeLeft = true;
+                                inputManager.SendActionToInputBuffer(BufferActions.ACTION_DODGE_LEFT);
+                            }
+                            break;
+                        case AttackType.THRUST:
+                            inputManager.tryingToBackstep = true;
+                            break;
+                        case AttackType.NONE:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
         }
     }
 }

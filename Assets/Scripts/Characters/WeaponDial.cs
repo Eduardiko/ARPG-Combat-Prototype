@@ -209,20 +209,8 @@ public class WeaponDial : MonoBehaviour
     {
         Character targetCharacter = character.target.GetComponent<Character>();
 
-        // Activate/Deactivate render
-        if (targetCharacter.isUILocked)
-        {
-            topTargetWeaponRect.gameObject.SetActive(true);
-            bottomTargetWeaponRect.gameObject.SetActive(true);
-        }
-        else
-        {
-            topTargetWeaponRect.gameObject.SetActive(false);
-            bottomTargetWeaponRect.gameObject.SetActive(false);
-        }
-
         // Target Angles (Enemy Angles)
-        if (topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf)
+        if ((topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf) && targetCharacter.attackInfo.type != AttackType.NONE)
         {
 
             float radianTopAngle = (90 - targetCharacter.attackInfo.topAngle) * Mathf.Deg2Rad;
@@ -234,6 +222,18 @@ public class WeaponDial : MonoBehaviour
             x = 0.6f * Mathf.Cos(radianBottomAngle);
             y = 0.6f * Mathf.Sin(radianBottomAngle);
             bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
+        }
+
+        // Activate/Deactivate render
+        if (targetCharacter.isUILocked && targetCharacter.attackInfo.type != AttackType.NONE)
+        {
+            topTargetWeaponRect.gameObject.SetActive(true);
+            bottomTargetWeaponRect.gameObject.SetActive(true);
+        }
+        else
+        {
+            topTargetWeaponRect.gameObject.SetActive(false);
+            bottomTargetWeaponRect.gameObject.SetActive(false);
         }
     }
 

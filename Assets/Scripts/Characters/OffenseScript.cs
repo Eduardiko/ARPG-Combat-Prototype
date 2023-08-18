@@ -96,7 +96,6 @@ public class OffenseScript : MonoBehaviour
     private void Attack(AttackType type, float angle=0f)
     {
         // Update States
-        character.isUILocked = true;
         character.isMovementRestriced = true;
 
         inputManager.tryingToWeaponTopAttack = false;
@@ -265,6 +264,7 @@ public class OffenseScript : MonoBehaviour
 
     private void DeactivateDamageCollider()
     {
+        character.ClearAttackInfo();
         character.isWeaponColliderActive = false;
         weaponDamager.SetActive(false);
     }

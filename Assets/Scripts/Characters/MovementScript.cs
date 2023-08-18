@@ -151,7 +151,7 @@ public class MovementScript : MonoBehaviour
             else if (!character.isWeaponColliderActive || manualNotLookAtActive)
             {
                 // This way it stops looking at the player from the moment the collider is active until the end of the action, giving a sense of locked attack
-                if (character.isPerformingAnAction && manualNotLookAtActive)
+                if (character.isMovementRestriced && manualNotLookAtActive)
                     return;
                 else if (manualNotLookAtActive)
                     manualNotLookAtActive = false;

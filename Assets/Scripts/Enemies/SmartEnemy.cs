@@ -22,6 +22,16 @@ public class SmartEnemy : MonoBehaviour
 
     [Range(0.0f, 100.0f)]
     [SerializeField] private float evadeProbability = 5f;
+    private bool triedEvading = false;
+
+    [Range(0.0f, 100.0f)]
+    [SerializeField] private float guardProbability = 5f;
+    [Range(0.0f, 100f)]
+    [SerializeField] private float guardAccuracy = 5f;
+    private bool triedGuarding = false;
+
+    [Range(0.0f, 100.0f)]
+    [SerializeField] private float counterThrustProbability = 5f;
 
     [Range(0.0f, 100.0f)]
     [SerializeField] private float backstepProbability = 5f;
@@ -85,6 +95,8 @@ public class SmartEnemy : MonoBehaviour
             Attack();
 
             Dodge();
+
+            Guard();
         }
     }
 
@@ -175,8 +187,10 @@ public class SmartEnemy : MonoBehaviour
 
     private void Dodge()
     {
-        if(targetCharacter.isWeaponColliderActive)
+        if(targetCharacter.isWeaponColliderActive && !triedEvading)
         {
+            triedEvading = true;
+
             float randomEvade = Random.Range(0f, 100f);
             if(randomEvade <= evadeProbability)
             {
@@ -223,6 +237,54 @@ public class SmartEnemy : MonoBehaviour
                     }
                 }
             }
+            else if(!targetCharacter.isWeaponColliderActive)
+                triedEvading = false;
         }
     }
+
+    private void Guard()
+    {
+        if (targetCharacter.isWeaponColliderActive && !triedGuarding)
+        {
+            triedGuarding = true;
+
+            float randomGuard = Random.Range(0f, 100f);
+            float accuracy = Random.Range(guardAccuracy / 5f, 100f);
+            float offset = 22.5f - 22.5f * accuracy / 100f;
+
+            float randomCounterThrust = Random.Range(0f, 100f);
+
+            switch (targetCharacter.attackInfo.type)
+            {
+                case AttackType.SLASH_WEAPON_TOP:
+                    if (randomGuard <= guardProbability)
+                    {
+                        weaponDial.manualAngle = targetCharacter.attackInfo.topAngle + offset > 360f ? targetCharacter.attackInfo.topAngle + offset  - 360f: 360f - targetCharacter.attackInfo.topAngle + offset;
+                        weaponDial.isUIWeaponAttached = true;
+                    }
+                    break;
+                case AttackType.SLASH_WEAPON_BOTTOM:
+                    if (randomGuard <= guardProbability)
+                    {
+                        weaponDial.manualAngle = targetCharacter.attackInfo.bottomAngle + offset > 360 ? targetCharacter.attackInfo.bottomAngle + offset - 360 : targetCharacter.attackInfo.bottomAngle + offset;
+                        weaponDial.isUIWeaponAttached = true;
+                    }
+                    break;
+                case AttackType.THRUST:
+                    if (randomCounterThrust <= counterThrustProbability)
+                        inputManager.tryingToWeaponThrustAttack = true;
+                    break;
+                default:
+                    break;
+            }
+        }
+        else if(targetCharacter.isWeaponColliderActive && triedGuarding)
+            weaponDial.isUIWeaponAttached = true;
+        else if (!targetCharacter.isWeaponColliderActive)
+        {
+            weaponDial.isUIWeaponAttached = false;
+            triedGuarding = false;
+        }
+    }
+
 }

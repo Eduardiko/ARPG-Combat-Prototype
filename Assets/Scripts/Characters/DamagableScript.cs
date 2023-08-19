@@ -53,9 +53,9 @@ public class DamagableScript : MonoBehaviour
         float angularDifference;
 
         if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
-            angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.topAngle));
+            angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360 - attackerCharacter.attackInfo.topAngle));
         else
-            angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360f - attackerCharacter.attackInfo.bottomAngle));
+            angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360 - attackerCharacter.attackInfo.bottomAngle));
 
         // Depending on the angular difference, choose what to apply
         if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
@@ -81,7 +81,6 @@ public class DamagableScript : MonoBehaviour
 
         // Apply Damage
         character.health -= attackerCharacter.attackInfo.damageAmmount;
-        print(gameObject.name + "'s remaining health: " + character.health);
 
         // Check Death
         if (character.health <= 0f)

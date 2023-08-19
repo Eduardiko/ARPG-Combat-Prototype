@@ -219,7 +219,7 @@ public class MovementScript : MonoBehaviour
     {       
         // Set Speed
         if (currentInputVector.magnitude < 0.01f) currentInputVector = Vector2.zero;
-        moveSpeed = AccelerateSpeed(moveSpeed, 0.5f, runSpeed);
+        moveSpeed = AccelerateSpeed(moveSpeed, 0.1f, runSpeed);
         if(moveSpeed > runSpeed) moveSpeed = runSpeed;
 
     }

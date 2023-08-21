@@ -48,12 +48,13 @@ public class Character : MonoBehaviour
 {
     // Character Parameters
     [Header("Parameters")]
-    public float health = 100f;
+    public float maxHealth = 100f;
     public Transform lookAtTransform;
     [SerializeField] private float attackStepLengthMultiplier = 1;
     [SerializeField] private float attackStepTime;
     [SerializeField] private float stepLengthMultiplier = 1;
     [SerializeField] private float stepTime;
+    [HideInInspector] public float health;
 
     // Access Character Animations
     [Header("Animations")]
@@ -88,6 +89,7 @@ public class Character : MonoBehaviour
     // Combat Information
     [HideInInspector] public AttackInfo attackInfo;
     [HideInInspector] public GameObject target;
+    [HideInInspector] public int combo = 0;
 
 
     private void Start()
@@ -96,11 +98,7 @@ public class Character : MonoBehaviour
         isGrounded = true;
 
         animator = GetComponentInChildren<Animator>();
-    }
-
-    private void Update()
-    {
-        UpdateGeneralBools();
+        health = maxHealth;
     }
 
     #region MAIN
@@ -123,53 +121,63 @@ public class Character : MonoBehaviour
     private void IsAttacking()
     {
         isAttacking = true;
+        UpdateGeneralBools();
     }
 
     private void IsNotAttacking()
     {
         isAttacking = false;
+        UpdateGeneralBools();
     }
 
     // Defense States
     private void IsDodging()
     {
         isDodging = true;
+        UpdateGeneralBools();
     }
 
     private void IsNotDodging()
     {
         isDodging = false;
+        UpdateGeneralBools();
     }
 
     private void IsBackstepping()
     {
         isBackstepping = true;
+        UpdateGeneralBools();
     }
 
     private void IsNotBackstepping()
     {
         isBackstepping = false;
+        UpdateGeneralBools();
     }
 
     private void IsImmuneToDamage()
     {
         isImmuneToDamage = true;
+        UpdateGeneralBools();
     }
 
     private void IsNotImmuneToDamage()
     {
         isImmuneToDamage = false;
+        UpdateGeneralBools();
     }
 
     // General States
     private void IsMovementRestricted()
     {
         isMovementRestriced = true;
+        UpdateGeneralBools();
     }
 
     private void IsNotMovementRestricted()
     {
         isMovementRestriced = false;
+        UpdateGeneralBools();
     }
 
     private void IsStaggered()
@@ -180,16 +188,20 @@ public class Character : MonoBehaviour
         isDodging = false;
         isBackstepping = false;
         isUILocked = false;
+        
+        UpdateGeneralBools();
     }
 
     private void IsNotStaggered()
     {
         isStaggered = false;
+        UpdateGeneralBools();
     }
 
     private void IsDead()
     {
         isDead = true;
+        UpdateGeneralBools();
     }
 
     #endregion

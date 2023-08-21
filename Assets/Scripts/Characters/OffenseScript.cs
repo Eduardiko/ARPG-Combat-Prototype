@@ -14,7 +14,6 @@ public class OffenseScript : MonoBehaviour
     private WeaponDial weaponDial;
 
     // Variables
-    private int combo = 0;
     private float attackSector = 0f;
 
     private GameObject weaponDamager;
@@ -124,17 +123,17 @@ public class OffenseScript : MonoBehaviour
         UpdateWeapon(type, angle);
 
         // Set Animation
-        character.animator.SetInteger(character.animKeys.comboKey, combo);
+        character.animator.SetInteger(character.animKeys.comboKey, character.combo);
         character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
         character.animator.SetTrigger(character.animKeys.attackTriggerKey);
 
-        // Set combo
-        if(combo == 0)
+        // Set character.combo
+        if(character.combo == 0)
             character.SetAttackInfo(10f, weaponDial.topAngle, weaponDial.bottomAngle, type);
         else
-            character.SetAttackInfo(10f * combo, weaponDial.topAngle, weaponDial.bottomAngle, type);
+            character.SetAttackInfo(10f * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, type);
 
-        combo = combo + 1 > 2 ? 0 : combo + 1;
+        character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
     }
 
     #endregion
@@ -146,7 +145,7 @@ public class OffenseScript : MonoBehaviour
         if (type != AttackType.THRUST)
         {
             // Hardcoded - As I didn't find light top/bottom attack animations, it will perform light high/low attacks
-            if (combo < 2)
+            if (character.combo < 2)
             {
                 switch (attackSector)
                 {
@@ -167,7 +166,7 @@ public class OffenseScript : MonoBehaviour
             else
                 UpdateWeaponHand(true, false);
 
-            // Hardcoded - For Light/Strong Mid Attack animations, the hand needs to be inversed for the combos to work
+            // Hardcoded - For Light/Strong Mid Attack animations, the hand needs to be inversed for the character.combos to work
             switch (attackSector)
             {
                 case 3:
@@ -240,8 +239,8 @@ public class OffenseScript : MonoBehaviour
 
     private void PeformResets()
     {
-        // Reset Combo
-        combo = 0;
+        // Reset character.combo
+        character.combo = 0;
 
         // Return Weapon to default
         if (isWeaponUpsideDown)

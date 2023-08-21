@@ -6,6 +6,7 @@ public class MovementScript : MonoBehaviour
     [Header("Move Parameters")]
     [SerializeField] private float walkSpeed = 5f;
     [SerializeField] private float runSpeed = 8f;
+    [SerializeField] private float lockWalkSpeed = 3f;
 
     [Header("Jump Parameters")]
     [SerializeField] private float jumpHeight = 0.5f;
@@ -194,14 +195,7 @@ public class MovementScript : MonoBehaviour
         if(!character.isLocking)
             moveSpeed = walkSpeed * currentInputVector.magnitude;
         else 
-        {
-            Vector2 reducedVec = currentInputVector;
-
-            reducedVec.x = reducedVec.x * 0.75f;
-            if(currentInputVector.y < 0f) reducedVec.y = reducedVec.y * 0.8f;
-
-            moveSpeed = walkSpeed * reducedVec.magnitude;
-        }
+            moveSpeed = lockWalkSpeed * currentInputVector.magnitude;
 
         // Set Animation
         if (character.isLocking)

@@ -4,17 +4,19 @@ using UnityEngine;
 
 public class DamagableScript : MonoBehaviour
 {
+    [SerializeField] private List<float> protectedAngles;
+    
     // References
     private Character character;
     private WeaponDial weaponDial;
 
-    // Vatiables
-    Character attackerCharacter;
+    // Variables
+    private Character attackerCharacter;
 
     private float damageResetTime = 0.3f;
     private float damageResetTimer = 0f;
 
-    private float guardThresholdAngle = 30f;
+    private float guardThresholdAngle = 45f;
     private float parryThresholdAngle = 10f;
 
     private void Start()
@@ -37,6 +39,7 @@ public class DamagableScript : MonoBehaviour
         if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage && !character.isDead && damageResetTimer >= damageResetTime)
         {
             attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
+
             ManageDamage();
 
             // Resets
@@ -52,6 +55,30 @@ public class DamagableScript : MonoBehaviour
         // Check if any of the two Weapon Angles is inside the threshold
         float angularDifference;
 
+        foreach (float protectedAngle in protectedAngles)
+        {
+            if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
+                angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.topAngle));
+            else
+                angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.bottomAngle));
+
+            print(angularDifference);
+
+            // Depending on the angular difference, choose what to apply
+            if (angularDifference > guardThresholdAngle / 2 || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
+                continue;
+            else if (angularDifference < parryThresholdAngle && !character.isMovementRestriced)
+            {
+                Parry(false);
+                return;
+            }
+            else if (!character.isMovementRestriced)
+            {
+                Guard(angularDifference);
+                return;
+            }
+        }
+        
         if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
             angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360 - attackerCharacter.attackInfo.topAngle));
         else
@@ -101,11 +128,10 @@ public class DamagableScript : MonoBehaviour
     public void Guard(float angularDifference)
     {
         // Calculate damage received based on accuracy && apply damage
-        float mitigationMultiplier = angularDifference / guardThresholdAngle;
-        float damage = attackerCharacter.attackInfo.damageAmmount * mitigationMultiplier / 1.5f;
+        float mitigationMultiplier = parryThresholdAngle / angularDifference;
+        float mitigationAmmount = 4f * mitigationMultiplier * mitigationMultiplier;
+        float damage = attackerCharacter.attackInfo.damageAmmount / (1f + mitigationAmmount);
         character.health -= damage;
-
-        print(gameObject.name + "'s remaining health: " + character.health);
 
         // Check Death
         if (character.health <= 0f)
@@ -123,11 +149,14 @@ public class DamagableScript : MonoBehaviour
         }
     }
 
-    public void Parry()
+    public void Parry(bool triggerCounteranimation = true)
     {
         // Parry animation
-        character.animator.SetFloat(character.animKeys.hitID, 9f);
-        character.animator.SetTrigger(character.animKeys.hitTriggerKey);
+        if(triggerCounteranimation)
+        {
+            character.animator.SetFloat(character.animKeys.hitID, 9f);
+            character.animator.SetTrigger(character.animKeys.hitTriggerKey);
+        }
 
         // Trigger Counter Parry to attacker
         attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);

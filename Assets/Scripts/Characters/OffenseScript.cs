@@ -7,6 +7,7 @@ public class OffenseScript : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject weaponRDamager;
     [SerializeField] private GameObject weaponLDamager;
+    public bool debugSkipStep = false;
 
     // References
     private Character character;
@@ -41,11 +42,10 @@ public class OffenseScript : MonoBehaviour
 
     private void Update()
     {
+        UpdatePossibleActions();
+
         if(!character.isDead)
-        { 
-            UpdatePossibleActions();
             UpdateStatesAndAnimations();
-        }
     }
 
     #region MAIN
@@ -53,7 +53,7 @@ public class OffenseScript : MonoBehaviour
     private void UpdatePossibleActions()
     {
         // If any action is successfully performed, the limiter is deactivated
-        if (character.isPerformingAnAction)
+        if (character.isPerformingAnAction || character.isDead)
             attackSpamLimiterActive = false;
         
         // Can The Player Attack?
@@ -107,8 +107,11 @@ public class OffenseScript : MonoBehaviour
             LookAtTarget();
 
         // Perform a step
-        StopCoroutine(character.Step());
-        StartCoroutine(character.Step());
+        if(!debugSkipStep)
+        {
+            StopCoroutine(character.Step());
+            StartCoroutine(character.Step());
+        }
 
         // Calculate sector to define animation - 8 sectors & 22.5 degree offset
         if (type != AttackType.THRUST)

@@ -23,10 +23,9 @@ public class EvasionScript : MonoBehaviour
     void Update()
     {
         if (!character.isDead)
-        {
             UpdatePossibleActions();
-            UpdateStatesAndAnimations();
-        }
+
+        UpdateStatesAndAnimations();
     }
 
     #region MAIN

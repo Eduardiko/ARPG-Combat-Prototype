@@ -79,6 +79,9 @@ public class SmartEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (targetCharacter.isDead)
+            character.health = character.maxHealth;
+        
         if(!character.isMovementRestriced)
             MoveToTarget();
 
@@ -154,7 +157,7 @@ public class SmartEnemy : MonoBehaviour
         toTargetVector = character.target.transform.position - transform.position;
         toInitVector = initialPosition - transform.position;
 
-        if (toTargetVector.magnitude > 5f && toTargetVector.magnitude < 12f)
+        if (toTargetVector.magnitude > 5f && toTargetVector.magnitude < 10f)
         {
             character.isLocking = false;
             toTargetVector = toTargetVector.normalized * moveSpeed * Time.deltaTime;
@@ -169,7 +172,7 @@ public class SmartEnemy : MonoBehaviour
 
             actionAttackTriggerTime = 1f;
         }
-        else if (toTargetVector.magnitude >= 12f && toInitVector.magnitude > 0.2f)
+        else if (toTargetVector.magnitude >= 10f && toInitVector.magnitude > 0.2f)
         {
             character.isLocking = false;
             toInitVector = toInitVector.normalized * moveSpeed * Time.deltaTime;

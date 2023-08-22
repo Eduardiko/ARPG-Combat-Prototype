@@ -62,19 +62,10 @@ public class DamagableScript : MonoBehaviour
             else
                 angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.bottomAngle));
 
-            print(angularDifference);
-
             // Depending on the angular difference, choose what to apply
-            if (angularDifference > guardThresholdAngle / 2 || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
-                continue;
-            else if (angularDifference < parryThresholdAngle && !character.isMovementRestriced)
+            if (angularDifference < parryThresholdAngle && !character.isMovementRestriced && attackerCharacter.attackInfo.type != AttackType.THRUST)
             {
                 Parry(false);
-                return;
-            }
-            else if (!character.isMovementRestriced)
-            {
-                Guard(angularDifference);
                 return;
             }
         }

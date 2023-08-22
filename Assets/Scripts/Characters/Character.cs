@@ -49,12 +49,12 @@ public class Character : MonoBehaviour
     // Character Parameters
     [Header("Parameters")]
     public float maxHealth = 100f;
+    public float health = 100f;
     public Transform lookAtTransform;
     [SerializeField] private float attackStepLengthMultiplier = 1;
     [SerializeField] private float attackStepTime;
     [SerializeField] private float stepLengthMultiplier = 1;
     [SerializeField] private float stepTime;
-    [HideInInspector] public float health;
 
     // Access Character Animations
     [Header("Animations")]
@@ -98,7 +98,6 @@ public class Character : MonoBehaviour
         isGrounded = true;
 
         animator = GetComponentInChildren<Animator>();
-        health = maxHealth;
     }
 
     #region MAIN
@@ -271,6 +270,9 @@ public class Character : MonoBehaviour
             }
 
             float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
+
+            if (!isLocking)
+                stepDistance *= 2f;
 
             Vector3 newPosition = new Vector3();
 

@@ -22,6 +22,9 @@ public class SmartEnemy : MonoBehaviour
     private float thrustAttackProbabilityMultiplier;
 
     [Range(0.0f, 100.0f)]
+    [SerializeField] private float bottomAttackProbability = 5f;
+
+    [Range(0.0f, 100.0f)]
     [SerializeField] private float evadeProbability = 5f;
     private float evadeProbabilityMultiplier;
     private bool triedEvading = false;
@@ -236,11 +239,24 @@ public class SmartEnemy : MonoBehaviour
                 float oppositeAngle = randomAngle + 180 > 360 ? randomAngle - 180 : randomAngle + 180;
 
                 weaponDial.manualAngle = randomAngle;
-                weaponDial.topAngle = randomAngle;
-                weaponDial.bottomAngle = oppositeAngle;
 
-                inputManager.tryingToWeaponTopAttack = true;
-                inputManager.SendActionToInputBuffer(BufferActions.ACTION_WEAPON_TOP_ATTACK);
+                float randomWeaponPart = Random.Range(0f, 100f);
+
+                if(randomWeaponPart >= bottomAttackProbability)
+                {
+                    weaponDial.topAngle = randomAngle;
+                    weaponDial.bottomAngle = oppositeAngle;
+                    inputManager.tryingToWeaponTopAttack = true;
+                    inputManager.SendActionToInputBuffer(BufferActions.ACTION_WEAPON_TOP_ATTACK);
+                }
+                else
+                {
+                    weaponDial.bottomAngle = randomAngle;
+                    weaponDial.topAngle = oppositeAngle;
+                    inputManager.tryingToWeaponBottomAttack = true;
+                    inputManager.SendActionToInputBuffer(BufferActions.ACTION_WEAPON_BOTTOM_ATTACK);
+                }
+
             }
 
             moveDirection = Random.Range(0, 2) * 2 - 1;

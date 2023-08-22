@@ -3615,6 +3615,91 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 354936393}
   m_CullTransparentMesh: 1
+--- !u!1 &356862601
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 356862602}
+  - component: {fileID: 356862603}
+  m_Layer: 0
+  m_Name: Although being less predictable, bottom attacks deal less damage and are
+    countered the same way as normal ones.
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &356862602
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356862601}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.3716, y: 0.119, z: -0.55}
+  m_LocalScale: {x: 0.0329288, y: 0.15351385, z: 0.9817295}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 860364739}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &356862603
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 356862601}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: 1d9e01374c742ab42958f48c2f222f23, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 6.89, y: 1.29}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &357772082
 GameObject:
   m_ObjectHideFlags: 0
@@ -6102,7 +6187,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.018189484, y: -0.000000016881977, z: 2.32962e-10, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189505, y: 0.000000016783236, z: -2.3159978e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -6817,12 +6902,12 @@ GameObject:
   - component: {fileID: 587693557}
   - component: {fileID: 587693556}
   m_Layer: 0
-  m_Name: WeaponTopUI (1)
+  m_Name: WeaponTargetTopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &587693555
 RectTransform:
   m_ObjectHideFlags: 0
@@ -7819,7 +7904,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: 0.000000005122274, y: 0.0000000014834056, z: 6.51502e-12, w: 1}
+  m_LocalRotation: {x: 0.0000000044237822, y: -0.0000000017567896, z: -7.715706e-12, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -8293,12 +8378,12 @@ GameObject:
   - component: {fileID: 667187901}
   - component: {fileID: 667187900}
   m_Layer: 0
-  m_Name: WeaponTopUI (1)
+  m_Name: WeaponTargetTopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &667187899
 RectTransform:
   m_ObjectHideFlags: 0
@@ -10159,7 +10244,8 @@ Transform:
   m_LocalPosition: {x: -26.05, y: -1.4352697, z: 100}
   m_LocalScale: {x: 25, y: 5.362513, z: 0.8385405}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 356862602}
   m_Father: {fileID: 1947146837}
   m_RootOrder: 19
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -11635,12 +11721,12 @@ GameObject:
   - component: {fileID: 987847639}
   - component: {fileID: 987847638}
   m_Layer: 0
-  m_Name: WeaponBottomUI (1)
+  m_Name: WeaponTargetBottomUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &987847637
 RectTransform:
   m_ObjectHideFlags: 0
@@ -13564,6 +13650,91 @@ Transform:
   m_Father: {fileID: 593246395}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1170271364
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1170271365}
+  - component: {fileID: 1170271366}
+  m_Layer: 0
+  m_Name: Although being less predictable, bottom attacks deal less damage and are
+    countered the same way as normal ones.
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1170271365
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170271364}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.3753, y: 0.124, z: -0.53}
+  m_LocalScale: {x: 0.033548307, y: 0.15640199, z: 1.0001993}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1872274159}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!212 &1170271366
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1170271364}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 0
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: eef1a8f30e3ebff4fb05f438b243a6ef, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_FlipX: 0
+  m_FlipY: 0
+  m_DrawMode: 0
+  m_Size: {x: 6.89, y: 1.29}
+  m_AdaptiveModeThreshold: 0.5
+  m_SpriteTileMode: 0
+  m_WasSpriteAssigned: 1
+  m_MaskInteraction: 0
+  m_SpriteSortPoint: 0
 --- !u!1 &1171636098
 GameObject:
   m_ObjectHideFlags: 0
@@ -16148,8 +16319,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 1295457797}
   topLWeaponTransform: {fileID: 1372386454}
   bottomLWeaponTransform: {fileID: 194297552}
-  topWeaponRect: {fileID: 895466155}
-  bottomWeaponRect: {fileID: 386900245}
+  topWeaponUI: {fileID: 895466154}
+  bottomWeaponUI: {fileID: 386900244}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 1976780295}
   topTargetWeaponRect: {fileID: 2142743646}
   bottomTargetWeaponRect: {fileID: 2024495909}
@@ -17803,7 +17980,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141454, y: 0.000000017678852, z: 3.9844902e-10, w: 0.9998355}
+  m_LocalRotation: {x: -0.018141456, y: -0.00000001819409, z: -4.100616e-10, w: 0.9998355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -18461,8 +18638,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 2088887974}
   topLWeaponTransform: {fileID: 1399155541}
   bottomLWeaponTransform: {fileID: 1406957488}
-  topWeaponRect: {fileID: 613956584}
-  bottomWeaponRect: {fileID: 1990835689}
+  topWeaponUI: {fileID: 613956583}
+  bottomWeaponUI: {fileID: 1990835688}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 1889233915}
   topTargetWeaponRect: {fileID: 587693555}
   bottomTargetWeaponRect: {fileID: 1898795828}
@@ -18672,6 +18855,7 @@ MonoBehaviour:
   actionAttackMaxTriggerTime: 0.3
   actionAttackMinTriggerTime: 2.5
   thrustAttackProbability: 5
+  bottomAttackProbability: 10
   evadeProbability: 15
   guardProbability: 30
   guardAccuracy: 75
@@ -21430,6 +21614,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 520168325}
+  - {fileID: 1170271365}
   m_Father: {fileID: 1947146837}
   m_RootOrder: 18
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21726,12 +21911,12 @@ GameObject:
   - component: {fileID: 1898795830}
   - component: {fileID: 1898795829}
   m_Layer: 0
-  m_Name: WeaponBottomUI (1)
+  m_Name: WeaponTargetBottomUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1898795828
 RectTransform:
   m_ObjectHideFlags: 0
@@ -22047,8 +22232,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 1148814139}
   topLWeaponTransform: {fileID: 2142717635}
   bottomLWeaponTransform: {fileID: 1836338400}
-  topWeaponRect: {fileID: 448564129}
-  bottomWeaponRect: {fileID: 1839979149}
+  topWeaponUI: {fileID: 448564128}
+  bottomWeaponUI: {fileID: 1839979148}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 2020262570}
   topTargetWeaponRect: {fileID: 2115745312}
   bottomTargetWeaponRect: {fileID: 2067895334}
@@ -24295,12 +24486,12 @@ GameObject:
   - component: {fileID: 2024495911}
   - component: {fileID: 2024495910}
   m_Layer: 0
-  m_Name: WeaponBottomUI (1)
+  m_Name: WeaponTargetBottomUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2024495909
 RectTransform:
   m_ObjectHideFlags: 0
@@ -24714,12 +24905,12 @@ GameObject:
   - component: {fileID: 2067895336}
   - component: {fileID: 2067895335}
   m_Layer: 0
-  m_Name: WeaponBottomUI (1)
+  m_Name: WeaponTargetBottomUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2067895334
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25521,12 +25712,12 @@ GameObject:
   - component: {fileID: 2115745314}
   - component: {fileID: 2115745313}
   m_Layer: 0
-  m_Name: WeaponTopUI (1)
+  m_Name: WeaponTargetTopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2115745312
 RectTransform:
   m_ObjectHideFlags: 0
@@ -25757,8 +25948,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 1580468552}
   topLWeaponTransform: {fileID: 1886610047}
   bottomLWeaponTransform: {fileID: 76997578}
-  topWeaponRect: {fileID: 1907915437}
-  bottomWeaponRect: {fileID: 1094166182}
+  topWeaponUI: {fileID: 1907915436}
+  bottomWeaponUI: {fileID: 1094166181}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 298727417}
   topTargetWeaponRect: {fileID: 667187899}
   bottomTargetWeaponRect: {fileID: 987847637}
@@ -26400,12 +26597,12 @@ GameObject:
   - component: {fileID: 2142743648}
   - component: {fileID: 2142743647}
   m_Layer: 0
-  m_Name: WeaponTopUI (1)
+  m_Name: WeaponTargetTopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2142743646
 RectTransform:
   m_ObjectHideFlags: 0
@@ -28291,8 +28488,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 3237960050378101002}
   topLWeaponTransform: {fileID: 3237960049852013817}
   bottomLWeaponTransform: {fileID: 3237960049861902364}
-  topWeaponRect: {fileID: 3237960051853921348}
-  bottomWeaponRect: {fileID: 3237960050477173317}
+  topWeaponUI: {fileID: 3237960051853921355}
+  bottomWeaponUI: {fileID: 3237960050477173316}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 3237960050444852311}
   topTargetWeaponRect: {fileID: 3237960051729091167}
   bottomTargetWeaponRect: {fileID: 3237960050418771096}
@@ -28347,6 +28550,7 @@ MonoBehaviour:
   actionAttackMaxTriggerTime: 0.3
   actionAttackMinTriggerTime: 4
   thrustAttackProbability: 5
+  bottomAttackProbability: 0
   evadeProbability: 10
   guardProbability: 25
   guardAccuracy: 50
@@ -29384,12 +29588,12 @@ GameObject:
   - component: {fileID: 3237960050418771098}
   - component: {fileID: 3237960050418771097}
   m_Layer: 0
-  m_Name: WeaponBottomUI (1)
+  m_Name: WeaponTargetBottomUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &3237960050444852304
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -31915,12 +32119,12 @@ GameObject:
   - component: {fileID: 3237960051729091161}
   - component: {fileID: 3237960051729091160}
   m_Layer: 0
-  m_Name: WeaponTopUI (1)
+  m_Name: WeaponTargetTopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &3237960051729091167
 RectTransform:
   m_ObjectHideFlags: 0
@@ -33124,7 +33328,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: -0.0021959539, y: 0.0000000010265678, z: 2.2542998e-12, w: 0.9999976}
+  m_LocalRotation: {x: -0.0021959539, y: -0.0000000012641153, z: -2.7759453e-12, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 1.66, z: -1.74}
   m_LocalScale: {x: 0.6187783, y: 0.6187781, z: 0.61877847}
   m_ConstrainProportionsScale: 0
@@ -33798,12 +34002,12 @@ GameObject:
   - component: {fileID: 6787757488723543920}
   - component: {fileID: 6787757488723543921}
   m_Layer: 0
-  m_Name: WeaponTopUI (1)
+  m_Name: WeaponTargetTopUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6787757488737774210
 Transform:
   m_ObjectHideFlags: 0
@@ -35631,12 +35835,12 @@ GameObject:
   - component: {fileID: 6787757489564117427}
   - component: {fileID: 6787757489564117424}
   m_Layer: 0
-  m_Name: WeaponBottomUI (1)
+  m_Name: 'WeaponTargetBottomUI '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!222 &6787757489568960888
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -37026,8 +37230,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 6787757489772026915}
   topLWeaponTransform: {fileID: 6787757490063757776}
   bottomLWeaponTransform: {fileID: 6787757490051632437}
-  topWeaponRect: {fileID: 6787757488830808429}
-  bottomWeaponRect: {fileID: 6787757489605805932}
+  topWeaponUI: {fileID: 6787757488830808418}
+  bottomWeaponUI: {fileID: 6787757489605805933}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 6787757489568960894}
   topTargetWeaponRect: {fileID: 6787757488723543926}
   bottomTargetWeaponRect: {fileID: 6787757489564117425}
@@ -37582,8 +37792,14 @@ MonoBehaviour:
   bottomRWeaponTransform: {fileID: 242733122}
   topLWeaponTransform: {fileID: 1242829827}
   bottomLWeaponTransform: {fileID: 1859381711}
-  topWeaponRect: {fileID: 650721258}
-  bottomWeaponRect: {fileID: 530969943}
+  topWeaponUI: {fileID: 650721257}
+  bottomWeaponUI: {fileID: 530969942}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
   manualPointerRect: {fileID: 1517630080}
   topTargetWeaponRect: {fileID: 629193876}
   bottomTargetWeaponRect: {fileID: 607607177}

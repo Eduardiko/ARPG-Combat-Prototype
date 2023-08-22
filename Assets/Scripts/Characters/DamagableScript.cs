@@ -131,6 +131,9 @@ public class DamagableScript : MonoBehaviour
             return;
         }
 
+        // Update UI
+        weaponDial.SetGuardSprites();
+
         // Apply/Not apply staggered animation
         if (!character.isPerformingAnAction)
         {
@@ -149,6 +152,10 @@ public class DamagableScript : MonoBehaviour
             character.animator.SetTrigger(character.animKeys.hitTriggerKey);
         }
 
+        // Update UI
+        WeaponDial attackerWeaponDial = attackerCharacter.gameObject.GetComponent<WeaponDial>();
+        attackerWeaponDial.SetCancelledSprites();
+
         // Trigger Counter Parry to attacker
         attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
         attackerCharacter.animator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
@@ -158,6 +165,9 @@ public class DamagableScript : MonoBehaviour
     {
         // Make attacker stop locking
         attackerCharacter.isLocking = false;
+
+        // Update UI
+        weaponDial.SetCancelledSprites();
 
         // Trigger Death animation
         float randomAnimID = Mathf.Round(Random.Range(11f, 12f));

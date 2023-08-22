@@ -31,6 +31,9 @@ public class OffenseScript : MonoBehaviour
     private bool attackSpamLimiterActive = false;
 
 
+    private float basedamage = 10f;
+    private float damage = 10f;
+
     private void Start()
     {
         character = GetComponent<Character>();
@@ -130,11 +133,16 @@ public class OffenseScript : MonoBehaviour
         character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
         character.animator.SetTrigger(character.animKeys.attackTriggerKey);
 
+        if (type == AttackType.SLASH_WEAPON_BOTTOM)
+            damage = basedamage / 2f;
+        else
+            damage = basedamage;
+
         // Set character.combo
         if(character.combo == 0)
-            character.SetAttackInfo(10f, weaponDial.topAngle, weaponDial.bottomAngle, type);
+            character.SetAttackInfo(damage, weaponDial.topAngle, weaponDial.bottomAngle, type);
         else
-            character.SetAttackInfo(10f * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, type);
+            character.SetAttackInfo(damage * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, type);
 
         character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
     }

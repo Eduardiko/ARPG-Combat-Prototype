@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class WeaponDial : MonoBehaviour
 {
@@ -11,12 +12,19 @@ public class WeaponDial : MonoBehaviour
     [SerializeField] private Transform bottomLWeaponTransform;
 
     [Header("Weapon UI Sprites")]
-    [SerializeField] private RectTransform topWeaponRect;
-    [SerializeField] private RectTransform bottomWeaponRect;
-    [SerializeField] private RectTransform manualPointerRect;
+    [SerializeField] private GameObject topWeaponUI;
+    [SerializeField] private GameObject bottomWeaponUI;
 
-    [SerializeField] private RectTransform topTargetWeaponRect;
-    [SerializeField] private RectTransform bottomTargetWeaponRect;
+    [SerializeField] private Sprite attackTopWeaponSprite;
+    [SerializeField] private Sprite attackBottomWeaponSprite;
+    [SerializeField] private Sprite guardTopWeaponSprite;
+    [SerializeField] private Sprite guardBottomWeaponSprite;
+    [SerializeField] private Sprite cancelledTopWeaponSprite;
+    [SerializeField] private Sprite cancelledBottomWeaponSprite;
+
+    [SerializeField] private RectTransform manualPointerRect;
+    [SerializeField] RectTransform topTargetWeaponRect;
+    [SerializeField] RectTransform bottomTargetWeaponRect;
 
     [Header("Plane Reference")]
     [SerializeField] private Transform referencePlaneTransform;
@@ -45,11 +53,25 @@ public class WeaponDial : MonoBehaviour
     private Transform topWeaponTransform;
     private Transform bottomWeaponTransform;
 
+    // UI
+    private Image topWeaponImage;
+    private Image bottomWeaponImage;
+
+    private RectTransform topWeaponRect;
+    private RectTransform bottomWeaponRect;
 
     private void Start()
     {
         character = GetComponent<Character>();
         inputManager = GetComponent<InputManager>();
+
+        topWeaponRect = topWeaponUI.GetComponent<RectTransform>();
+        topWeaponImage = topWeaponUI.GetComponent<Image>();
+
+        bottomWeaponRect = bottomWeaponUI.GetComponent<RectTransform>();
+        bottomWeaponImage = bottomWeaponUI.GetComponent<Image>();
+
+        SetAttackSprites();
     }
 
     private void Update()
@@ -169,16 +191,16 @@ public class WeaponDial : MonoBehaviour
     #region UI
     private void UpdateUI()
     {
-        if(isUIWeaponAttached || !character.isUILocked)
+        if(!character.isStaggered)
+            SetAttackSprites();
+
+        if (isUIWeaponAttached || !character.isUILocked)
             UpdateAnglesUI();
 
         if (character.isLocking && character.target != null)
             UpdateTargetAnglesUI();
         else
-        {
-            topTargetWeaponRect.gameObject.SetActive(false);
-            bottomTargetWeaponRect.gameObject.SetActive(false);
-        }
+            DisableTargetUI();
     }
 
     private void UpdateAnglesUI()
@@ -240,6 +262,34 @@ public class WeaponDial : MonoBehaviour
             y = 0.6f * Mathf.Sin(radianBottomAngle);
             bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
         }
+    }
+
+    private void DisableTargetUI()
+    {
+        topTargetWeaponRect.gameObject.SetActive(false);
+        bottomTargetWeaponRect.gameObject.SetActive(false);
+    }
+
+    #endregion
+
+    #region SPRITES
+
+    private void SetAttackSprites()
+    {
+        topWeaponImage.sprite = attackTopWeaponSprite;
+        bottomWeaponImage.sprite = attackBottomWeaponSprite;
+    }
+
+    public void SetGuardSprites()
+    {
+        topWeaponImage.sprite = guardTopWeaponSprite;
+        bottomWeaponImage.sprite = guardBottomWeaponSprite;
+    }
+
+    public void SetCancelledSprites()
+    {
+        topWeaponImage.sprite = cancelledTopWeaponSprite;
+        bottomWeaponImage.sprite = cancelledBottomWeaponSprite;
     }
 
     #endregion

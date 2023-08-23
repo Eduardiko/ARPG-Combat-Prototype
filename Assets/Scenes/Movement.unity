@@ -6187,7 +6187,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
-  m_LocalRotation: {x: 0.018189505, y: 0.000000016783236, z: -2.3159978e-10, w: 0.9998346}
+  m_LocalRotation: {x: 0.018189503, y: 0.000000017617682, z: -2.431147e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -7904,7 +7904,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: 0.0000000044237822, y: -0.0000000017567896, z: -7.715706e-12, w: 1}
+  m_LocalRotation: {x: 0.0000000044237822, y: 0.0000000017567898, z: 7.7157065e-12, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -16349,6 +16349,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 1874015298}
   weaponLDamager: {fileID: 2071963172}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debugSkipStep: 1
 --- !u!114 &1404569658
 MonoBehaviour:
@@ -17980,7 +17983,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141456, y: -0.00000001819409, z: -4.100616e-10, w: 0.9998355}
+  m_LocalRotation: {x: -0.018141454, y: 0.000000018194122, z: 4.100623e-10, w: 0.9998355}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -18684,6 +18687,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 2015482014}
   weaponLDamager: {fileID: 1724165486}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debugSkipStep: 0
 --- !u!114 &1594295742
 MonoBehaviour:
@@ -22262,6 +22268,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 1952715284}
   weaponLDamager: {fileID: 1719586132}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debugSkipStep: 1
 --- !u!114 &1900574232
 MonoBehaviour:
@@ -25978,6 +25987,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 1187298991}
   weaponLDamager: {fileID: 679140945}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debugSkipStep: 1
 --- !u!114 &2126103158
 MonoBehaviour:
@@ -26827,6 +26839,7 @@ GameObject:
   - component: {fileID: 330069501826700823}
   - component: {fileID: 330069501826700822}
   - component: {fileID: 330069501826700821}
+  - component: {fileID: 6985017023614976590}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -27187,6 +27200,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 1272392114}
   weaponLDamager: {fileID: 1948826676}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 64
   debugSkipStep: 0
 --- !u!4 &332140216431626955
 Transform:
@@ -28411,6 +28427,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 3237960050300512050}
   weaponLDamager: {fileID: 3237960050751576770}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debugSkipStep: 0
 --- !u!114 &3237960049782927890
 MonoBehaviour:
@@ -28445,6 +28464,7 @@ GameObject:
   - component: {fileID: 3237960049782927894}
   - component: {fileID: 3237960049782927888}
   - component: {fileID: 3237960049782927978}
+  - component: {fileID: 3237960049782927984}
   m_Layer: 6
   m_Name: Bob?
   m_TagString: Enemy
@@ -28675,6 +28695,20 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+--- !u!136 &3237960049782927984
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3237960049782927893}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!1 &3237960049851667285
 GameObject:
   m_ObjectHideFlags: 0
@@ -33328,7 +33362,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: -0.0021959539, y: -0.0000000012641153, z: -2.7759453e-12, w: 0.9999976}
+  m_LocalRotation: {x: -0.0021959539, y: 0.0000000012641153, z: 2.7759453e-12, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 1.66, z: -1.74}
   m_LocalScale: {x: 0.6187783, y: 0.6187781, z: 0.61877847}
   m_ConstrainProportionsScale: 0
@@ -37158,6 +37192,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   weaponRDamager: {fileID: 6787757489715407387}
   weaponLDamager: {fileID: 6787757489868675051}
+  enemyLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   debugSkipStep: 0
 --- !u!54 &6787757490267045689
 Rigidbody:
@@ -37833,6 +37870,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de77f35aece77064a8dd964cc092e912, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!136 &6985017023614976590
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330069501817349247}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 0.4
+  m_Height: 1.8
+  m_Direction: 1
+  m_Center: {x: 0, y: 0.95, z: 0}
 --- !u!1 &6994529591178411588
 GameObject:
   m_ObjectHideFlags: 0

@@ -7,6 +7,7 @@ public class OffenseScript : MonoBehaviour
     [Header("References")]
     [SerializeField] private GameObject weaponRDamager;
     [SerializeField] private GameObject weaponLDamager;
+    [SerializeField] private LayerMask enemyLayerMask;
     public bool debugSkipStep = false;
 
     // References
@@ -31,7 +32,6 @@ public class OffenseScript : MonoBehaviour
     private bool attackSpamLimiterActive = false;
 
 
-    private float basedamage = 10f;
     private float damage = 10f;
 
     private void Start()
@@ -74,19 +74,19 @@ public class OffenseScript : MonoBehaviour
 
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
-            Attack(AttackType.SLASH_WEAPON_TOP, weaponDial.topAngle);
+            TopAttack();
         else
             inputManager.tryingToWeaponTopAttack = false;
 
         // Weapon Bottom Attack
         if (inputManager.tryingToWeaponBottomAttack && ableToAttack)
-            Attack(AttackType.SLASH_WEAPON_BOTTOM, weaponDial.bottomAngle);
+            BottomAttack();
         else
             inputManager.tryingToWeaponBottomAttack = false;
 
         // Weapon Thrust Attack
         if (inputManager.tryingToWeaponThrustAttack && ableToAttack)
-            Attack(AttackType.THRUST);
+            ThrustAttack();
         else
             inputManager.tryingToWeaponThrustAttack = false;
     }
@@ -95,15 +95,17 @@ public class OffenseScript : MonoBehaviour
 
     #region ATTACK
 
-    private void Attack(AttackType type, float angle=0f)
+    private void TopAttack()
     {
         // Update States
+        character.ResetStates();
+        character.isUILocked = true;
         character.isMovementRestriced = true;
+        attackSpamLimiterActive = true;
 
+        // Clear Input
         inputManager.tryingToWeaponTopAttack = false;
         inputManager.bufferedAction = BufferActions.CLEAR;
-
-        attackSpamLimiterActive = true;
 
         // Rotate the character to the target
         if (character.isLocking && character.target != null)
@@ -113,39 +115,125 @@ public class OffenseScript : MonoBehaviour
         if(!debugSkipStep)
         {
             StopCoroutine(character.Step());
-            StartCoroutine(character.Step());
+            if(GetNearEnemy())
+                StartCoroutine(character.Step(true));
+            else
+                StartCoroutine(character.Step());
         }
 
         // Calculate sector to define animation - 8 sectors & 22.5 degree offset
-        if (type != AttackType.THRUST)
-        {
-            float thresholdAngle = angle + 22.5f > 360f ? (angle + 22.5f - 360f) / 45f : (angle + 22.5f) / 45f;
-            attackSector = Mathf.Ceil(thresholdAngle);
-        }
-        else
-            attackSector = 0f;
+        float thresholdAngle = weaponDial.topAngle + 22.5f > 360f ? (weaponDial.topAngle + 22.5f - 360f) / 45f : (weaponDial.topAngle + 22.5f) / 45f;
+        attackSector = Mathf.Ceil(thresholdAngle);
 
         // Change weapon's hand, rotate and adjust collider
-        UpdateWeapon(type, angle);
+        UpdateWeapon(AttackType.SLASH_WEAPON_TOP, weaponDial.topAngle);
 
         // Set Animation
         character.animator.SetInteger(character.animKeys.comboKey, character.combo);
         character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
         character.animator.SetTrigger(character.animKeys.attackTriggerKey);
 
-        if (type == AttackType.SLASH_WEAPON_BOTTOM)
-            damage = basedamage / 2f;
-        else
-            damage = basedamage;
-
         // Set character.combo
         if(character.combo == 0)
-            character.SetAttackInfo(damage, weaponDial.topAngle, weaponDial.bottomAngle, type);
+            character.SetAttackInfo(damage, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_TOP);
         else
-            character.SetAttackInfo(damage * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, type);
+            character.SetAttackInfo(damage * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_TOP);
 
         character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
     }
+
+    private void BottomAttack()
+    {
+        // Update States
+        character.isMovementRestriced = true;
+        character.isUILocked = true;
+        attackSpamLimiterActive = true;
+
+        // Clear Input
+        inputManager.tryingToWeaponBottomAttack = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        // Rotate the character to the target
+        if (character.isLocking && character.target != null)
+            LookAtTarget();
+
+        // Perform a step
+        if (!debugSkipStep)
+        {
+            StopCoroutine(character.Step());
+            if (GetNearEnemy())
+                StartCoroutine(character.Step(true));
+            else
+                StartCoroutine(character.Step());
+        }
+
+        // Calculate sector to define animation - 8 sectors & 22.5 degree offset
+        float thresholdAngle = weaponDial.bottomAngle + 22.5f > 360f ? (weaponDial.bottomAngle + 22.5f - 360f) / 45f : (weaponDial.bottomAngle + 22.5f) / 45f;
+        attackSector = Mathf.Ceil(thresholdAngle);
+
+        // Change weapon's hand, rotate and adjust collider
+        UpdateWeapon(AttackType.SLASH_WEAPON_BOTTOM, weaponDial.bottomAngle);
+
+        // Set Animation
+        character.animator.SetInteger(character.animKeys.comboKey, character.combo);
+        character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
+        character.animator.SetTrigger(character.animKeys.attackTriggerKey);
+
+        // Set character.combo
+        if (character.combo == 0)
+            character.SetAttackInfo(damage / 2f, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
+        else
+            character.SetAttackInfo(damage * character.combo / 2f, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
+
+        character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
+    }
+
+    private void ThrustAttack()
+    {
+        // Update States
+        character.isMovementRestriced = true;
+        character.isAttacking = true;
+        character.isUILocked = false;
+        attackSpamLimiterActive = true;
+
+        // Clear Input
+        inputManager.tryingToWeaponTopAttack = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
+
+        // Rotate the character to the target
+        if (character.isLocking && character.target != null)
+            LookAtTarget();
+
+        // Perform a step
+        if (!debugSkipStep)
+        {
+            StopCoroutine(character.Step());
+            if (GetNearEnemy())
+                StartCoroutine(character.Step(true));
+            else
+                StartCoroutine(character.Step());
+        }
+
+        // Assign Sector
+        attackSector = 0f;
+
+        // Change weapon's hand, rotate and adjust collider
+        UpdateWeapon(AttackType.THRUST, 0f);
+
+        // Set Animation
+        character.animator.SetInteger(character.animKeys.comboKey, character.combo);
+        character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
+        character.animator.SetTrigger(character.animKeys.attackTriggerKey);
+
+        // Set character.combo
+        if (character.combo == 0)
+            character.SetAttackInfo(damage, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
+        else
+            character.SetAttackInfo(damage * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
+
+        character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
+    }
+
 
     #endregion
 
@@ -264,6 +352,33 @@ public class OffenseScript : MonoBehaviour
         // Reset Collider
         if (weaponDamager != null)
             DeactivateDamageCollider();
+    }
+
+    private bool GetNearEnemy()
+    {
+        Collider[] hitColliders = Physics.OverlapSphere(transform.position, 3f, enemyLayerMask);
+
+        bool ret = false;
+        float distanceToCurrentTarget = 1000f;
+
+        foreach (Collider collider in hitColliders)
+        {
+            if(character.target != null)
+                distanceToCurrentTarget = (character.target.transform.position - transform.position).magnitude;
+
+            if (collider.gameObject.tag == "Enemy")
+            {
+                float distanceToTarget = (collider.gameObject.transform.position - transform.position).magnitude;
+
+                if (distanceToTarget <= distanceToCurrentTarget)
+                {
+                    character.target = collider.gameObject;
+                    ret = true;
+                }
+            }
+        }
+
+        return ret;
     }
 
     private void ActivateDamageCollider()

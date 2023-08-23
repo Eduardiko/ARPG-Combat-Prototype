@@ -223,12 +223,32 @@ public class Character : MonoBehaviour
         attackInfo.type = AttackType.NONE;
     }
 
-    public IEnumerator Step()
+    public void ResetStates()
+    {
+        isGrounded = true;
+        isRunning = false;
+        isDead = false;
+
+        isAttacking = false;
+        isWeaponColliderActive = false;
+        
+        isDodging = false;
+        isBackstepping = false;
+        isStaggered = false;
+        isImmuneToDamage = false;
+
+        isUILocked = false;
+        isMovementRestriced = false;
+
+        isPerformingAnAction = false;
+    }
+
+    public IEnumerator Step(bool toTarget = false)
     {
         float elapsedTime = 0;
 
         // Rotate the character to the target
-        if (isLocking && target != null)
+        if ((isLocking || toTarget) && target != null)
         {
             // Y axis to 0 so Vector is calculated at same height
             Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
@@ -238,7 +258,7 @@ public class Character : MonoBehaviour
 
         while (elapsedTime < attackStepTime)
         {
-            if (!isLocking || (target != null && (target.transform.position - transform.position).magnitude > 1.2f))
+            if ((!toTarget && !isLocking) || (target != null && (target.transform.position - transform.position).magnitude > 1.2f))
             {
                 float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime);
 

@@ -85,50 +85,53 @@ public class SmartEnemy : MonoBehaviour
         if (targetCharacter.isDead)
             character.health = character.maxHealth;
         
-        if(!character.isMovementRestriced)
-            MoveToTarget();
-
-        // Animation Mode
-        if (character.isLocking)
-            character.animator.SetBool(character.animKeys.isLockingKey, true);
-        else
-            character.animator.SetBool(character.animKeys.isLockingKey, false);
-
-        if (character.isLocking)
+        if(!character.isDead)
         {
-            ManageProbabilities();
+            if (!character.isMovementRestriced)
+                MoveToTarget();
 
-            Attack();
+            // Animation Mode
+            if (character.isLocking)
+                character.animator.SetBool(character.animKeys.isLockingKey, true);
+            else
+                character.animator.SetBool(character.animKeys.isLockingKey, false);
 
-            Parry();
-            Dodge();
-            Guard();
-
-            if (!targetCharacter.isWeaponColliderActive)
+            if (character.isLocking)
             {
-                hasPerformedDefensiveAction = false;
-                weaponDial.isUIWeaponAttached = false;
-                triedEvading = false;
-                triedGuarding = false;
-                triedParrying = false;
-            }
+                ManageProbabilities();
 
-            if (!character.isWeaponColliderActive || manualNotLookAtActive)
-            {
-                // This way it stops looking at the player from the moment the collider is active until the end of the action, giving a sense of locked attack
-                if (character.isMovementRestriced && manualNotLookAtActive)
-                    return;
-                else if (manualNotLookAtActive)
-                    manualNotLookAtActive = false;
+                Attack();
 
-                // Rotate the player to face the target
-                // Y axis to 0 so Vector is calculated at same height
-                Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
-                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
-                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+                Parry();
+                Dodge();
+                Guard();
+
+                if (!targetCharacter.isWeaponColliderActive)
+                {
+                    hasPerformedDefensiveAction = false;
+                    weaponDial.isUIWeaponAttached = false;
+                    triedEvading = false;
+                    triedGuarding = false;
+                    triedParrying = false;
+                }
+
+                if (!character.isWeaponColliderActive || manualNotLookAtActive)
+                {
+                    // This way it stops looking at the player from the moment the collider is active until the end of the action, giving a sense of locked attack
+                    if (character.isMovementRestriced && manualNotLookAtActive)
+                        return;
+                    else if (manualNotLookAtActive)
+                        manualNotLookAtActive = false;
+
+                    // Rotate the player to face the target
+                    // Y axis to 0 so Vector is calculated at same height
+                    Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
+                    Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+                    transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+                }
+                else if (character.isWeaponColliderActive && !manualNotLookAtActive)
+                    manualNotLookAtActive = true;
             }
-            else if (character.isWeaponColliderActive && !manualNotLookAtActive)
-                manualNotLookAtActive = true;
         }
     }
 

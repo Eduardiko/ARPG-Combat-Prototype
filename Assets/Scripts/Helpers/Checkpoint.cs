@@ -30,17 +30,7 @@ public class Checkpoint : MonoBehaviour
             character.health = character.maxHealth;
             transform.position = new Vector3(spawnPoint.position.x, transform.position.y, spawnPoint.position.z);
             transform.rotation = spawnPoint.rotation;
-            character.isPerformingAnAction = false;
-            character.isMovementRestriced = false;
-            character.isImmuneToDamage = false;
-            character.isLocking = false;
-            character.isRunning = false;
-            character.isAttacking = false;
-            character.isDodging = false;
-            character.isUILocked = false;
-            character.isWeaponColliderActive = false;
-            character.isStaggered = false;
-            character.isDead = false;
+            character.ResetStates();
             character.animator.SetFloat(character.animKeys.hitID, 0f);
         }
     }

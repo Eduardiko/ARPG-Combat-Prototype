@@ -107,6 +107,11 @@ public class DamagableScript : MonoBehaviour
             return;
         }
 
+        // Set States
+        character.isMovementRestriced = true;
+        character.isStaggered = true;
+        character.isUILocked = false;
+
         // Apply/Not apply staggered animation
         if (!character.isWeaponColliderActive)
         {
@@ -131,8 +136,15 @@ public class DamagableScript : MonoBehaviour
             return;
         }
 
+        // Set States
+        character.ResetStates();
+        character.isMovementRestriced = true;
+        character.isStaggered = true;
+        character.isUILocked = false;
+
         // Update UI
         weaponDial.SetGuardSprites();
+        character.isStaggered = true;
 
         // Apply/Not apply staggered animation
         if (!character.isPerformingAnAction)
@@ -148,6 +160,12 @@ public class DamagableScript : MonoBehaviour
         // Parry animation
         if(triggerCounteranimation)
         {
+            // Set States
+            character.ResetStates();
+            character.isMovementRestriced = true;
+            character.isStaggered = true;
+            character.isUILocked = false;
+
             character.animator.SetFloat(character.animKeys.hitID, 9f);
             character.animator.SetTrigger(character.animKeys.hitTriggerKey);
         }
@@ -155,6 +173,12 @@ public class DamagableScript : MonoBehaviour
         // Update UI
         WeaponDial attackerWeaponDial = attackerCharacter.gameObject.GetComponent<WeaponDial>();
         attackerWeaponDial.SetCancelledSprites();
+
+        // Set States
+        attackerCharacter.ResetStates();
+        attackerCharacter.isMovementRestriced = true;
+        attackerCharacter.isStaggered = true;
+        attackerCharacter.isUILocked = false;
 
         // Trigger Counter Parry to attacker
         attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
@@ -169,6 +193,11 @@ public class DamagableScript : MonoBehaviour
         // Update UI
         weaponDial.SetCancelledSprites();
 
+        // Set States
+        character.ResetStates();
+        character.isLocking = false;
+        character.isDead = true;
+        
         // Trigger Death animation
         float randomAnimID = Mathf.Round(Random.Range(11f, 12f));
         character.animator.SetFloat(character.animKeys.hitID, randomAnimID);

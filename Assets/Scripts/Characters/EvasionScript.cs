@@ -71,13 +71,18 @@ public class EvasionScript : MonoBehaviour
 
     private void BackStep()
     {
-        // Perform Stepc
-        StopCoroutine(character.BackStep());
-        StartCoroutine(character.BackStep());
-
+        // Update States
+        character.isBackstepping = true;
+        character.isImmuneToDamage = true;
+        character.isMovementRestriced = true;
+        
         // Clear Input
         inputManager.tryingToBackstep = false;
         inputManager.bufferedAction = BufferActions.CLEAR;
+
+        // Perform Step
+        StopCoroutine(character.BackStep());
+        StartCoroutine(character.BackStep());
 
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, 0f);
@@ -86,16 +91,21 @@ public class EvasionScript : MonoBehaviour
 
     private void DodgeRight()
     {
-        // Update hand weapon
-        character.UpdateWeapon(false, true);
+        // Update States
+        character.isDodging = true;
+        character.isImmuneToDamage = true;
+        character.isMovementRestriced = true;
+
+        // Clear Input
+        inputManager.tryingToDodgeRight = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Perform Step
         StopCoroutine(character.BackStep());
         StartCoroutine(character.BackStep(1));
 
-        // Clear Input
-        inputManager.tryingToDodgeRight = false;
-        inputManager.bufferedAction = BufferActions.CLEAR;
+        // Update hand weapon
+        character.UpdateWeapon(false, true);
 
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, 1f);
@@ -104,16 +114,21 @@ public class EvasionScript : MonoBehaviour
 
     private void DodgeLeft()
     {
-        // Update hand weapon
-        character.UpdateWeapon(true, false);
+        // Update States
+        character.isDodging = true;
+        character.isImmuneToDamage = true;
+        character.isMovementRestriced = true;
+
+        // Clear Input
+        inputManager.tryingToDodgeLeft = false;
+        inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Perform Step
         StopCoroutine(character.BackStep());
         StartCoroutine(character.BackStep(-1));
 
-        // Clear Input
-        inputManager.tryingToDodgeLeft = false;
-        inputManager.bufferedAction = BufferActions.CLEAR;
+        // Update hand weapon
+        character.UpdateWeapon(true, false);
 
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, -1f);

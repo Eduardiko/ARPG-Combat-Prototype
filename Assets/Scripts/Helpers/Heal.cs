@@ -15,7 +15,8 @@ public class Heal : MonoBehaviour
     {
         if (other.tag == "Heal")
         {
-            character.health += healSpeed * Time.deltaTime;
+            if(character.health < character.maxHealth)
+                character.health += healSpeed * Time.deltaTime;
         }
     }
 }

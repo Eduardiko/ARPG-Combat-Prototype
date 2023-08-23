@@ -145,9 +145,12 @@ public class MovementScript : MonoBehaviour
         {
             if (!character.isLocking || character.isRunning || !character.isGrounded)
             {
-                // Rotate the player to face the direction of movement
-                float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
-                transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+                if(!character.isMovementRestriced)
+                {
+                    // Rotate the player to face the direction of movement
+                    float targetAngle = Mathf.Atan2(moveDirection.x, moveDirection.z) * Mathf.Rad2Deg;
+                    transform.rotation = Quaternion.Euler(0f, targetAngle, 0f);
+                }
             }
             else if (!character.isWeaponColliderActive || manualNotLookAtActive)
             {

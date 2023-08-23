@@ -27,6 +27,9 @@ public class Checkpoint : MonoBehaviour
 
             dieTime = 3f;
 
+            gameObject.tag = "Player";
+            gameObject.layer = 0;
+
             character.health = character.maxHealth;
             transform.position = new Vector3(spawnPoint.position.x, transform.position.y, spawnPoint.position.z);
             transform.rotation = spawnPoint.rotation;

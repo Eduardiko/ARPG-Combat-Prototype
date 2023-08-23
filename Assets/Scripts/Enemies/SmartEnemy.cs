@@ -143,7 +143,7 @@ public class SmartEnemy : MonoBehaviour
 
         if (character.isBackstepping)
         {
-            actionAttackTriggerTime = 0f;
+            actionAttackTriggerTime = (actionAttackTriggerTime + 0.6f) / 3f;
             thrustAttackProbabilityMultiplier = 15f;
         }
         else if (!character.isMovementRestriced)
@@ -230,7 +230,10 @@ public class SmartEnemy : MonoBehaviour
 
             float randomType = Random.Range(0f, 100f);
             if (randomType <= thrustAttackProbability * thrustAttackProbabilityMultiplier)
+            {
                 inputManager.tryingToWeaponThrustAttack = true;
+                inputManager.SendActionToInputBuffer(BufferActions.ACTION_WEAPON_THRUST_ATTACK);
+            }
             else
             {
                 // Force a random angle for each attack
@@ -245,7 +248,7 @@ public class SmartEnemy : MonoBehaviour
 
                 float randomWeaponPart = Random.Range(0f, 100f);
 
-                if(randomWeaponPart >= bottomAttackProbability)
+                if (randomWeaponPart >= bottomAttackProbability)
                 {
                     weaponDial.topAngle = randomAngle;
                     weaponDial.bottomAngle = oppositeAngle;
@@ -283,7 +286,10 @@ public class SmartEnemy : MonoBehaviour
 
                 float randomBackstep = Random.Range(0f, 100f);
                 if (randomBackstep <= backstepProbability)
+                {
                     inputManager.tryingToBackstep = true;
+                    inputManager.SendActionToInputBuffer(BufferActions.ACTION_BACKSTEP);
+                }
                 else
                 {
                     switch (targetCharacter.attackInfo.type)
@@ -314,11 +320,12 @@ public class SmartEnemy : MonoBehaviour
                             break;
                         case AttackType.THRUST:
                             float randomDodgeDirection = Random.Range(0f, 1f);
-                            if(randomDodgeDirection < 0.5f)
+                            if (randomDodgeDirection < 0.5f)
                             {
                                 inputManager.tryingToDodgeRight = true;
                                 inputManager.SendActionToInputBuffer(BufferActions.ACTION_DODGE_RIGHT);
-                            } else
+                            }
+                            else
                             {
                                 inputManager.tryingToDodgeLeft = true;
                                 inputManager.SendActionToInputBuffer(BufferActions.ACTION_DODGE_LEFT);
@@ -411,5 +418,13 @@ public class SmartEnemy : MonoBehaviour
         else if(targetCharacter.isWeaponColliderActive && triedGuarding && hasPerformedDefensiveAction)
             weaponDial.isUIWeaponAttached = true;
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    if (other.tag == "Weapon" && other.transform.root.gameObject != gameObject && character.isBackstepping)
+    //    {
+    //        character.isBackstepping = false;
+    //    }
+    //}
 
 }

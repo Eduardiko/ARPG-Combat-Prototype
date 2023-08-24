@@ -94,11 +94,20 @@ public class DamagableScript : MonoBehaviour
         {
             attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
             attackerCharacter.animator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+
+            // Data Gather
+            if (gameObject.tag == "Player")
+                DataCollector.currentTest.successfulCounterThrusts += 1;
+
             return;
         }
 
         // Apply Damage
         character.health -= attackerCharacter.attackInfo.damageAmmount;
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.hitsReceived += 1;
 
         // Check Death
         if (character.health <= 0f)
@@ -128,6 +137,10 @@ public class DamagableScript : MonoBehaviour
         float mitigationAmmount = 4f * mitigationMultiplier * mitigationMultiplier;
         float damage = attackerCharacter.attackInfo.damageAmmount / (1f + mitigationAmmount);
         character.health -= damage;
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.successfulGuards += 1;
 
         // Check Death
         if (character.health <= 0f)
@@ -168,6 +181,10 @@ public class DamagableScript : MonoBehaviour
 
             character.animator.SetFloat(character.animKeys.hitID, 9f);
             character.animator.SetTrigger(character.animKeys.hitTriggerKey);
+
+            // Data Gather
+            if(gameObject.tag == "Player")
+                DataCollector.currentTest.successfulParries += 1;
         }
 
         // Update UI
@@ -180,9 +197,18 @@ public class DamagableScript : MonoBehaviour
         attackerCharacter.isStaggered = true;
         attackerCharacter.isUILocked = false;
 
-        // Trigger Counter Parry to attacker
+        // Trigger Parry Hit to attacker
         attackerCharacter.animator.SetFloat(attackerCharacter.animKeys.hitID, 10f);
         attackerCharacter.animator.SetTrigger(attackerCharacter.animKeys.hitTriggerKey);
+
+        // Data Gather
+        if (attackerCharacter.gameObject.tag == "Player")
+        {
+            if(triggerCounteranimation)
+                DataCollector.currentTest.failedAttacksbyTopWeapon += 1;
+            else
+                DataCollector.currentTest.failedAttacksByProtectedArea += 1;
+        }
     }
 
     public void Die()
@@ -206,6 +232,10 @@ public class DamagableScript : MonoBehaviour
         // Update tag & layer
         gameObject.tag = "Corpse";
         gameObject.layer = 8;
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.deathsCount += 1;
     }
 
     #endregion

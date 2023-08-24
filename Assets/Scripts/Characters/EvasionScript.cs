@@ -87,6 +87,10 @@ public class EvasionScript : MonoBehaviour
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, 0f);
         character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.backstepsCount += 1;
     }
 
     private void DodgeRight()
@@ -110,6 +114,10 @@ public class EvasionScript : MonoBehaviour
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, 1f);
         character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.dodgesCount += 1;
     }
 
     private void DodgeLeft()
@@ -133,6 +141,10 @@ public class EvasionScript : MonoBehaviour
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, -1f);
         character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.dodgesCount += 1;
     }
 
     #endregion

@@ -75,7 +75,7 @@ public class SmartEnemy : MonoBehaviour
         targetCharacter = player.GetComponent<Character>();
 
         initialPosition = transform.position;
-
+        
         actionAttackTriggerTime = actionAttackMaxTriggerTime;
     }
 

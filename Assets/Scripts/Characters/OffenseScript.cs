@@ -140,6 +140,10 @@ public class OffenseScript : MonoBehaviour
             character.SetAttackInfo(damage * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_TOP);
 
         character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.performedTopAttacks += 1;
     }
 
     private void BottomAttack()
@@ -186,6 +190,10 @@ public class OffenseScript : MonoBehaviour
             character.SetAttackInfo(damage * character.combo / 2f, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
 
         character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.performedBottomAttacks += 1;
     }
 
     private void ThrustAttack()
@@ -232,6 +240,10 @@ public class OffenseScript : MonoBehaviour
             character.SetAttackInfo(damage * character.combo, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
 
         character.combo = character.combo + 1 > 2 ? 0 : character.combo + 1;
+
+        // Data Gather
+        if (gameObject.tag == "Player")
+            DataCollector.currentTest.performedThrustAttacks += 1;
     }
 
 

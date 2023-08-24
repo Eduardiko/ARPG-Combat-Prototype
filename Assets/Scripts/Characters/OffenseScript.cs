@@ -98,7 +98,6 @@ public class OffenseScript : MonoBehaviour
     private void TopAttack()
     {
         // Update States
-        character.ResetStates();
         character.isUILocked = true;
         character.isMovementRestriced = true;
         attackSpamLimiterActive = true;

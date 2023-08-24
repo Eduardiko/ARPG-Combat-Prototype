@@ -150,7 +150,6 @@ public class DamagableScript : MonoBehaviour
         }
 
         // Set States
-        character.ResetStates();
         character.isMovementRestriced = true;
         character.isStaggered = true;
         character.isUILocked = false;
@@ -174,7 +173,6 @@ public class DamagableScript : MonoBehaviour
         if(triggerCounteranimation)
         {
             // Set States
-            character.ResetStates();
             character.isMovementRestriced = true;
             character.isStaggered = true;
             character.isUILocked = false;
@@ -192,7 +190,6 @@ public class DamagableScript : MonoBehaviour
         attackerWeaponDial.SetCancelledSprites();
 
         // Set States
-        attackerCharacter.ResetStates();
         attackerCharacter.isMovementRestriced = true;
         attackerCharacter.isStaggered = true;
         attackerCharacter.isUILocked = false;
@@ -220,7 +217,6 @@ public class DamagableScript : MonoBehaviour
         weaponDial.SetCancelledSprites();
 
         // Set States
-        character.ResetStates();
         character.isLocking = false;
         character.isDead = true;
         

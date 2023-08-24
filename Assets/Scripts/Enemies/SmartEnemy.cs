@@ -7,10 +7,10 @@ public class SmartEnemy : MonoBehaviour
     // References
     public GameObject player;
     private Character character;
-    private Character targetCharacter;
     private InputManager inputManager;
     private WeaponDial weaponDial;
     private CharacterController characterController;
+    [HideInInspector] public Character targetCharacter;
 
     // Variables
     [SerializeField] private float actionAttackMaxTriggerTime = 5f;

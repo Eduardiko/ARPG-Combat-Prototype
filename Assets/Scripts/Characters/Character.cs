@@ -292,7 +292,7 @@ public class Character : MonoBehaviour
             float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
 
             if (!isLocking)
-                stepDistance *= 2f;
+                stepDistance *= 1.3f;
 
             Vector3 newPosition = new Vector3();
 

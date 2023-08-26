@@ -225,13 +225,13 @@ public class DamagableScript : MonoBehaviour
         character.animator.SetFloat(character.animKeys.hitID, randomAnimID);
         character.animator.SetTrigger(character.animKeys.hitTriggerKey);
 
-        // Update tag & layer
-        gameObject.tag = "Corpse";
-        gameObject.layer = 8;
-
         // Data Gather
         if (gameObject.tag == "Player")
             DataCollector.currentTest.deathsCount += 1;
+
+        // Update tag & layer
+        gameObject.tag = "Corpse";
+        gameObject.layer = 8;
     }
 
     #endregion

@@ -14,6 +14,7 @@ public class StaticEnemy : MonoBehaviour
     [SerializeField] private bool nonAgressive;
     [SerializeField] private bool isInvincible;
     [SerializeField] private bool forceThrust;
+    [SerializeField] private bool forceBottom;
     [SerializeField] private float actionTriggerTime = 5f;
     private float actionTriggerTimer = 0f;
 
@@ -40,7 +41,11 @@ public class StaticEnemy : MonoBehaviour
                 
                 if(!forceThrust)
                 {
-                    inputManager.tryingToWeaponTopAttack = true;
+                    if(forceBottom)
+                        inputManager.tryingToWeaponBottomAttack = true;
+                    else
+                        inputManager.tryingToWeaponTopAttack = true;
+
 
                     // Force a random angle for each attack
                     float randomAngle = Random.Range(Random.Range(0f, 360f), Random.Range(0f, 360f));

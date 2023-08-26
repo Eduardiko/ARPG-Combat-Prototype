@@ -123,6 +123,9 @@ public class InputManager : MonoBehaviour
     // Movement Actions
     public void ActionJump(InputAction.CallbackContext context)
     {
+        // for this prototype the jump is left out. Remove the return to reactivate jump
+        return;
+
         if (context.performed)
         {
             tryingToJump = true;

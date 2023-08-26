@@ -59,8 +59,13 @@ public class SmartEnemy : MonoBehaviour
     private bool manualNotLookAtActive = false;
 
     private bool hasPerformedDefensiveAction = false;
+    private bool hasSetProbabilities = false;
 
-    private float combo = 0f;
+    public bool probabilitiesBasedOnVarietyOfAttacks = false;
+    private float varietyMultiplier = 0f;
+    private float comboMultiplier = 0f;
+
+    private AttackType lastReceivedAttackType;
 
     private int moveDirection = 1;
 
@@ -75,6 +80,8 @@ public class SmartEnemy : MonoBehaviour
         targetCharacter = player.GetComponent<Character>();
 
         initialPosition = transform.position;
+
+        lastReceivedAttackType = AttackType.NONE;
         
         actionAttackTriggerTime = actionAttackMaxTriggerTime;
     }
@@ -137,25 +144,31 @@ public class SmartEnemy : MonoBehaviour
 
     private void ManageProbabilities()
     {
-        combo = targetCharacter.combo - 1f < 0 ? 2f : targetCharacter.combo - 1f;
-        
-        evadeProbabilityMultiplier = 1 + combo;
-
-        if (character.isBackstepping)
+        if (!probabilitiesBasedOnVarietyOfAttacks)
         {
-            actionAttackTriggerTime = (actionAttackTriggerTime + 0.6f) / 3f;
-            thrustAttackProbabilityMultiplier = 15f;
+            comboMultiplier = targetCharacter.combo - 1f < 0f ? 2f : targetCharacter.combo - 1f;
+
+            SetProbabilities(comboMultiplier);
         }
-        else if (!character.isMovementRestriced)
-            thrustAttackProbabilityMultiplier = 1f;
+        else
+        {
+            if (!hasSetProbabilities && targetCharacter.isAttacking)
+            {
+                hasSetProbabilities = true;
 
-        parryProbabilityMultiplier = 1f + (combo * combo / 4f);
+                if (targetCharacter.attackInfo.type == lastReceivedAttackType)
+                    varietyMultiplier += 1f;
+                else
+                    varietyMultiplier = 0f;
 
-        guardProbabilityMultiplier = 1f + combo;
+                lastReceivedAttackType = targetCharacter.attackInfo.type;
 
-        if(targetCharacter.isAttacking && targetCharacter.attackInfo.type == AttackType.THRUST)
-            evadeProbabilityMultiplier = 5f - combo * 2f;
-
+                SetProbabilities(varietyMultiplier);
+            }
+            else if(!targetCharacter.isAttacking)
+                hasSetProbabilities = false;
+        }
+        
     }
 
     private void MoveToTarget()
@@ -419,12 +432,24 @@ public class SmartEnemy : MonoBehaviour
             weaponDial.isUIWeaponAttached = true;
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.tag == "Weapon" && other.transform.root.gameObject != gameObject && character.isBackstepping)
-    //    {
-    //        character.isBackstepping = false;
-    //    }
-    //}
+   private void SetProbabilities(float multiplier)
+   {
+        evadeProbabilityMultiplier = 1 + multiplier;
+
+        parryProbabilityMultiplier = 1f + (multiplier * multiplier / 4f);
+
+        guardProbabilityMultiplier = 1f + multiplier;
+
+        if (targetCharacter.isAttacking && targetCharacter.attackInfo.type == AttackType.THRUST)
+            evadeProbabilityMultiplier = 5f - multiplier * 2f;
+
+        if (character.isBackstepping)
+        {
+            actionAttackTriggerTime = (actionAttackTriggerTime + 0.6f) / 3f;
+            thrustAttackProbabilityMultiplier = 15f;
+        }
+        else if (!character.isMovementRestriced)
+            thrustAttackProbabilityMultiplier = 1f;
+    }
 
 }

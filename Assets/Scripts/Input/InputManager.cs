@@ -123,14 +123,13 @@ public class InputManager : MonoBehaviour
     // Movement Actions
     public void ActionJump(InputAction.CallbackContext context)
     {
-        // for this prototype the jump is left out. Remove the return to reactivate jump
-        return;
+        // For this prototype the jump is left out. Uncomment to reactivate jump
 
-        if (context.performed)
-        {
-            tryingToJump = true;
-            SendActionToInputBuffer(BufferActions.ACTION_JUMP);
-        }
+        //if (context.performed)
+        //{
+        //    tryingToJump = true;
+        //    SendActionToInputBuffer(BufferActions.ACTION_JUMP);
+        //}
     }
 
     public void ActionRun(InputAction.CallbackContext context)

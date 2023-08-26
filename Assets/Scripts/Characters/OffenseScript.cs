@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
 using UnityEngine.InputSystem;
 
@@ -9,6 +10,8 @@ public class OffenseScript : MonoBehaviour
     [SerializeField] private GameObject weaponLDamager;
     [SerializeField] private LayerMask enemyLayerMask;
     public bool debugSkipStep = false;
+    [SerializeField] private List<AudioClip> sfxList;
+
 
     // References
     private Character character;
@@ -31,7 +34,7 @@ public class OffenseScript : MonoBehaviour
     //           animation cancelling at the start of another attack
     private bool attackSpamLimiterActive = false;
 
-
+    private bool sfxLimiterActive = false;
     private float damage = 10f;
 
     private void Start()
@@ -47,7 +50,7 @@ public class OffenseScript : MonoBehaviour
     {
         UpdatePossibleActions();
 
-        if(!character.isDead)
+        if (!character.isDead)
             UpdateStatesAndAnimations();
     }
 
@@ -89,6 +92,12 @@ public class OffenseScript : MonoBehaviour
             ThrustAttack();
         else
             inputManager.tryingToWeaponThrustAttack = false;
+
+        if (character.isWeaponColliderActive && !sfxLimiterActive)
+            PlaySFX();
+        else if (!character.isWeaponColliderActive)
+            sfxLimiterActive = false;
+
     }
 
     #endregion
@@ -131,6 +140,7 @@ public class OffenseScript : MonoBehaviour
         character.animator.SetInteger(character.animKeys.comboKey, character.combo);
         character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
         character.animator.SetTrigger(character.animKeys.attackTriggerKey);
+
 
         // Set character.combo
         if(character.combo == 0)
@@ -181,7 +191,7 @@ public class OffenseScript : MonoBehaviour
         character.animator.SetInteger(character.animKeys.comboKey, character.combo);
         character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
         character.animator.SetTrigger(character.animKeys.attackTriggerKey);
-
+        
         // Set character.combo
         if (character.combo == 0)
             character.SetAttackInfo(damage / 2f, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.SLASH_WEAPON_BOTTOM);
@@ -231,7 +241,7 @@ public class OffenseScript : MonoBehaviour
         character.animator.SetInteger(character.animKeys.comboKey, character.combo);
         character.animator.SetFloat(character.animKeys.attackDirection, attackSector);
         character.animator.SetTrigger(character.animKeys.attackTriggerKey);
-
+        
         // Set character.combo
         if (character.combo == 0)
             character.SetAttackInfo(damage, weaponDial.topAngle, weaponDial.bottomAngle, AttackType.THRUST);
@@ -403,6 +413,17 @@ public class OffenseScript : MonoBehaviour
         character.ClearAttackInfo();
         character.isWeaponColliderActive = false;
         weaponDamager.SetActive(false);
+    }
+
+    private void PlaySFX()
+    {
+        sfxLimiterActive = true;
+
+        // Play SFX
+        character.audioSource.clip = sfxList[0];
+
+        character.audioSource.Stop();
+        character.audioSource.Play();
     }
 
     #endregion

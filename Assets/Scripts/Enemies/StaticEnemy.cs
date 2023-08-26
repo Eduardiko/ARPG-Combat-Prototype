@@ -25,14 +25,14 @@ public class StaticEnemy : MonoBehaviour
         inputManager = GetComponent<InputManager>();
         weaponDial = GetComponent<WeaponDial>();
         character = GetComponent<Character>();
-        character.isLocking = true;
         character.target = player;
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        character.isLocking = true;
+
         if (!nonAgressive)
         {
             if (actionTriggerTimer < 0f)
@@ -63,7 +63,6 @@ public class StaticEnemy : MonoBehaviour
                 else
                     inputManager.tryingToWeaponThrustAttack = true;
 
-                //inputManager.inputMoveVector = new Vector2(0.01f, 0.01f);
             }
             else
             {

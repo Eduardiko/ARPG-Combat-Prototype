@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class DamagableScript : MonoBehaviour
 {
+    [SerializeField] private List<AudioClip> sfxList;
     [SerializeField] private List<float> protectedAngles;
-    
+
     // References
     private Character character;
     private WeaponDial weaponDial;
@@ -55,21 +56,21 @@ public class DamagableScript : MonoBehaviour
         // Check if any of the two Weapon Angles is inside the threshold
         float angularDifference;
 
-        foreach (float protectedAngle in protectedAngles)
+        if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
         {
-            if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
-                angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.topAngle));
-            else
-                angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.bottomAngle));
-
-            // Depending on the angular difference, choose what to apply
-            if (angularDifference < parryThresholdAngle && !character.isMovementRestriced && attackerCharacter.attackInfo.type != AttackType.THRUST)
+            foreach (float protectedAngle in protectedAngles)
             {
-                Parry(false);
-                return;
+                angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.topAngle));
+
+                // Depending on the angular difference, choose what to apply
+                if (angularDifference < parryThresholdAngle && !character.isMovementRestriced && attackerCharacter.attackInfo.type != AttackType.THRUST)
+                {
+                    Parry(false);
+                    return;
+                }
             }
         }
-        
+
         if (attackerCharacter.attackInfo.type == AttackType.SLASH_WEAPON_TOP)
             angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360 - attackerCharacter.attackInfo.topAngle));
         else
@@ -120,6 +121,11 @@ public class DamagableScript : MonoBehaviour
         character.isMovementRestriced = true;
         character.isStaggered = true;
         character.isUILocked = false;
+
+        // Play SFX
+        character.audioSource.clip = sfxList[0];
+        character.audioSource.Stop();
+        character.audioSource.Play();
 
         // Apply/Not apply staggered animation
         if (!character.isWeaponColliderActive)

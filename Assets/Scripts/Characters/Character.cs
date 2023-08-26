@@ -60,6 +60,7 @@ public class Character : MonoBehaviour
     [Header("Animations")]
     [SerializeField] public AnimationTriggerKeys animKeys;
     [HideInInspector] public Animator animator;
+    [HideInInspector] public AudioSource audioSource;
 
     // Fake It Until U Make It References
     public GameObject RWeapon;
@@ -98,6 +99,7 @@ public class Character : MonoBehaviour
         isGrounded = true;
 
         animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponentInChildren<AudioSource>();
     }
 
     #region MAIN
@@ -193,7 +195,7 @@ public class Character : MonoBehaviour
 
     private void IsNotStaggered()
     {
-        isStaggered = false;
+        ResetStates();
         UpdateGeneralBools();
     }
 
@@ -227,7 +229,6 @@ public class Character : MonoBehaviour
     {
         isGrounded = true;
         isRunning = false;
-        isDead = false;
 
         isAttacking = false;
         isWeaponColliderActive = false;
@@ -300,7 +301,10 @@ public class Character : MonoBehaviour
             {
                 case 0:
                     // Calculate the new position for backstep
-                    newPosition = transform.position - transform.forward * stepDistance * 4;
+                    if(isLocking)
+                        newPosition = transform.position - transform.forward * stepDistance * 4;
+                    else
+                        newPosition = transform.position + transform.forward * stepDistance * 4;
                     break;
                 case 1:
                     // Calculate the new position for right dodge

@@ -34,6 +34,7 @@ public class Checkpoint : MonoBehaviour
             transform.position = new Vector3(spawnPoint.position.x, transform.position.y, spawnPoint.position.z);
             transform.rotation = spawnPoint.rotation;
             character.ResetStates();
+            character.isDead = false;
             character.animator.SetFloat(character.animKeys.hitID, 0f);
         }
     }

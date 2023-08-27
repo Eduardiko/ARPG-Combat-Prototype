@@ -47,7 +47,7 @@ public class MovementScript : MonoBehaviour
         jumpVelocity = Vector3.zero;
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if(!character.isDead)
         {

@@ -261,7 +261,7 @@ public class Character : MonoBehaviour
         {
             if ((!toTarget && !isLocking) || (target != null && (target.transform.position - transform.position).magnitude > 1.2f))
             {
-                float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime);
+                float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime) * Time.deltaTime;
 
                 // Calculate the new position after stepping forward
                 Vector3 newPosition = transform.position + transform.forward * stepDistance;
@@ -301,15 +301,15 @@ public class Character : MonoBehaviour
             {
                 case 0:
                     // Calculate the new position for backstep
-                    newPosition = transform.position - transform.forward * stepDistance * 4;
+                    newPosition = transform.position - transform.forward * stepDistance * 4 * Time.deltaTime;
                     break;
                 case 1:
                     // Calculate the new position for right dodge
-                    newPosition = transform.position + transform.right * stepDistance * 2;
+                    newPosition = transform.position + transform.right * stepDistance * 2 * Time.deltaTime;
                     break;
                 case -1:
                     // Calculate the new position for left dodge
-                    newPosition = transform.position - transform.right * stepDistance * 2;
+                    newPosition = transform.position - transform.right * stepDistance * 2 * Time.deltaTime;
                     break;
                 default:
                     break;

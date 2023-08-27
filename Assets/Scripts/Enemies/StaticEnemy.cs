@@ -19,6 +19,7 @@ public class StaticEnemy : MonoBehaviour
     private float actionTriggerTimer = 0f;
 
     public float forcedAngle = 0f;
+    private bool manualNotLookAtActive = false;
 
     private void Start()
     {
@@ -35,6 +36,23 @@ public class StaticEnemy : MonoBehaviour
 
         if (!nonAgressive)
         {
+            if (!character.isWeaponColliderActive || manualNotLookAtActive)
+            {
+                // This way it stops looking at the player from the moment the collider is active until the end of the action, giving a sense of locked attack
+                if (character.isMovementRestriced && manualNotLookAtActive)
+                    return;
+                else if (manualNotLookAtActive)
+                    manualNotLookAtActive = false;
+
+                // Rotate the player to face the target
+                // Y axis to 0 so Vector is calculated at same height
+                Vector3 targetPos = new Vector3(character.target.transform.position.x, 0f, character.target.transform.position.z);
+                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+            }
+            else if (character.isWeaponColliderActive && !manualNotLookAtActive)
+                manualNotLookAtActive = true;
+
             if (actionTriggerTimer < 0f)
             {
                 actionTriggerTimer = actionTriggerTime;
@@ -69,10 +87,11 @@ public class StaticEnemy : MonoBehaviour
                 actionTriggerTimer -= Time.deltaTime;
             }
         }
-        
-        if(isInvincible)
+
+
+        if (isInvincible)
         {
-            if (character.health < 25f)
+            if (character.health < 20.1f)
                 character.health = character.maxHealth;
         }
 

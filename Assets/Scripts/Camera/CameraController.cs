@@ -31,7 +31,7 @@ public class CameraController : MonoBehaviour
         uiLock.SetActive(false);
     }
 
-    void Update()
+    private void FixedUpdate()
     {
         ManageRecentering();
         ManageLocking();

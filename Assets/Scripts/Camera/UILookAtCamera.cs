@@ -6,19 +6,11 @@ using UnityEngine;
 public class UILookAtCamera : MonoBehaviour
 {
     [SerializeField] Transform target;
-    private void OnEnable()
-    {
-        StartCoroutine(LookAtTarget());
-    }
 
-    private IEnumerator LookAtTarget()
+    private void LateUpdate()
     {
-        while (this.gameObject.activeInHierarchy)
-        {
-            Vector3 dir = target.position - transform.position;
+        Vector3 dir = target.position - transform.position;
 
-            transform.rotation = Quaternion.LookRotation(-dir);
-            yield return null;
-        }
+        transform.rotation = Quaternion.LookRotation(-dir);
     }
 }

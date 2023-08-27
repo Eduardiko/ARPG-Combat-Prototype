@@ -420,7 +420,24 @@ public class OffenseScript : MonoBehaviour
         sfxLimiterActive = true;
 
         // Play SFX
-        character.audioSource.clip = sfxList[0];
+        switch (character.attackInfo.type)
+        {
+            case AttackType.SLASH_WEAPON_TOP:
+                character.audioSource.clip = sfxList[0];
+                break;
+            case AttackType.SLASH_WEAPON_BOTTOM:
+                character.audioSource.clip = sfxList[1];
+                break;
+            case AttackType.THRUST:
+                character.audioSource.clip = sfxList[2];
+                break;
+            case AttackType.NONE:
+                return;
+            default:
+                break;
+        }
+
+        character.audioSource.pitch = character.combo - 1 < 0 ? 1.3f : 0.15f * character.combo + 0.85f;
 
         character.audioSource.Stop();
         character.audioSource.Play();

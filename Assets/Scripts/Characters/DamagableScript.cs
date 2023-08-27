@@ -124,6 +124,8 @@ public class DamagableScript : MonoBehaviour
 
         // Play SFX
         character.audioSource.clip = sfxList[0];
+        float randomPitch = Random.Range(0.85f, 1.15f);
+        character.audioSource.pitch = randomPitch;
         character.audioSource.Stop();
         character.audioSource.Play();
 
@@ -164,6 +166,12 @@ public class DamagableScript : MonoBehaviour
         weaponDial.SetGuardSprites();
         character.isStaggered = true;
 
+        // Play SFX
+        character.audioSource.pitch = 2f - angularDifference / guardThresholdAngle;
+        character.audioSource.clip = sfxList[3];
+        character.audioSource.Stop();
+        character.audioSource.Play();
+
         // Apply/Not apply staggered animation
         if (!character.isPerformingAnAction)
         {
@@ -186,10 +194,26 @@ public class DamagableScript : MonoBehaviour
             character.animator.SetFloat(character.animKeys.hitID, 9f);
             character.animator.SetTrigger(character.animKeys.hitTriggerKey);
 
+            // Play SFX
+            character.audioSource.pitch = 1f;
+            character.audioSource.clip = sfxList[1];
+            character.audioSource.Stop();
+            character.audioSource.Play();
+
             // Data Gather
-            if(gameObject.tag == "Player")
+            if (gameObject.tag == "Player")
                 DataCollector.currentTest.successfulParries += 1;
         }
+
+        if (!triggerCounteranimation)
+        {
+            // Play SFX
+            character.audioSource.pitch = 1f;
+            character.audioSource.clip = sfxList[2];
+            character.audioSource.Stop();
+            character.audioSource.Play();
+        }
+            
 
         // Update UI
         WeaponDial attackerWeaponDial = attackerCharacter.gameObject.GetComponent<WeaponDial>();
@@ -225,7 +249,14 @@ public class DamagableScript : MonoBehaviour
         // Set States
         character.isLocking = false;
         character.isDead = true;
-        
+
+        // Play SFX
+        character.audioSource.clip = sfxList[4];
+        float randomPitch = Random.Range(0.85f, 1.15f);
+        character.audioSource.pitch = randomPitch;
+        character.audioSource.Stop();
+        character.audioSource.Play();
+
         // Trigger Death animation
         float randomAnimID = Mathf.Round(Random.Range(11f, 12f));
         character.animator.SetFloat(character.animKeys.hitID, randomAnimID);

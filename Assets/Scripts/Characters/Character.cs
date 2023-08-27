@@ -301,10 +301,7 @@ public class Character : MonoBehaviour
             {
                 case 0:
                     // Calculate the new position for backstep
-                    if(isLocking)
-                        newPosition = transform.position - transform.forward * stepDistance * 4;
-                    else
-                        newPosition = transform.position + transform.forward * stepDistance * 4;
+                    newPosition = transform.position - transform.forward * stepDistance * 4;
                     break;
                 case 1:
                     // Calculate the new position for right dodge

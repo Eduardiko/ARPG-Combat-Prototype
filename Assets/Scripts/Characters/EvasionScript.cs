@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class EvasionScript : MonoBehaviour
 {
+    [SerializeField] private List<AudioClip> sfxList;
 
     // References
     private Character character;
@@ -84,6 +85,13 @@ public class EvasionScript : MonoBehaviour
         StopCoroutine(character.BackStep());
         StartCoroutine(character.BackStep());
 
+        // Play SFX
+        character.audioSource.clip = sfxList[0];
+        float randomPitch = Random.Range(0.85f, 1.15f);
+        character.audioSource.pitch = randomPitch;
+        character.audioSource.Stop();
+        character.audioSource.Play();
+
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, 0f);
         character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
@@ -111,6 +119,13 @@ public class EvasionScript : MonoBehaviour
         // Update hand weapon
         character.UpdateWeapon(false, true);
 
+        // Play SFX
+        character.audioSource.clip = sfxList[0];
+        float randomPitch = Random.Range(0.85f, 1.15f);
+        character.audioSource.pitch = randomPitch;
+        character.audioSource.Stop();
+        character.audioSource.Play();
+
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, 1f);
         character.animator.SetTrigger(character.animKeys.dodgeTriggerKey);
@@ -137,6 +152,13 @@ public class EvasionScript : MonoBehaviour
 
         // Update hand weapon
         character.UpdateWeapon(true, false);
+
+        // Play SFX
+        character.audioSource.clip = sfxList[0];
+        float randomPitch = Random.Range(0.85f, 1.15f);
+        character.audioSource.pitch = randomPitch;
+        character.audioSource.Stop();
+        character.audioSource.Play();
 
         // Set Animation
         character.animator.SetFloat(character.animKeys.dodgeDirection, -1f);

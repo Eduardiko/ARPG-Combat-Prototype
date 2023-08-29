@@ -92,6 +92,12 @@ public class Character : MonoBehaviour
     [HideInInspector] public GameObject target;
     [HideInInspector] public int combo = 0;
 
+    // Fixed Update
+    private float elapsedTime = 0;
+    [HideInInspector] public bool doStep = false;
+    [HideInInspector] public bool doBackStep = false;
+    private int stepDirection = 0;
+    [HideInInspector] public Coroutine currentCoroutine;
 
     private void Start()
     {
@@ -101,6 +107,17 @@ public class Character : MonoBehaviour
         animator = GetComponentInChildren<Animator>();
         audioSource = GetComponentInChildren<AudioSource>();
     }
+
+    // Fixed Update is used so that step does not trigger
+    private void FixedUpdate()
+    {
+        if (doStep)
+            FixedStep();
+
+        if (doBackStep)
+            FixedBackStep();
+    }
+
 
     #region MAIN
 
@@ -189,7 +206,7 @@ public class Character : MonoBehaviour
         isDodging = false;
         isBackstepping = false;
         isUILocked = false;
-        
+
         UpdateGeneralBools();
     }
 
@@ -244,9 +261,20 @@ public class Character : MonoBehaviour
         isPerformingAnAction = false;
     }
 
+    private void FixedStep()
+    {
+        float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime) * Time.deltaTime;
+
+        // Calculate the new position after stepping forward
+        Vector3 newPosition = transform.position + transform.forward * stepDistance;
+
+        // Move the GameObject to the new position
+        transform.position = newPosition;
+    }
+
     public IEnumerator Step(bool toTarget = false)
     {
-        float elapsedTime = 0;
+        elapsedTime = 0;
 
         // Rotate the character to the target
         if ((isLocking || toTarget) && target != null)
@@ -259,66 +287,91 @@ public class Character : MonoBehaviour
 
         while (elapsedTime < attackStepTime)
         {
+            doBackStep = false;
+
             if ((!toTarget && !isLocking) || (target != null && (target.transform.position - transform.position).magnitude > 1.2f))
-            {
-                float stepDistance = Mathf.Lerp(attackStepLengthMultiplier, 0f, elapsedTime / stepTime) * Time.deltaTime;
-
-                // Calculate the new position after stepping forward
-                Vector3 newPosition = transform.position + transform.forward * stepDistance;
-
-                // Move the GameObject to the new position
-                transform.position = newPosition;
-            }
+                doStep = true;
+            else
+                doStep = false;
 
             elapsedTime += Time.deltaTime;
             yield return null;
         }
     }
 
+    private void FixedBackStep()
+    {
+        // Rotate the character to the target
+        if (isLocking && target != null)
+        {
+            // Y axis to 0 so Vector is calculated at same height
+            Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
+            Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
+            transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
+        }
+
+        float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
+
+        if (!isLocking)
+            stepDistance *= 1.3f;
+
+        Vector3 newPosition = new Vector3();
+
+        switch (stepDirection)
+        {
+            case 0:
+                // Calculate the new position for backstep
+                newPosition = transform.position - transform.forward * stepDistance * 4f * Time.deltaTime;
+                break;
+            case 1:
+                // Calculate the new position for right dodge
+                newPosition = transform.position + transform.right * stepDistance * 2f * Time.deltaTime;
+                break;
+            case -1:
+                // Calculate the new position for left dodge
+                newPosition = transform.position - transform.right * stepDistance * 2f * Time.deltaTime;
+                break;
+            default:
+                break;
+        }
+
+        // Move the GameObject to the new position
+        transform.position = newPosition;
+    }
+
     public IEnumerator BackStep(int direction=0)
     {
-        float elapsedTime = 0;
+        elapsedTime = 0;
+        stepDirection = direction;
 
         while (elapsedTime < stepTime)
         {
-            // Rotate the character to the target
-            if (isLocking && target != null)
-            {
-                // Y axis to 0 so Vector is calculated at same height
-                Vector3 targetPos = new Vector3(target.transform.position.x, 0f, target.transform.position.z);
-                Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
-                transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
-            }
-
-            float stepDistance = Mathf.Lerp(stepLengthMultiplier, 0f, elapsedTime / stepTime);
-
-            if (!isLocking)
-                stepDistance *= 1.3f;
-
-            Vector3 newPosition = new Vector3();
-
-            switch (direction)
-            {
-                case 0:
-                    // Calculate the new position for backstep
-                    newPosition = transform.position - transform.forward * stepDistance * 4 * Time.deltaTime;
-                    break;
-                case 1:
-                    // Calculate the new position for right dodge
-                    newPosition = transform.position + transform.right * stepDistance * 2 * Time.deltaTime;
-                    break;
-                case -1:
-                    // Calculate the new position for left dodge
-                    newPosition = transform.position - transform.right * stepDistance * 2 * Time.deltaTime;
-                    break;
-                default:
-                    break;
-            }
-
-            // Move the GameObject to the new position
-            transform.position = newPosition;
+            doStep = false;
 
             elapsedTime += Time.deltaTime;
+
+            doBackStep = true;
+            if (elapsedTime >= stepTime)
+                doBackStep = false;
+
+            yield return null;
+        }
+    }
+
+    public IEnumerator WaitToBackstep(float waitTime, int direction = 0)
+    {
+        elapsedTime = 0;
+        
+        if(currentCoroutine != null)
+            StopCoroutine(currentCoroutine);
+
+        while (elapsedTime < waitTime)
+        {
+            elapsedTime += Time.deltaTime;
+
+            if (elapsedTime >= waitTime)
+                StartCoroutine(BackStep(direction));
+
             yield return null;
         }
     }

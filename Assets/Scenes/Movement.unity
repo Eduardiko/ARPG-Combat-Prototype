@@ -2272,7 +2272,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 94058776}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.173, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3140,15 +3140,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 707804997}
   topWeaponUI: {fileID: 3175665}
   bottomWeaponUI: {fileID: 1426533168}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 2094089121}
+  targetBottomWeaponUI: {fileID: 366483270}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 514016197}
-  topTargetWeaponRect: {fileID: 2094089122}
-  bottomTargetWeaponRect: {fileID: 366483271}
   referencePlaneTransform: {fileID: 1993602683}
   topAngle: 0
   bottomAngle: 0
@@ -3299,6 +3303,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!114 &124849553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4150,7 +4156,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 173840235}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.173, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7410,7 +7416,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 6b53ba0211028234a874482aa33bb319, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -7987,7 +7993,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 383899469}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.169, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -11820,7 +11826,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 524388343}
   m_LocalRotation: {x: -0, y: 0.000000023285509, z: -0.000000110735584, w: 1}
-  m_LocalPosition: {x: -4.2516587e-13, y: -0.00000012025524, z: 0.00000023789275}
+  m_LocalPosition: {x: -4.2518758e-13, y: -0.00000035867149, z: 0.00000023684564}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -11984,11 +11990,11 @@ RectTransform:
   m_GameObject: {fileID: 530969942}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.5}
-  m_LocalScale: {x: 0.16434357, y: 0.16434357, z: 0.16434357}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.49999997, y: 0.49999997, z: 0.49999997}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 760998340}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -12015,7 +12021,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -12329,7 +12335,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 554920395}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.173, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -12461,7 +12467,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569740127}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.169, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -13236,12 +13242,12 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 607607176}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.5}
-  m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
+  m_LocalPosition: {x: 0, y: 0, z: -0.45}
+  m_LocalScale: {x: 0.45000002, y: 0.45000002, z: 0.45000002}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 760998340}
-  m_RootOrder: 5
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -13261,14 +13267,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 6cb0bf7dc09af1c4f96dd1a8f396e20f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -13733,15 +13739,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 1319563844}
   topWeaponUI: {fileID: 1497946081}
   bottomWeaponUI: {fileID: 1499537184}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 1273779959}
+  targetBottomWeaponUI: {fileID: 1320800775}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 1872582267}
-  topTargetWeaponRect: {fileID: 1273779960}
-  bottomTargetWeaponRect: {fileID: 1320800776}
   referencePlaneTransform: {fileID: 1564155243}
   topAngle: 0
   bottomAngle: 0
@@ -13890,6 +13900,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!114 &619984620
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14272,12 +14284,12 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629193875}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -0.5}
-  m_LocalScale: {x: 0.27, y: 0.27, z: 0.27}
+  m_LocalPosition: {x: 0, y: 0, z: -0.45}
+  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 760998340}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14297,14 +14309,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: aa1626fd8125f1646b5269c38ddb8c58, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -14423,8 +14435,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629450420}
-  m_LocalRotation: {x: 0.0000000044237822, y: -2.4812408e-10, z: -1.0897446e-12, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 6.9849193e-10, y: -4.656569e-10, z: -2.0451397e-12, w: 1}
+  m_LocalPosition: {x: -2.5849388e-26, y: -0.00000011920812, z: -5.235559e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -14963,11 +14975,11 @@ RectTransform:
   m_GameObject: {fileID: 650721257}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: -0.5}
-  m_LocalScale: {x: 0.41664, y: 0.41664, z: 0.41664}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 760998340}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -14994,7 +15006,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -16306,7 +16318,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 0
-  m_FollowOffset: {x: 0, y: 1.66, z: -5}
+  m_FollowOffset: {x: 0, y: 1.954472, z: -4.849282}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -17219,11 +17231,11 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1590615728}
+  - {fileID: 629193876}
+  - {fileID: 607607177}
   - {fileID: 650721258}
   - {fileID: 530969943}
   - {fileID: 1517630080}
-  - {fileID: 629193876}
-  - {fileID: 607607177}
   m_Father: {fileID: 330069501817452959}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -26252,7 +26264,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 0
-  m_FollowOffset: {x: 0, y: 1.66, z: -5}
+  m_FollowOffset: {x: 0, y: 1.954472, z: -4.849282}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -29268,15 +29280,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 194297552}
   topWeaponUI: {fileID: 895466154}
   bottomWeaponUI: {fileID: 386900244}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 2142743645}
+  targetBottomWeaponUI: {fileID: 2024495908}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 1976780295}
-  topTargetWeaponRect: {fileID: 2142743646}
-  bottomTargetWeaponRect: {fileID: 2024495909}
   referencePlaneTransform: {fileID: 524491536}
   topAngle: 0
   bottomAngle: 0
@@ -29421,6 +29437,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!4 &1404569662
 Transform:
   m_ObjectHideFlags: 0
@@ -30266,7 +30284,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!143 &1436512966
 CharacterController:
   m_ObjectHideFlags: 0
@@ -30353,15 +30371,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 1679520128}
   topWeaponUI: {fileID: 352384459}
   bottomWeaponUI: {fileID: 620196009}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 1632322443}
+  targetBottomWeaponUI: {fileID: 1237262139}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 29884992}
-  topTargetWeaponRect: {fileID: 1632322444}
-  bottomTargetWeaponRect: {fileID: 1237262140}
   referencePlaneTransform: {fileID: 253032719}
   topAngle: 0
   bottomAngle: 0
@@ -30524,6 +30546,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!4 &1436512976
 Transform:
   m_ObjectHideFlags: 0
@@ -32907,17 +32931,17 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1517630079}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
-  m_LocalPosition: {x: 0, y: 0, z: -0.5}
-  m_LocalScale: {x: 0.41664, y: 0.41664, z: 0.41664}
-  m_ConstrainProportionsScale: 0
+  m_LocalPosition: {x: 0, y: 0, z: -0.55}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 760998340}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0.5}
-  m_SizeDelta: {x: 0.2, y: 0.2}
+  m_SizeDelta: {x: 1, y: 1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1517630081
 MonoBehaviour:
@@ -32939,7 +32963,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 6e3c6c49609821944b8490e8b9455d75, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -33186,8 +33210,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1528669102}
-  m_LocalRotation: {x: -0.018141456, y: -0.00000001615029, z: -3.6399805e-10, w: 0.9998355}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0.018141448, y: 0.000000029761042, z: 6.707596e-10, w: 0.99983543}
+  m_LocalPosition: {x: -2.5849388e-26, y: -0.00000011920812, z: -5.235559e-10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -34664,15 +34688,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 1406957488}
   topWeaponUI: {fileID: 613956583}
   bottomWeaponUI: {fileID: 1990835688}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 587693554}
+  targetBottomWeaponUI: {fileID: 1898795827}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 1889233915}
-  topTargetWeaponRect: {fileID: 587693555}
-  bottomTargetWeaponRect: {fileID: 1898795828}
   referencePlaneTransform: {fileID: 512955646}
   topAngle: 0
   bottomAngle: 0
@@ -34860,6 +34888,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!143 &1594295750
 CharacterController:
   m_ObjectHideFlags: 0
@@ -37733,7 +37763,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1717787403}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.169, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -39430,7 +39460,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1839881159}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.169, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -40500,7 +40530,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!143 &1900574226
 CharacterController:
   m_ObjectHideFlags: 0
@@ -40587,15 +40617,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 1836338400}
   topWeaponUI: {fileID: 448564128}
   bottomWeaponUI: {fileID: 1839979148}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 2115745311}
+  targetBottomWeaponUI: {fileID: 2067895333}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 2020262570}
-  topTargetWeaponRect: {fileID: 2115745312}
-  bottomTargetWeaponRect: {fileID: 2067895334}
   referencePlaneTransform: {fileID: 1917772337}
   topAngle: 0
   bottomAngle: 0
@@ -40746,6 +40780,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!4 &1900574236
 Transform:
   m_ObjectHideFlags: 0
@@ -46298,7 +46334,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!143 &2126103152
 CharacterController:
   m_ObjectHideFlags: 0
@@ -46385,15 +46421,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 76997578}
   topWeaponUI: {fileID: 1907915436}
   bottomWeaponUI: {fileID: 1094166181}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 667187898}
+  targetBottomWeaponUI: {fileID: 987847636}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 298727417}
-  topTargetWeaponRect: {fileID: 667187899}
-  bottomTargetWeaponRect: {fileID: 987847637}
   referencePlaneTransform: {fileID: 1380576829}
   topAngle: 0
   bottomAngle: 0
@@ -46538,6 +46578,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!4 &2126103162
 Transform:
   m_ObjectHideFlags: 0
@@ -46866,7 +46908,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BindingMode: 0
-  m_FollowOffset: {x: 0, y: 1.66, z: -5}
+  m_FollowOffset: {x: 0, y: 1.954472, z: -4.849282}
   m_XDamping: 0
   m_YDamping: 0
   m_ZDamping: 0
@@ -49232,15 +49274,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 3237960049861902364}
   topWeaponUI: {fileID: 3237960051853921355}
   bottomWeaponUI: {fileID: 3237960050477173316}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 3237960051729091166}
+  targetBottomWeaponUI: {fileID: 3237960050418771103}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 3237960050444852311}
-  topTargetWeaponRect: {fileID: 3237960051729091167}
-  bottomTargetWeaponRect: {fileID: 3237960050418771096}
   referencePlaneTransform: {fileID: 3237960050880521042}
   topAngle: 0
   bottomAngle: 0
@@ -49423,6 +49469,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!136 &3237960049782927984
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -51713,7 +51761,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3237960051078209735}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.169, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -54197,7 +54245,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6522471014971820069}
-  m_LocalRotation: {x: -0.0021959539, y: 0.0000000016355888, z: 3.5916858e-12, w: 0.9999976}
+  m_LocalRotation: {x: -0.0021959594, y: -0.0000000011641507, z: -2.556434e-12, w: 0.9999976}
   m_LocalPosition: {x: 0, y: 1.66, z: 1}
   m_LocalScale: {x: 0.6187783, y: 0.6187781, z: 0.61877847}
   m_ConstrainProportionsScale: 0
@@ -56259,7 +56307,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6787757489405734382}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0, y: 1.221, z: 0}
+  m_LocalPosition: {x: 0, y: 1.169, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -58087,7 +58135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &6787757490267045694
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58106,15 +58154,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 6787757490051632437}
   topWeaponUI: {fileID: 6787757488830808418}
   bottomWeaponUI: {fileID: 6787757489605805933}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 6787757488723543927}
+  targetBottomWeaponUI: {fileID: 6787757489564117430}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 6787757489568960894}
-  topTargetWeaponRect: {fileID: 6787757488723543926}
-  bottomTargetWeaponRect: {fileID: 6787757489564117425}
   referencePlaneTransform: {fileID: 6787757489200377467}
   topAngle: 0
   bottomAngle: 0
@@ -58249,6 +58301,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!114 &6787757490267045703
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58747,6 +58801,8 @@ MonoBehaviour:
   isPerformingAnAction: 0
   target: {fileID: 0}
   combo: 0
+  doStep: 0
+  doBackStep: 0
 --- !u!114 &6985017023614976586
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -58784,15 +58840,19 @@ MonoBehaviour:
   bottomLWeaponTransform: {fileID: 1859381711}
   topWeaponUI: {fileID: 650721257}
   bottomWeaponUI: {fileID: 530969942}
-  attackTopWeaponSprite: {fileID: 21300000, guid: 19a7260466060394d81d1879d0c6f011, type: 3}
-  attackBottomWeaponSprite: {fileID: 21300000, guid: 6e446a3887cda27439a9e10a2d790c7b, type: 3}
-  guardTopWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  guardBottomWeaponSprite: {fileID: 21300000, guid: b872d6a77dd0da14e9cdeaafc2786358, type: 3}
-  cancelledTopWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
-  cancelledBottomWeaponSprite: {fileID: 21300000, guid: fd26a2c280427974ca4ade02c01f52ef, type: 3}
+  targetTopWeaponUI: {fileID: 629193875}
+  targetBottomWeaponUI: {fileID: 607607176}
+  attackTopWeaponSprite: {fileID: 21300000, guid: 9a4d4234645a8294080555c4a28a676a, type: 3}
+  attackBottomWeaponSprite: {fileID: 21300000, guid: 66ecf224d1ee1bb4abdbdcaa742bdd4c, type: 3}
+  guardTopWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  guardBottomWeaponSprite: {fileID: 21300000, guid: 04532ec9fecd01c45941ca8a1fa3d5d2, type: 3}
+  cancelledTopWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  cancelledBottomWeaponSprite: {fileID: 21300000, guid: 979c2f1808276d145a8f76cf39306e70, type: 3}
+  targetTopWeaponSprite: {fileID: 21300000, guid: 3619527c917800d418ccd2dbd1fb3e58, type: 3}
+  targetBottomWeaponSprite: {fileID: 21300000, guid: 8f3cb2c054db3924a9b1f3da781dce36, type: 3}
+  targetUnabledTopWeaponSprite: {fileID: 21300000, guid: f1e61a12252b33244beb8b116e07e521, type: 3}
+  targetUnabledBottomWeaponSprite: {fileID: 21300000, guid: 807ca0e79a518944d986b08182a73e6e, type: 3}
   manualPointerRect: {fileID: 1517630080}
-  topTargetWeaponRect: {fileID: 629193876}
-  bottomTargetWeaponRect: {fileID: 607607177}
   referencePlaneTransform: {fileID: 493139580}
   topAngle: 0
   bottomAngle: 0

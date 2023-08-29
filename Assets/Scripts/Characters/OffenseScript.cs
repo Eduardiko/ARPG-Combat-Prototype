@@ -71,9 +71,8 @@ public class OffenseScript : MonoBehaviour
 
     private void UpdateStatesAndAnimations()
     {
-        // Check for reset
-        if (!character.isMovementRestriced || character.isStaggered)
-            PeformResets();
+        if(!character.isMovementRestriced || character.isStaggered)
+            PerformResets();
 
         // Weapon Top Attack
         if (inputManager.tryingToWeaponTopAttack && ableToAttack)
@@ -93,6 +92,7 @@ public class OffenseScript : MonoBehaviour
         else
             inputManager.tryingToWeaponThrustAttack = false;
 
+        // SFX
         if (character.isWeaponColliderActive && !sfxLimiterActive)
             PlaySFX();
         else if (!character.isWeaponColliderActive)
@@ -122,11 +122,11 @@ public class OffenseScript : MonoBehaviour
         // Perform a step
         if(!debugSkipStep)
         {
-            StopCoroutine(character.Step());
-            if(GetNearEnemy())
-                StartCoroutine(character.Step(true));
+            StopAllCoroutines();
+            if (GetNearEnemy())
+                character.currentCoroutine = StartCoroutine(character.Step(true));
             else
-                StartCoroutine(character.Step());
+                character.currentCoroutine = StartCoroutine(character.Step());
         }
 
         // Calculate sector to define animation - 8 sectors & 22.5 degree offset
@@ -173,11 +173,11 @@ public class OffenseScript : MonoBehaviour
         // Perform a step
         if (!debugSkipStep)
         {
-            StopCoroutine(character.Step());
+            StopAllCoroutines();
             if (GetNearEnemy())
-                StartCoroutine(character.Step(true));
+                character.currentCoroutine = StartCoroutine(character.Step(true));
             else
-                StartCoroutine(character.Step());
+                character.currentCoroutine = StartCoroutine(character.Step());
         }
 
         // Calculate sector to define animation - 8 sectors & 22.5 degree offset
@@ -224,11 +224,13 @@ public class OffenseScript : MonoBehaviour
         // Perform a step
         if (!debugSkipStep)
         {
-            StopCoroutine(character.Step());
+            character.doStep = false;
+            character.doBackStep = false; 
+            StopAllCoroutines();
             if (GetNearEnemy())
-                StartCoroutine(character.Step(true));
+                character.currentCoroutine = StartCoroutine(character.Step(true));
             else
-                StartCoroutine(character.Step());
+                character.currentCoroutine = StartCoroutine(character.Step());
         }
 
         // Assign Sector
@@ -323,7 +325,7 @@ public class OffenseScript : MonoBehaviour
     {
         character.UpdateWeapon(lActive, rActive);
 
-        if (character.RWeapon.activeSelf)
+        if (rActive)
             weaponDamager = weaponRDamager;
         else
             weaponDamager = weaponLDamager;
@@ -357,7 +359,7 @@ public class OffenseScript : MonoBehaviour
         transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
     }
 
-    private void PeformResets()
+    private void PerformResets()
     {
         // Reset character.combo
         character.combo = 0;
@@ -410,8 +412,8 @@ public class OffenseScript : MonoBehaviour
 
     private void DeactivateDamageCollider()
     {
-        character.ClearAttackInfo();
         character.isWeaponColliderActive = false;
+        character.ClearAttackInfo();
         weaponDamager.SetActive(false);
     }
 
@@ -437,7 +439,7 @@ public class OffenseScript : MonoBehaviour
                 break;
         }
 
-        character.audioSource.pitch = character.combo - 1 < 0 ? 1.3f : 0.15f * character.combo + 0.85f;
+        character.audioSource.pitch = character.combo - 1f < 0f ? 1.3f : 0.15f * character.combo + 0.85f;
 
         character.audioSource.Stop();
         character.audioSource.Play();

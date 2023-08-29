@@ -82,8 +82,9 @@ public class EvasionScript : MonoBehaviour
         inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Perform Step
-        StopCoroutine(character.BackStep());
-        StartCoroutine(character.BackStep());
+        if (character.currentCoroutine != null)
+            StopCoroutine(character.BackStep());
+        character.currentCoroutine = StartCoroutine(character.WaitToBackstep(0.01f, 0));
 
         // Play SFX
         character.audioSource.clip = sfxList[0];
@@ -113,8 +114,9 @@ public class EvasionScript : MonoBehaviour
         inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Perform Step
-        StopCoroutine(character.BackStep());
-        StartCoroutine(character.BackStep(1));
+        if(character.currentCoroutine != null)
+            character.StopAllCoroutines();
+        StartCoroutine(character.WaitToBackstep(0.01f, 1));
 
         // Update hand weapon
         character.UpdateWeapon(false, true);
@@ -147,8 +149,9 @@ public class EvasionScript : MonoBehaviour
         inputManager.bufferedAction = BufferActions.CLEAR;
 
         // Perform Step
-        StopCoroutine(character.BackStep());
-        StartCoroutine(character.BackStep(-1));
+        if (character.currentCoroutine != null)
+            StopCoroutine(character.BackStep());
+        character.currentCoroutine = StartCoroutine(character.WaitToBackstep(0.01f, -1));
 
         // Update hand weapon
         character.UpdateWeapon(true, false);

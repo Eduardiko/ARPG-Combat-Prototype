@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum SpriteType
+{
+    ATTACK,
+    GUARD,
+    CANCELLED,
+    NONE
+}
+
 public class WeaponDial : MonoBehaviour
 {
     [Header("Weapon Transforms")]
@@ -14,6 +22,8 @@ public class WeaponDial : MonoBehaviour
     [Header("Weapon UI Sprites")]
     [SerializeField] private GameObject topWeaponUI;
     [SerializeField] private GameObject bottomWeaponUI;
+    [SerializeField] private GameObject targetTopWeaponUI;
+    [SerializeField] private GameObject targetBottomWeaponUI;
 
     [SerializeField] private Sprite attackTopWeaponSprite;
     [SerializeField] private Sprite attackBottomWeaponSprite;
@@ -22,9 +32,13 @@ public class WeaponDial : MonoBehaviour
     [SerializeField] private Sprite cancelledTopWeaponSprite;
     [SerializeField] private Sprite cancelledBottomWeaponSprite;
 
+    [SerializeField] private Sprite targetTopWeaponSprite;
+    [SerializeField] private Sprite targetBottomWeaponSprite;
+    [SerializeField] private Sprite targetUnabledTopWeaponSprite;
+    [SerializeField] private Sprite targetUnabledBottomWeaponSprite;
+
     [SerializeField] private RectTransform manualPointerRect;
-    [SerializeField] RectTransform topTargetWeaponRect;
-    [SerializeField] RectTransform bottomTargetWeaponRect;
+    
 
     [Header("Plane Reference")]
     [SerializeField] private Transform referencePlaneTransform;
@@ -56,9 +70,15 @@ public class WeaponDial : MonoBehaviour
     // UI
     private Image topWeaponImage;
     private Image bottomWeaponImage;
+    private Image targetTopWeaponImage;
+    private Image targetBottomWeaponImage;
 
     private RectTransform topWeaponRect;
     private RectTransform bottomWeaponRect;
+    private RectTransform targetTopWeaponRect;
+    private RectTransform targetBottomWeaponRect;
+
+    private SpriteType spriteType;
 
     private void Start()
     {
@@ -70,6 +90,12 @@ public class WeaponDial : MonoBehaviour
 
         bottomWeaponRect = bottomWeaponUI.GetComponent<RectTransform>();
         bottomWeaponImage = bottomWeaponUI.GetComponent<Image>();
+
+        targetTopWeaponRect = targetTopWeaponUI.GetComponent<RectTransform>();
+        targetTopWeaponImage = targetTopWeaponUI.GetComponent<Image>();
+
+        targetBottomWeaponRect = targetBottomWeaponUI.GetComponent<RectTransform>();
+        targetBottomWeaponImage = targetBottomWeaponUI.GetComponent<Image>();
 
         SetAttackSprites();
     }
@@ -216,11 +242,31 @@ public class WeaponDial : MonoBehaviour
         // Apply the new position
         topWeaponRect.localPosition = new Vector3(x, y, topWeaponRect.localPosition.z);
 
+        if(spriteType == SpriteType.ATTACK)
+        {
+            // Rotate the topWeaponRect to look at the circle center
+            Vector3 directionToTarget = Vector3.zero - topWeaponRect.localPosition;
+            float targetRotation = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            topWeaponRect.localRotation = Quaternion.Euler(0f, 0f, targetRotation + 90f);
+        }
+        else
+            topWeaponRect.localRotation = Quaternion.Euler(0f, 0f, 0f);
+
+
         // Bottom Angle
         float radianBottomAngle = (90 - bottomAngle) * Mathf.Deg2Rad;
         x = 0.5f * Mathf.Cos(radianBottomAngle);
         y = 0.5f * Mathf.Sin(radianBottomAngle);
         bottomWeaponRect.localPosition = new Vector3(x, y, bottomWeaponRect.localPosition.z);
+
+        if (spriteType == SpriteType.ATTACK)
+        {
+            Vector3 directionToTarget = Vector3.zero - bottomWeaponRect.localPosition;
+            float targetRotation = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            bottomWeaponRect.localRotation = Quaternion.Euler(0f, 0f, targetRotation - 90f);
+        }
+        else
+            bottomWeaponRect.localRotation = Quaternion.Euler(0f, 0f, 0f);
 
         // Manual Angle
         if (manualPointerRect.gameObject.activeSelf)
@@ -229,6 +275,15 @@ public class WeaponDial : MonoBehaviour
             x = 0.5f * Mathf.Cos(radianManualAngle);
             y = 0.5f * Mathf.Sin(radianManualAngle);
             manualPointerRect.localPosition = new Vector3(x, y, manualPointerRect.localPosition.z);
+
+            if (spriteType == SpriteType.ATTACK)
+            {
+                Vector3 directionToTarget = Vector3.zero - manualPointerRect.localPosition;
+                float targetRotation = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+                manualPointerRect.localRotation = Quaternion.Euler(0f, 0f, targetRotation + 90f);
+            }
+            else
+                manualPointerRect.localRotation = Quaternion.Euler(0f, 0f, 0f);
         }
     }
 
@@ -239,35 +294,47 @@ public class WeaponDial : MonoBehaviour
         // Activate Render
         if (targetCharacter.isUILocked && targetCharacter.attackInfo.type != AttackType.NONE)
         {
-            topTargetWeaponRect.gameObject.SetActive(true);
-            bottomTargetWeaponRect.gameObject.SetActive(true);
+            targetTopWeaponRect.gameObject.SetActive(true);
+            targetBottomWeaponRect.gameObject.SetActive(true);
         }
         else
         {
-            topTargetWeaponRect.gameObject.SetActive(false);
-            bottomTargetWeaponRect.gameObject.SetActive(false);
+            targetTopWeaponRect.gameObject.SetActive(false);
+            targetBottomWeaponRect.gameObject.SetActive(false);
         }
 
         // Target Angles (Enemy Angles)
-        if ((topTargetWeaponRect.gameObject.activeSelf || bottomTargetWeaponRect.gameObject.activeSelf) && targetCharacter.attackInfo.type != AttackType.NONE)
+        if ((targetTopWeaponRect.gameObject.activeSelf || targetBottomWeaponRect.gameObject.activeSelf) && targetCharacter.attackInfo.type != AttackType.NONE)
         {
+            if (targetCharacter.attackInfo.type != AttackType.SLASH_WEAPON_BOTTOM)
+                SetTopAttackTargetSprites();
+            else
+                SetBottomAttackTargetSprites();
 
             float radianTopAngle = (90 - targetCharacter.attackInfo.topAngle) * Mathf.Deg2Rad;
-            float x = 0.6f * Mathf.Cos(radianTopAngle);
-            float y = 0.6f * Mathf.Sin(radianTopAngle);
-            topTargetWeaponRect.localPosition = new Vector3(-x, y, topTargetWeaponRect.localPosition.z);
+            float x = 0.7f * Mathf.Cos(radianTopAngle);
+            float y = 0.7f * Mathf.Sin(radianTopAngle);
+            targetTopWeaponRect.localPosition = new Vector3(-x, y, targetTopWeaponRect.localPosition.z);
+            
+            Vector3 directionToTarget = Vector3.zero - targetTopWeaponRect.localPosition;
+            float targetRotation = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            targetTopWeaponRect.localRotation = Quaternion.Euler(0f, 0f, targetRotation + 90f);
 
             float radianBottomAngle = (90 - targetCharacter.attackInfo.bottomAngle) * Mathf.Deg2Rad;
-            x = 0.6f * Mathf.Cos(radianBottomAngle);
-            y = 0.6f * Mathf.Sin(radianBottomAngle);
-            bottomTargetWeaponRect.localPosition = new Vector3(-x, y, bottomTargetWeaponRect.localPosition.z);
+            x = 0.7f * Mathf.Cos(radianBottomAngle);
+            y = 0.7f * Mathf.Sin(radianBottomAngle);
+            targetBottomWeaponRect.localPosition = new Vector3(-x, y, targetBottomWeaponRect.localPosition.z);
+
+            directionToTarget = Vector3.zero - targetBottomWeaponRect.localPosition;
+            targetRotation = Mathf.Atan2(directionToTarget.y, directionToTarget.x) * Mathf.Rad2Deg;
+            targetBottomWeaponRect.localRotation = Quaternion.Euler(0f, 0f, targetRotation - 90f);
         }
     }
 
     private void DisableTargetUI()
     {
-        topTargetWeaponRect.gameObject.SetActive(false);
-        bottomTargetWeaponRect.gameObject.SetActive(false);
+        targetTopWeaponRect.gameObject.SetActive(false);
+        targetBottomWeaponRect.gameObject.SetActive(false);
     }
 
     #endregion
@@ -276,20 +343,38 @@ public class WeaponDial : MonoBehaviour
 
     private void SetAttackSprites()
     {
+        spriteType = SpriteType.ATTACK;
         topWeaponImage.sprite = attackTopWeaponSprite;
         bottomWeaponImage.sprite = attackBottomWeaponSprite;
+        bottomWeaponRect.localScale = new Vector3(0.4f, 0.4f, 0.4f);
     }
 
     public void SetGuardSprites()
     {
+        spriteType = SpriteType.GUARD;
         topWeaponImage.sprite = guardTopWeaponSprite;
         bottomWeaponImage.sprite = guardBottomWeaponSprite;
+        bottomWeaponRect.localScale *= 1f;
     }
 
     public void SetCancelledSprites()
     {
+        spriteType = SpriteType.CANCELLED;
         topWeaponImage.sprite = cancelledTopWeaponSprite;
         bottomWeaponImage.sprite = cancelledBottomWeaponSprite;
+        bottomWeaponRect.localScale *= 0.5f;
+    }
+
+    private void SetTopAttackTargetSprites()
+    {
+        targetTopWeaponImage.sprite = targetTopWeaponSprite;
+        targetBottomWeaponImage.sprite = targetUnabledBottomWeaponSprite;
+    }
+
+    private void SetBottomAttackTargetSprites()
+    {
+        targetBottomWeaponImage.sprite = targetBottomWeaponSprite;
+        targetTopWeaponImage.sprite = targetUnabledTopWeaponSprite;
     }
 
     #endregion

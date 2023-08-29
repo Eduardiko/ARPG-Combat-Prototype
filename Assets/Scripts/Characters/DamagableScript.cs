@@ -37,15 +37,17 @@ public class DamagableScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject && !character.isImmuneToDamage && !character.isDead && damageResetTimer >= damageResetTime)
+        if(other.tag == "Weapon" && other.transform.root.gameObject != gameObject)
         {
-            attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
+            if (!character.isImmuneToDamage && !character.isDead && damageResetTimer >= damageResetTime)
+            {
+                attackerCharacter = other.transform.root.gameObject.GetComponent<Character>();
 
-            ManageDamage();
+                ManageDamage();
 
-            // Resets
-            damageResetTimer = 0f;
-            attackerCharacter.ClearAttackInfo();
+                // Resets
+                damageResetTimer = 0f;
+            }
         }
     }
 
@@ -63,7 +65,7 @@ public class DamagableScript : MonoBehaviour
                 angularDifference = Mathf.Abs(Mathf.DeltaAngle(protectedAngle, attackerCharacter.attackInfo.topAngle));
 
                 // Depending on the angular difference, choose what to apply
-                if (angularDifference < parryThresholdAngle && !character.isMovementRestriced && attackerCharacter.attackInfo.type != AttackType.THRUST)
+                if (angularDifference < parryThresholdAngle)
                 {
                     Parry(false);
                     return;
@@ -77,7 +79,7 @@ public class DamagableScript : MonoBehaviour
             angularDifference = Mathf.Abs(Mathf.DeltaAngle(weaponDial.topAngle, 360 - attackerCharacter.attackInfo.bottomAngle));
 
         // Depending on the angular difference, choose what to apply
-        if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isPerformingAnAction)
+        if (angularDifference > guardThresholdAngle || attackerCharacter.attackInfo.type == AttackType.THRUST || character.isMovementRestriced)
             Hit();
         else if (angularDifference < parryThresholdAngle && !character.isMovementRestriced)
             Parry();
@@ -118,8 +120,6 @@ public class DamagableScript : MonoBehaviour
         }
 
         // Set States
-        character.isMovementRestriced = true;
-        character.isStaggered = true;
         character.isUILocked = false;
 
         // Play SFX
@@ -130,8 +130,11 @@ public class DamagableScript : MonoBehaviour
         character.audioSource.Play();
 
         // Apply/Not apply staggered animation
-        if (!character.isWeaponColliderActive)
+        if (!character.isAttacking)
         {
+            character.isMovementRestriced = true;
+            character.isStaggered = true;
+
             float randomAnimID = Random.Range(1f, 5f);
             character.animator.SetFloat(character.animKeys.hitID, randomAnimID);
             character.animator.SetTrigger(character.animKeys.hitTriggerKey);

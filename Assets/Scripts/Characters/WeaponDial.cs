@@ -312,8 +312,8 @@ public class WeaponDial : MonoBehaviour
                 SetBottomAttackTargetSprites();
 
             float radianTopAngle = (90 - targetCharacter.attackInfo.topAngle) * Mathf.Deg2Rad;
-            float x = 0.7f * Mathf.Cos(radianTopAngle);
-            float y = 0.7f * Mathf.Sin(radianTopAngle);
+            float x = 0.5f * Mathf.Cos(radianTopAngle);
+            float y = 0.5f * Mathf.Sin(radianTopAngle);
             targetTopWeaponRect.localPosition = new Vector3(-x, y, targetTopWeaponRect.localPosition.z);
             
             Vector3 directionToTarget = Vector3.zero - targetTopWeaponRect.localPosition;
@@ -321,8 +321,8 @@ public class WeaponDial : MonoBehaviour
             targetTopWeaponRect.localRotation = Quaternion.Euler(0f, 0f, targetRotation + 90f);
 
             float radianBottomAngle = (90 - targetCharacter.attackInfo.bottomAngle) * Mathf.Deg2Rad;
-            x = 0.7f * Mathf.Cos(radianBottomAngle);
-            y = 0.7f * Mathf.Sin(radianBottomAngle);
+            x = 0.5f * Mathf.Cos(radianBottomAngle);
+            y = 0.5f * Mathf.Sin(radianBottomAngle);
             targetBottomWeaponRect.localPosition = new Vector3(-x, y, targetBottomWeaponRect.localPosition.z);
 
             directionToTarget = Vector3.zero - targetBottomWeaponRect.localPosition;

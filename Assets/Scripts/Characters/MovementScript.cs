@@ -1,5 +1,6 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
-
 
 public class MovementScript : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class MovementScript : MonoBehaviour
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform groundCheck;
     [SerializeField] private LayerMask groundMask;
-    
+    [SerializeField] private List<AudioClip> sfxList;
+
     // References
     private Character character;
     private InputManager inputManager;
@@ -169,9 +171,25 @@ public class MovementScript : MonoBehaviour
             else if (character.isWeaponColliderActive && !manualNotLookAtActive)
                 manualNotLookAtActive = true;
 
+            // Play SFX
+
+            if (!character.audioSource.isPlaying && !character.isMovementRestriced)
+            {
+                character.audioSource.clip = sfxList[Random.Range(0, 5)];
+                if (!character.isRunning)
+                    character.audioSource.pitch = 0.8f + 3f * moveDirection.magnitude;
+                else
+                    character.audioSource.pitch = 1.5f;
+
+                character.audioSource.Play();
+            }
+            
 
             characterController.Move(moveDirection);
-        }
+        } 
+        
+        if (inputManager.inputMoveVector == Vector2.zero && !character.isMovementRestriced && character.audioSource.isPlaying)
+            character.audioSource.Stop();
     }
 
     private void Idle()

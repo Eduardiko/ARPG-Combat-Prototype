@@ -64,6 +64,7 @@ public class SmartEnemy : MonoBehaviour
     public bool probabilitiesBasedOnVarietyOfAttacks = false;
     private float varietyMultiplier = 0f;
     private float comboMultiplier = 0f;
+    private int lastCombo = 0;
 
     private AttackType lastReceivedAttackType;
 
@@ -156,6 +157,8 @@ public class SmartEnemy : MonoBehaviour
             {
                 hasSetProbabilities = true;
 
+                lastCombo = targetCharacter.combo;
+
                 if (targetCharacter.attackInfo.type == lastReceivedAttackType)
                     varietyMultiplier += 1f;
                 else
@@ -165,7 +168,7 @@ public class SmartEnemy : MonoBehaviour
 
                 SetProbabilities(varietyMultiplier);
             }
-            else if(!targetCharacter.isAttacking)
+            else if(!targetCharacter.isAttacking || (targetCharacter.isAttacking && lastCombo != targetCharacter.combo))
                 hasSetProbabilities = false;
         }
         
@@ -202,10 +205,10 @@ public class SmartEnemy : MonoBehaviour
             Vector3 selfPos = new Vector3(transform.position.x, 0f, transform.position.z);
             transform.rotation = Quaternion.LookRotation(targetPos - selfPos);
         }
-        else if(toTargetVector.magnitude <= 5f && toTargetVector.magnitude > 2f)
+        else if(toTargetVector.magnitude <= 7.5f && toTargetVector.magnitude > 2f)
         {
             character.isLocking = true;
-            toTargetVector = toTargetVector.normalized * moveSpeed/10f * Time.deltaTime;
+            toTargetVector = toTargetVector.normalized * moveSpeed /10f * Time.deltaTime;
             character.animator.SetFloat(character.animKeys.directionZKey, 0.4f);
             characterController.Move(toTargetVector);
 
@@ -440,8 +443,10 @@ public class SmartEnemy : MonoBehaviour
 
         guardProbabilityMultiplier = 1f + multiplier;
 
-        if (targetCharacter.isAttacking && targetCharacter.attackInfo.type == AttackType.THRUST)
-            evadeProbabilityMultiplier = 5f - multiplier * 2f;
+        //if (targetCharacter.isAttacking && targetCharacter.attackInfo.type == AttackType.THRUST)
+          //      evadeProbabilityMultiplier *= 5f - character.combo * 2f;
+
+        print(evadeProbabilityMultiplier);
 
         if (character.isBackstepping)
         {

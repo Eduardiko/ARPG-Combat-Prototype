@@ -91,9 +91,13 @@ public class SmartEnemy : MonoBehaviour
     void Update()
     {
         if (targetCharacter.isDead)
+        {
+            gameObject.transform.position = initialPosition;
             character.health = character.maxHealth;
-        
-        if(!character.isDead)
+            character.ResetStates();
+        }
+
+        if (!character.isDead && !targetCharacter.isDead)
         {
             if (!character.isMovementRestriced)
                 MoveToTarget();
@@ -164,9 +168,10 @@ public class SmartEnemy : MonoBehaviour
                 else
                     varietyMultiplier = 0f;
 
+                SetProbabilities(varietyMultiplier);
+
                 lastReceivedAttackType = targetCharacter.attackInfo.type;
 
-                SetProbabilities(varietyMultiplier);
             }
             else if(!targetCharacter.isAttacking || (targetCharacter.isAttacking && lastCombo != targetCharacter.combo))
                 hasSetProbabilities = false;
@@ -443,10 +448,8 @@ public class SmartEnemy : MonoBehaviour
 
         guardProbabilityMultiplier = 1f + multiplier;
 
-        //if (targetCharacter.isAttacking && targetCharacter.attackInfo.type == AttackType.THRUST)
-          //      evadeProbabilityMultiplier *= 5f - character.combo * 2f;
-
-        print(evadeProbabilityMultiplier);
+        if (targetCharacter.isAttacking && targetCharacter.attackInfo.type == AttackType.THRUST)
+                evadeProbabilityMultiplier += 1;
 
         if (character.isBackstepping)
         {

@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Checkpoint : MonoBehaviour
 {
+    [SerializeField] private MusicManager musicManager;
+    [SerializeField] private AudioClip windClip;
+
     private Transform spawnPoint;
     private Character character;
 
@@ -16,6 +19,9 @@ public class Checkpoint : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if(Input.GetKeyDown(KeyCode.F10))
+            Application.Quit();
+
         if(character.isDead)
         {
             if (dieTime > 0f)
@@ -29,6 +35,8 @@ public class Checkpoint : MonoBehaviour
 
             gameObject.tag = "Player";
             gameObject.layer = 0;
+
+            musicManager.SetMusic(windClip);
 
             character.health = character.maxHealth;
             transform.position = new Vector3(spawnPoint.position.x, transform.position.y, spawnPoint.position.z);

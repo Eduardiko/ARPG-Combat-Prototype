@@ -14,6 +14,8 @@ public class StartBattle : MonoBehaviour
     private SmartEnemy enemy1Brain;
     private SmartEnemy enemy2Brain;
 
+    private bool done = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -26,12 +28,13 @@ public class StartBattle : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == "Player" && !done)
             BeginBattle();
     }
 
     private void BeginBattle()
     {
+        done = true;
         enemy1Character.target = enemy2;
         enemy2Character.target = enemy1;
 

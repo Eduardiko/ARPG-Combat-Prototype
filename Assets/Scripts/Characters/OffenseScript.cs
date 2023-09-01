@@ -35,7 +35,7 @@ public class OffenseScript : MonoBehaviour
     private bool attackSpamLimiterActive = false;
 
     private bool sfxLimiterActive = false;
-    private float damage = 10f;
+    public float damage = 10f;
 
     private void Start()
     {

@@ -281,18 +281,18 @@ public class MovementScript : MonoBehaviour
     #endregion
 
     #region HERLPERS
-    private float DecelerateSpeed(float currentSpeed, float decelerationTime)
-    {
-        float decelerationRate = Mathf.Log(2) / decelerationTime;
-        float deceleratedSpeed = currentSpeed * Mathf.Exp(-decelerationRate * Time.deltaTime);
-        return deceleratedSpeed;
-    }
-
     private float AccelerateSpeed(float currentSpeed, float accelerationTime, float maxSpeed)
     {
         float accelerationRate = Mathf.Log(maxSpeed / currentSpeed) / accelerationTime;
         float acceleratedSpeed = currentSpeed * Mathf.Exp(accelerationRate * Time.deltaTime);
         return Mathf.Min(acceleratedSpeed, maxSpeed);
+    }
+
+    private float DecelerateSpeed(float currentSpeed, float decelerationTime)
+    {
+        float decelerationRate = Mathf.Log(2) / decelerationTime;
+        float deceleratedSpeed = currentSpeed * Mathf.Exp(-decelerationRate * Time.deltaTime);
+        return deceleratedSpeed;
     }
 
     private void EnterRunning()

@@ -89,7 +89,7 @@ public class DamagableScript : MonoBehaviour
 
     #endregion
 
-    #region HELPERS
+    #region ACTIONS
     public void Hit()
     {
         // Trigger Counter Parry to attacker
@@ -194,6 +194,7 @@ public class DamagableScript : MonoBehaviour
             character.isStaggered = true;
             character.isUILocked = false;
 
+            // Set Parry Animation
             character.animator.SetFloat(character.animKeys.hitID, 9f);
             character.animator.SetTrigger(character.animKeys.hitTriggerKey);
 

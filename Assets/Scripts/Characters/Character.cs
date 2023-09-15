@@ -4,7 +4,7 @@ using UnityEngine;
 
 // Strings To Re-Use and Not memorize all animation parameters
 [System.Serializable]
-public class AnimationTriggerKeys
+public class AnimationKeys
 {
     // Triggers
     public string jumpTriggerKey;
@@ -58,7 +58,7 @@ public class Character : MonoBehaviour
 
     // Access Character Animations
     [Header("Animations")]
-    [SerializeField] public AnimationTriggerKeys animKeys;
+    [SerializeField] public AnimationKeys animKeys;
     [HideInInspector] public Animator animator;
     [HideInInspector] public AudioSource audioSource;
 
